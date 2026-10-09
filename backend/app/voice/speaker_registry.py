@@ -25,7 +25,9 @@ class SpeakerRegistry:
 
     def peek(self, provider_speaker_id: str | None) -> tuple[str, str]:
         """Look up a label without registering a new speaker (used for unstable partials)."""
-        key = str(provider_speaker_id).strip() if provider_speaker_id is not None else ""
+        key = (
+            str(provider_speaker_id).strip() if provider_speaker_id is not None else ""
+        )
         if key in self._labels:
             return key, self._labels[key]
         return UNKNOWN_SPEAKER_ID, UNKNOWN_SPEAKER_LABEL
