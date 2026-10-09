@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kognia-voice-backend"
+version = "0.1.0"
+description = "Kognia Voice: voice agent and HTTP API over the official Colombian IPS dataset (datos.gov.co s2ru-bqt6)"
+requires-python = ">=3.11, <3.14"
+dependencies = [
+    "fastapi~=0.115",
+    "uvicorn[standard]~=0.32",
+    "httpx~=0.28",
+    "pydantic~=2.9",
+    "pydantic-settings~=2.6",
+    "livekit-api>=1.0",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+agent = [
+    "livekit-agents~=1.8",
+    "livekit-plugins-ai-coustics~=0.3",
+    "pysentimiento~=0.7",
+    "torch>=2.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "respx",
+    "ruff",
+]
+
+[tool.uv]
+constraint-dependencies = ["yarl<1.24"]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = ["integration: hits the real datos.gov.co API"]
+addopts = "-m 'not integration'"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B", "A", "C4", "UP", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
