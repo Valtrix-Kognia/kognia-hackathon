@@ -7,13 +7,14 @@ from livekit.agents import (
     CloseEvent,
     ConversationItemAddedEvent,
     ErrorEvent,
-    UserInputTranscribedEvent,
+    SpeechCreatedEvent,
 )
 from livekit.agents.llm import ChatMessage
 
 from app.domain.models.emotion_analysis import EmotionAnalysis
-from app.emotions.emotion_worker import EmotionWorker
+from app.voice.conversation_controller import ConversationController
 from app.voice.event_publisher import EventPublisher
+from app.voice.latency_metrics import LatencyMetricsService
 from app.voice.transcript_tracker import TranscriptTracker
 
 logger = logging.getLogger("kognia.session")
@@ -33,18 +34,20 @@ class SessionObserver:
         session: AgentSession,
         events: EventPublisher,
         tracker: TranscriptTracker,
-        emotions: EmotionWorker,
+        controller: ConversationController,
+        latency: LatencyMetricsService,
         started_at: float,
     ) -> None:
         self._session = session
         self._events = events
         self._tracker = tracker
-        self._emotions = emotions
+        self._controller = controller
+        self._latency = latency
         self._started_at = started_at
         self._speaking_since_ms: int | None = None
 
     def attach(self) -> None:
-        self._session.on("user_input_transcribed", self._on_user_transcribed)
+        self._session.on("speech_created", self._on_speech_created)
         self._session.on("agent_state_changed", self._on_agent_state)
         self._session.on("conversation_item_added", self._on_item_added)
         self._session.on("error", self._on_error)
@@ -56,38 +59,31 @@ class SessionObserver:
     def _elapsed_ms(self) -> int:
         return int((time.monotonic() - self._started_at) * 1000)
 
-    def _on_user_transcribed(self, ev: UserInputTranscribedEvent) -> None:
-        segment, new_speaker = self._tracker.on_user_transcript(
-            ev.transcript, ev.is_final, ev.speaker_id
-        )
-        if segment is None:
-            return
-        self._events.publish(
-            "transcript.final" if segment.is_final else "transcript.partial", segment
-        )
-        if new_speaker:
-            self._events.publish(
-                "speaker.identified",
-                {
-                    "speaker_id": segment.speaker_id,
-                    "speaker_label": segment.speaker_label,
-                    "segment_id": segment.id,
-                },
-            )
-        if segment.is_final:
-            self._emotions.submit(segment)
+    def _on_speech_created(self, ev: SpeechCreatedEvent) -> None:
+        self._controller.on_agent_speech(ev.speech_handle)
 
     def _on_agent_state(self, ev: AgentStateChangedEvent) -> None:
         if ev.new_state == "speaking":
             self._speaking_since_ms = self._elapsed_ms()
+            self._latency.on_agent_speaking(ev.created_at)
+        elif ev.old_state == "speaking":
+            self._controller.on_agent_finished_speaking()
         event_type = _STATE_EVENTS.get(ev.new_state)
         if event_type:
             self._events.publish(event_type, {"state": ev.new_state})  # type: ignore[arg-type]
 
     def _on_item_added(self, ev: ConversationItemAddedEvent) -> None:
         item = ev.item
-        if not isinstance(item, ChatMessage) or item.role != "assistant":
+        if not isinstance(item, ChatMessage):
             return
+        if item.role == "user":
+            self._latency.on_user_message(item.id, dict(item.metrics))
+            return
+        if item.role != "assistant":
+            return
+        turn_metrics = self._latency.on_agent_message(dict(item.metrics))
+        if turn_metrics:
+            self._events.publish("metrics.turn", turn_metrics)
         segment = self._tracker.on_agent_message(
             item.text_content or "", item.interrupted, self._speaking_since_ms
         )

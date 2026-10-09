@@ -65,3 +65,23 @@ def test_agent_message_is_role_agent_and_keeps_interrupted_flag() -> None:
     assert seg.role == "agent"
     assert seg.interrupted is True
     assert (seg.start_ms, seg.end_ms) == (1500, 2000)
+
+
+def test_diarized_final_splits_spans_and_reuses_partial_id() -> None:
+    from app.voice.speaker_diarization import SpeakerDiarizationService
+    from tests.unit.speech_fixtures import alt
+
+    tracker, clock = build()
+    clock.now = 5000
+    partial, _ = tracker.on_user_transcript("Kognia cuántas", False, "0")
+    utterance = SpeakerDiarizationService().analyze(
+        alt(("0", "Kognia cuántas IPS hay"), ("1", "y en Pereira también"), t0=2.0)
+    )
+    results = tracker.on_diarized_final(utterance, audio_offset_ms=1000)
+    segments = [s for s, _ in results]
+    assert segments[0].id == partial.id
+    assert segments[1].id != partial.id
+    assert [s.speaker_label for s in segments] == ["Hablante 1", "Hablante 2"]
+    assert segments[0].start_ms == 3000
+    assert segments[1].start_ms > segments[0].end_ms - 1
+    assert [new for _, new in results] == [True, True]

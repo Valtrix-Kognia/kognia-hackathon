@@ -16,11 +16,19 @@ class Settings(BaseSettings):
     socrata_max_retries: int = Field(default=2, ge=0, le=5)
     socrata_max_response_bytes: int = Field(default=8_000_000, gt=0)
     catalog_ttl_s: int = Field(default=6 * 3600, gt=0)
+    socrata_cache_ttl_s: float = Field(default=600, ge=0)
+    socrata_cache_max_entries: int = Field(default=256, gt=0)
 
     livekit_url: str = ""
     livekit_api_key: str = ""
     livekit_api_secret: SecretStr = SecretStr("")
     livekit_agent_name: str = "kognia-voice"
+    noise_model: str = Field(
+        default="quail_l", pattern="^(none|quail_l|quail_vf_s|quail_vf_l)$"
+    )
+    noise_enhancement_level: float | None = Field(default=None, ge=0, le=1)
+    turn_mode: str = Field(default="wake_word", pattern="^(open|wake_word)$")
+    follow_up_window_s: float = Field(default=8.0, ge=0, le=30)
     session_token_ttl_minutes: int = Field(default=30, gt=0, le=240)
 
     cors_origins: list[str] = ["http://localhost:4200"]

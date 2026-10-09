@@ -67,8 +67,16 @@ class IpsQueryService:
         self._catalog = catalog
         self._settings = settings
 
+    @property
+    def network_requests(self) -> int:
+        return self._client.requests_sent
+
     async def warm_up(self) -> None:
         await self._catalog.snapshot()
+
+    async def territory_names(self) -> list[str]:
+        """Department/district names as published in the dataset (STT keyterm hints)."""
+        return sorted((await self._catalog.snapshot()).places)
 
     async def resolve_filters(
         self, request: FilterRequest

@@ -19,6 +19,9 @@ EventType = Literal[
     "ips.query.completed",
     "ips.query.failed",
     "error.occurred",
+    "metrics.turn",
+    "turn.decision",
+    "turn.mode",
 ]
 
 

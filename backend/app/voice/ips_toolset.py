@@ -1,9 +1,10 @@
 import logging
+import time
 import uuid
 from collections.abc import Awaitable, Callable
 from typing import Any, Literal
 
-from livekit.agents import llm
+from livekit.agents import RunContext, llm
 from livekit.agents.llm import ToolError, function_tool
 from pydantic import BaseModel
 
@@ -13,6 +14,7 @@ from app.domain.models.dataset_columns import Dimension, Metric
 from app.domain.models.filter_request import FilterRequest
 from app.infrastructure.socrata.errors import SocrataError
 from app.voice.event_publisher import EventPublisher
+from app.voice.latency_metrics import LatencyMetricsService, ToolTiming
 
 logger = logging.getLogger("kognia.tools")
 
@@ -25,6 +27,13 @@ DimensionName = Literal[
     "descripcion_capacidad",
 ]
 MetricName = Literal["prestadores", "sedes", "registros", "capacidad_instalada"]
+
+FILLER_DELAY_S = 0.7
+FILLER_PHRASES = (
+    "Un momento, consulto los datos oficiales.",
+    "Déjame revisar la fuente oficial.",
+    "Ya lo consulto en los datos oficiales.",
+)
 
 _DIMENSIONS: dict[str, Dimension] = {
     "departamento": Dimension.DEPARTAMENTO,
@@ -39,13 +48,28 @@ _DIMENSIONS: dict[str, Dimension] = {
 class IpsToolset(llm.Toolset):
     """LLM-facing tools. The LLM only chooses typed parameters; SoQL is built server-side."""
 
-    def __init__(self, service: IpsQueryService, events: EventPublisher) -> None:
+    def __init__(
+        self,
+        service: IpsQueryService,
+        events: EventPublisher,
+        latency: LatencyMetricsService | None = None,
+    ) -> None:
         super().__init__(id="ips_tools")
         self._service = service
         self._events = events
+        self._latency = latency
+        self._filler_count = 0
+
+    def _filler(self, step: int) -> str | None:
+        if step > 0:
+            return None
+        phrase = FILLER_PHRASES[self._filler_count % len(FILLER_PHRASES)]
+        self._filler_count += 1
+        return phrase
 
     async def _run(
         self,
+        context: RunContext,
         tool: str,
         arguments: dict[str, Any],
         call: Callable[[], Awaitable[BaseModel | None]],
@@ -57,8 +81,13 @@ class IpsToolset(llm.Toolset):
             "ips.query.started",
             {"query_id": query_id, "tool": tool, "arguments": clean_args},
         )
+        started = time.perf_counter()
+        requests_before = self._service.network_requests
         try:
-            result = await call()
+            async with context.with_filler(
+                self._filler, delay=FILLER_DELAY_S, max_steps=1
+            ):
+                result = await call()
         except DomainError as exc:
             self._fail(query_id, tool, clean_args, str(exc))
             raise ToolError(str(exc)) from exc
@@ -66,6 +95,15 @@ class IpsToolset(llm.Toolset):
             logger.warning("tool %s failed: %r", tool, exc)
             self._fail(query_id, tool, clean_args, exc.user_message)
             raise ToolError(exc.user_message + " No hay datos para responder.") from exc
+        finally:
+            if self._latency is not None:
+                self._latency.on_tool(
+                    ToolTiming(
+                        tool=tool,
+                        duration_ms=round((time.perf_counter() - started) * 1000, 1),
+                        cache_hit=self._service.network_requests == requests_before,
+                    )
+                )
         self._events.publish(
             "ips.query.completed",
             {
@@ -90,6 +128,7 @@ class IpsToolset(llm.Toolset):
     @function_tool
     async def count_ips(
         self,
+        context: RunContext,
         departamento: str | None = None,
         municipio: str | None = None,
         naturaleza: Literal["Pública", "Privada", "Mixta"] | None = None,
@@ -115,6 +154,7 @@ class IpsToolset(llm.Toolset):
             grupo_capacidad=grupo_capacidad,
         )
         return await self._run(
+            context,
             "count_ips",
             request.model_dump(),
             lambda: self._service.count(request),
@@ -130,6 +170,7 @@ class IpsToolset(llm.Toolset):
     @function_tool
     async def group_ips(
         self,
+        context: RunContext,
         dimension: DimensionName,
         metrica: MetricName = "prestadores",
         top_n: int = 10,
@@ -167,6 +208,7 @@ class IpsToolset(llm.Toolset):
         if dimension not in _DIMENSIONS:
             raise ToolError(f"Dimensión no permitida: {dimension}")
         return await self._run(
+            context,
             "group_ips",
             {
                 "dimension": dimension,
@@ -192,6 +234,7 @@ class IpsToolset(llm.Toolset):
     @function_tool
     async def search_ips(
         self,
+        context: RunContext,
         nombre: str | None = None,
         departamento: str | None = None,
         municipio: str | None = None,
@@ -218,6 +261,7 @@ class IpsToolset(llm.Toolset):
                 "Indica al menos un nombre, departamento o municipio para buscar."
             )
         return await self._run(
+            context,
             "search_ips",
             {**request.model_dump(), "pagina": pagina},
             lambda: self._service.search(request, page=pagina, page_size=10),
@@ -241,7 +285,9 @@ class IpsToolset(llm.Toolset):
         )
 
     @function_tool
-    async def get_ips_details(self, codigo_sede: str) -> dict[str, Any]:
+    async def get_ips_details(
+        self, context: RunContext, codigo_sede: str
+    ) -> dict[str, Any]:
         """Detalle de una sede: prestador, ubicación, naturaleza, nivel y capacidad instalada.
 
         Usa el codigo_sede devuelto por search_ips; nunca inventes códigos.
@@ -259,6 +305,7 @@ class IpsToolset(llm.Toolset):
             return detail
 
         return await self._run(
+            context,
             "get_ips_details",
             {"codigo_sede": codigo_sede},
             call,
@@ -279,12 +326,13 @@ class IpsToolset(llm.Toolset):
         )
 
     @function_tool
-    async def get_dataset_overview(self) -> dict[str, Any]:
+    async def get_dataset_overview(self, context: RunContext) -> dict[str, Any]:
         """Describe la fuente oficial: nombre, cobertura, totales, campos, fecha de corte y límites.
 
         Úsala cuando pregunten qué datos hay, de cuándo son o qué no se puede saber con la fuente.
         """
         return await self._run(
+            context,
             "get_dataset_overview",
             {},
             self._service.overview,

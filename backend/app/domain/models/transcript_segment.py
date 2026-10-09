@@ -17,4 +17,5 @@ class TranscriptSegment(BaseModel):
     end_ms: int
     is_final: bool
     interrupted: bool = False
+    overlap_suspected: bool = False
     timestamp: datetime

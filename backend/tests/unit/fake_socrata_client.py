@@ -6,6 +6,7 @@ class FakeSocrataClient:
 
     def __init__(self, responses: list[list[dict[str, Any]]] | None = None) -> None:
         self.queries: list[str] = []
+        self.requests_sent = 0
         self._responses = list(responses or [])
 
     async def metadata(self) -> dict[str, Any]:

@@ -1,0 +1,203 @@
+{
+  "summary": {
+    "label": "baseline",
+    "turns_sent": 8,
+    "turns_measured": 6,
+    "failed_turns": [],
+    "e2e_latency": {
+      "n": 6,
+      "p50": 3976.5,
+      "p95": 5717.875
+    },
+    "end_of_turn_delay": {
+      "n": 6,
+      "p50": 697.55,
+      "p95": 2076.475
+    },
+    "transcription_delay": {
+      "n": 6,
+      "p50": 602.4000000000001,
+      "p95": 772.325
+    },
+    "llm_node_ttft": {
+      "n": 6,
+      "p50": 869.9000000000001,
+      "p95": 1493.65
+    },
+    "tts_node_ttfb": {
+      "n": 6,
+      "p50": 463.05,
+      "p95": 521.3
+    },
+    "socrata_ms": {
+      "n": 4,
+      "p50": 1022.1,
+      "p95": 1719.69
+    }
+  },
+  "turns": [
+    {
+      "turn_index": 1,
+      "user_message_id": "item_7430b160da57",
+      "stages_ms": {
+        "transcription_delay": 802.1,
+        "end_of_turn_delay": 823.6,
+        "on_user_turn_completed_delay": 0.1,
+        "llm_node_ttft": 792.4,
+        "llm_node_ttfs": 1054.7,
+        "tts_node_ttfb": 536.8,
+        "playback_latency": 0.0,
+        "e2e_latency": 4015.8
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 997.2,
+          "cache_hit": false
+        }
+      ],
+      "socrata_ms": 997.2,
+      "summary": {
+        "turns": 1,
+        "e2e_p50_ms": 4015.8,
+        "e2e_p95_ms": 4015.8,
+        "e2e_mean_ms": 4015.8,
+        "llm_ttft_p50_ms": 792.4
+      }
+    },
+    {
+      "turn_index": 2,
+      "user_message_id": "item_53df55c50057",
+      "stages_ms": {
+        "transcription_delay": 683.0,
+        "end_of_turn_delay": 707.2,
+        "on_user_turn_completed_delay": 0.1,
+        "llm_node_ttft": 828.2,
+        "llm_node_ttfs": 1159.8,
+        "tts_node_ttfb": 473.8,
+        "playback_latency": 1.0,
+        "e2e_latency": 3937.2
+      },
+      "tools": [
+        {
+          "tool": "group_ips",
+          "duration_ms": 653.6,
+          "cache_hit": false
+        }
+      ],
+      "socrata_ms": 653.6,
+      "summary": {
+        "turns": 2,
+        "e2e_p50_ms": 3976.5,
+        "e2e_p95_ms": 4011.9,
+        "e2e_mean_ms": 3976.5,
+        "llm_ttft_p50_ms": 810.3
+      }
+    },
+    {
+      "turn_index": 3,
+      "user_message_id": "item_6ba91df0afc0",
+      "stages_ms": {
+        "transcription_delay": 544.2,
+        "end_of_turn_delay": 568.6,
+        "on_user_turn_completed_delay": 0.1,
+        "llm_node_ttft": 1027.9,
+        "llm_node_ttfs": 1247.7,
+        "tts_node_ttfb": 452.3,
+        "playback_latency": 0.0,
+        "e2e_latency": 5073.7
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 1047.0,
+          "cache_hit": false
+        }
+      ],
+      "socrata_ms": 1047.0,
+      "summary": {
+        "turns": 3,
+        "e2e_p50_ms": 4015.8,
+        "e2e_p95_ms": 4967.9,
+        "e2e_mean_ms": 4342.2,
+        "llm_ttft_p50_ms": 828.2
+      }
+    },
+    {
+      "turn_index": 4,
+      "user_message_id": "item_3982d4ac356d",
+      "stages_ms": {
+        "transcription_delay": 346.3,
+        "end_of_turn_delay": 2494.1,
+        "on_user_turn_completed_delay": 0.1,
+        "llm_node_ttft": 911.6,
+        "llm_node_ttfs": 1208.5,
+        "tts_node_ttfb": 378.1,
+        "playback_latency": 0.0,
+        "e2e_latency": 5932.6
+      },
+      "tools": [
+        {
+          "tool": "group_ips",
+          "duration_ms": 1838.4,
+          "cache_hit": false
+        }
+      ],
+      "socrata_ms": 1838.4,
+      "summary": {
+        "turns": 4,
+        "e2e_p50_ms": 4544.8,
+        "e2e_p95_ms": 5803.8,
+        "e2e_mean_ms": 4739.8,
+        "llm_ttft_p50_ms": 869.9
+      }
+    },
+    {
+      "turn_index": 5,
+      "user_message_id": "item_2937282029e1",
+      "stages_ms": {
+        "transcription_delay": 443.0,
+        "end_of_turn_delay": 469.2,
+        "on_user_turn_completed_delay": 0.1,
+        "llm_node_ttft": 779.1,
+        "llm_node_ttfs": 909.7,
+        "tts_node_ttfb": 301.1,
+        "playback_latency": 1.0,
+        "e2e_latency": 1657.4
+      },
+      "tools": [],
+      "socrata_ms": 0,
+      "summary": {
+        "turns": 5,
+        "e2e_p50_ms": 4015.8,
+        "e2e_p95_ms": 5760.8,
+        "e2e_mean_ms": 4123.3,
+        "llm_ttft_p50_ms": 828.2
+      }
+    },
+    {
+      "turn_index": 6,
+      "user_message_id": "item_b0f787006e46",
+      "stages_ms": {
+        "transcription_delay": 660.6,
+        "end_of_turn_delay": 687.9,
+        "on_user_turn_completed_delay": 0.2,
+        "llm_node_ttft": 1648.9,
+        "llm_node_ttfs": 1746.2,
+        "tts_node_ttfb": 474.8,
+        "playback_latency": 0.0,
+        "e2e_latency": 2884.7
+      },
+      "tools": [],
+      "socrata_ms": 0,
+      "summary": {
+        "turns": 6,
+        "e2e_p50_ms": 3976.5,
+        "e2e_p95_ms": 5717.9,
+        "e2e_mean_ms": 3916.9,
+        "llm_ttft_p50_ms": 869.9
+      }
+    }
+  ],
+  "raw": []
+}

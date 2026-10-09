@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 from typing import Any
 
@@ -14,6 +15,7 @@ from app.infrastructure.socrata.errors import (
     SocrataTimeoutError,
     SocrataUnavailableError,
 )
+from app.infrastructure.socrata.query_cache import QueryCache
 
 logger = logging.getLogger("kognia.socrata")
 
@@ -33,6 +35,11 @@ class SocrataClient:
         self._settings = settings
         self._http = http_client
         self._backoff_base_s = backoff_base_s
+        self._cache = QueryCache(
+            ttl_s=settings.socrata_cache_ttl_s,
+            max_entries=settings.socrata_cache_max_entries,
+        )
+        self.requests_sent = 0
 
     def _headers(self) -> dict[str, str]:
         headers = {"Content-Type": "application/json", "Accept": "application/json"}
@@ -51,7 +58,13 @@ class SocrataClient:
             "page": {"pageNumber": page_number, "pageSize": page_size},
             "includeSynthetic": False,
         }
-        logger.info("socrata query", extra={"soql": soql, "page": page_number})
+        key = json.dumps(body, sort_keys=True, ensure_ascii=False)
+        return await self._cache.get_or_load(key, lambda: self._fetch_rows(body))
+
+    async def _fetch_rows(self, body: dict[str, Any]) -> list[dict[str, Any]]:
+        logger.info(
+            "socrata query: %s (page %s)", body["query"], body["page"]["pageNumber"]
+        )
         payload = await self._request("POST", self._settings.socrata_query_url, body)
         if not isinstance(payload, list) or not all(
             isinstance(r, dict) for r in payload
@@ -60,6 +73,9 @@ class SocrataClient:
         return payload
 
     async def metadata(self) -> dict[str, Any]:
+        return await self._cache.get_or_load("__metadata__", self._fetch_metadata)
+
+    async def _fetch_metadata(self) -> dict[str, Any]:
         payload = await self._request("GET", self._settings.socrata_metadata_url, None)
         if not isinstance(payload, dict):
             raise SocrataResponseError("Expected a JSON object for metadata")
@@ -69,6 +85,7 @@ class SocrataClient:
         attempts = self._settings.socrata_max_retries + 1
         last_error: SocrataError = SocrataUnavailableError("No attempt executed")
         for attempt in range(1, attempts + 1):
+            self.requests_sent += 1
             try:
                 response = await self._http.request(
                     method,
