@@ -30,3 +30,6 @@ Thumbs.db
 
 # Logs del agente: pueden contener tokens de sesión
 backend/bench/results/e2e/agent_*.log
+
+# Archivos de secretos para despliegue
+*.secrets

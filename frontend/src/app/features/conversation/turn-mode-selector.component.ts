@@ -25,8 +25,13 @@ const REASONS: Record<string, string> = {
   template: `
     <div class="space-y-2">
       <p class="text-xs text-kv-muted">
-        Habla con naturalidad: Kognia responde a tus preguntas y puedes interrumpirlo hablando. Las expresiones breves
-        (“sí”, “ok”) no generan respuesta y, si varias personas hablan a la vez, te pedirá repetir.
+        @if (store.turnMode() === 'wake_word') {
+          Empieza con <strong>“Kognia, …”</strong> (también respondo preguntas claras sobre IPS). Las demás conversaciones se
+          transcriben pero no se responden. Para interrumpir, di “Kognia”.
+        } @else {
+          Habla con naturalidad: Kognia responde a tus preguntas y puedes interrumpirlo hablando. Las expresiones breves
+          (“sí”, “ok”) no generan respuesta y, si varias personas hablan a la vez, te pedirá repetir.
+        }
       </p>
       @if (decision(); as d) {
         <p class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs {{ d.tone }}" aria-live="polite">

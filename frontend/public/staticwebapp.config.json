@@ -1,0 +1,9 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/geo/*", "/*.{js,css,svg,png,ico,json,geojson}"]
+  },
+  "mimeTypes": {
+    ".geojson": "application/geo+json"
+  }
+}

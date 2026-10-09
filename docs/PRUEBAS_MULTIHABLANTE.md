@@ -7,7 +7,8 @@ estas pruebas se considera aprobada sin el archivo exportado y el reporte del ev
 ## Preparación
 
 1. Un único portátil, un único micrófono (el integrado o uno de mesa), a 0,5–1,5 m de las personas.
-2. Abrir el dashboard, elegir el modo de turnos indicado en la tabla y pulsar **Iniciar conversación**.
+2. Arrancar el worker con el modo indicado en la tabla (`TURN_MODE=open`, por defecto, o
+   `TURN_MODE=wake_word`), abrir el dashboard y pulsar **Iniciar conversación**.
 3. Al terminar cada escenario: **Exportar** → guarda `kognia-<sesión>.json`.
 4. Evaluar:
 
@@ -43,7 +44,8 @@ Para escenarios sin archivo de referencia, crear uno con el mismo formato:
 | 14 | Pregunta larga con pausas de 1–2 s | Kognia | No se corta la pregunta | crear |
 | 15 | Acentos colombianos (paisa, costeño, rolo, pastuso…) | Kognia | WER comparable entre acentos | crear |
 
-Repetir 4, 9, 11 y 12 en **Conversación abierta** para comparar activaciones falsas e
+Los escenarios marcados “Kognia” usan `TURN_MODE=wake_word`. Repetir 4, 9, 11 y 12 con
+`TURN_MODE=open` (modo por defecto del dashboard) para comparar activaciones falsas e
 interrupciones entre modos.
 
 ## Registro de resultados

@@ -1,59 +1,56 @@
-# Frontend
+# Kognia Voice — frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.26.
-
-## Development server
-
-To start a local development server, run:
+Dashboard Angular 21 (componentes standalone, signals, detección de cambios sin zone.js, Tailwind 4).
 
 ```bash
-ng serve
+npm install
+npx ng serve                 # http://localhost:4200 (API en http://localhost:8000)
+npx ng test --watch=false    # 23 pruebas (Vitest)
+npx ng build                 # dist/frontend/browser
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La URL de la API está en `src/environments/environment.ts` (desarrollo) y
+`environment.production.ts` (producción).
 
-## Code scaffolding
+## Organización
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+| Ruta | Contenido |
+|---|---|
+| `core/models/` | Contratos TypeScript de eventos (`realtime-event.model.ts`), resultados de IPS y visualizaciones |
+| `core/services/voice-room.service.ts` | Sala LiveKit: conexión, micrófono, audio del agente, eventos, texto (`lk.chat`), modo de conversación, medición de reproducción |
+| `core/services/conversation-store.service.ts` | Estado de la sesión con signals; descarta eventos de otras sesiones o desordenados |
+| `core/services/agent-audio-monitor.ts` | Detecta cuándo el audio del agente es audible en el navegador |
+| `core/services/visualization-builder.ts` | Convierte resultados de herramientas en especificaciones de gráficos |
+| `core/services/dashboard-state.service.ts` | Consulta seleccionada, pestaña activa y actualización del mapa |
+| `core/services/ips-api.service.ts` | Lecturas de la API con caché y deduplicación |
+| `core/services/preferences.service.ts` | Tamaño de letra y subtítulos (persistidos en el navegador si es posible) |
+| `features/conversation/` | Panel de voz, orbe de audio, estado y última decisión de turno |
+| `features/transcription/` | Transcripción, línea temporal de hablantes, correcciones |
+| `features/viz/` | Métricas, barras, dona, tabla y panel de visualización |
+| `features/map/` | Mapa coroplético (`d3-geo`, carga diferida), catálogo nombre→ISO, escala por cuantiles |
+| `features/evidence/` | Procedencia de cada respuesta |
+| `features/emotions/`, `features/metrics/` | Sentimiento/emoción y latencia |
+| `public/geo/colombia-departamentos.geojson` | Límites geoBoundaries ADM1 (OpenStreetMap, ODbL 1.0) |
+| `public/staticwebapp.config.json` | Fallback de navegación para Azure Static Web Apps |
+
+## Conversación
+
+El modo de conversación lo decide el agente (`TURN_MODE` en el backend; por defecto `open`, conversación
+natural sin palabra de activación). El dashboard lo recibe en `session.started`/`turn.mode` y adapta
+sus indicaciones. El protocolo también admite cambiarlo con el atributo de participante
+`kognia.turn_mode` (el token incluye ese permiso), aunque la interfaz no expone ese control.
+
+## Diseño
+
+Tokens en `src/styles.css` (`--kv-*`). Los colores de datos (series, hablantes, rampa del mapa) son
+pasos oscuros de una paleta validada para daltonismo y contraste sobre `--kv-surface`; la identidad de
+cada hablante sigue un orden fijo (Hablante N → serie N).
+
+## Scripts de verificación
 
 ```bash
-ng generate component component-name
+node e2e/ui-check.mjs <carpeta>                                          # capturas 1920/1440/390, mapa, selección, consola
+node e2e/voice-e2e.mjs <audio.wav> <salida.json> [--screens <carpeta>]   # conversación real con el agente
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Ambos usan el Chrome instalado (`playwright-core`, sin descargar navegadores).

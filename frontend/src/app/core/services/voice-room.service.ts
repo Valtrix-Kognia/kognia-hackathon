@@ -9,7 +9,7 @@ import {
   RoomEvent,
   Track,
 } from 'livekit-client';
-import { EVENTS_TOPIC, PlaybackMeasurement, RealtimeEvent, TurnMode } from '../models/realtime-event.model';
+import { EVENTS_TOPIC, PlaybackMeasurement, RealtimeEvent } from '../models/realtime-event.model';
 import { AgentAudioMonitor } from './agent-audio-monitor';
 import { ConnectionState, MicState, VoiceSession } from '../models/voice-session.model';
 import { ConversationStore } from './conversation-store.service';
@@ -17,10 +17,7 @@ import { SessionApiService } from './session-api.service';
 import { ToastService } from './toast.service';
 
 const AGENT_TRANSCRIPTION_TOPIC = 'lk.transcription';
-const TURN_MODE_ATTRIBUTE = 'kognia.turn_mode';
 const CLIENT_METRICS_TOPIC = 'kognia.client_metrics';
-/** Natural conversation: Kognia answers without a wake word and can be interrupted by speaking. */
-const ACTIVATION_MODE: TurnMode = 'open';
 
 /**
  * Shared-microphone capture. Noise suppression runs once, server side (ai-coustics QUAIL_L,
@@ -171,10 +168,9 @@ export class VoiceRoomService implements OnDestroy {
     this.connection.set('connected');
     this.toasts.show(
       'success',
-      'Conectado. Habla con naturalidad: Kognia te está escuchando.',
+      'Conectado. Kognia te está escuchando.',
       4000,
     );
-    await room.localParticipant.setAttributes({ [TURN_MODE_ATTRIBUTE]: ACTIVATION_MODE }).catch(() => undefined);
     await this.setMicrophone(room, true);
     await this.resumeAudio();
     navigator.mediaDevices?.addEventListener('devicechange', this.onDeviceChange);
