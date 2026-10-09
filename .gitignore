@@ -33,3 +33,6 @@ backend/bench/results/e2e/agent_*.log
 
 # Archivos de secretos para despliegue
 *.secrets
+
+# Artefactos de construcción de Python
+build/
