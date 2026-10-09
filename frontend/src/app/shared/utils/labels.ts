@@ -27,34 +27,30 @@ export const DIMENSION_LABELS: Record<string, string> = {
 };
 
 export const SENTIMENT_META: Record<Sentiment, { label: string; dot: string; bar: string; text: string }> = {
-  positivo: { label: 'Positivo', dot: 'bg-emerald-500', bar: 'bg-emerald-500', text: 'text-emerald-700' },
-  neutral: { label: 'Neutral', dot: 'bg-slate-400', bar: 'bg-slate-400', text: 'text-slate-600' },
-  negativo: { label: 'Negativo', dot: 'bg-rose-500', bar: 'bg-rose-500', text: 'text-rose-700' },
+  positivo: { label: 'Positivo', dot: 'bg-emerald-500', bar: 'bg-emerald-500', text: 'text-emerald-300' },
+  neutral: { label: 'Neutral', dot: 'bg-slate-400', bar: 'bg-slate-400', text: 'text-slate-300' },
+  negativo: { label: 'Negativo', dot: 'bg-rose-500', bar: 'bg-rose-500', text: 'text-rose-300' },
 };
 
 export const EMOTION_META: Record<Emotion, { label: string; chip: string }> = {
-  alegria: { label: 'Alegría', chip: 'bg-amber-100 text-amber-800' },
-  tristeza: { label: 'Tristeza', chip: 'bg-sky-100 text-sky-800' },
-  enojo: { label: 'Enojo', chip: 'bg-rose-100 text-rose-800' },
-  miedo: { label: 'Miedo', chip: 'bg-violet-100 text-violet-800' },
-  sorpresa: { label: 'Sorpresa', chip: 'bg-fuchsia-100 text-fuchsia-800' },
-  asco: { label: 'Asco', chip: 'bg-lime-100 text-lime-800' },
-  neutral: { label: 'Neutral', chip: 'bg-slate-100 text-slate-700' },
+  alegria: { label: 'Alegría', chip: 'bg-amber-400/15 text-amber-200 ring-1 ring-amber-400/30' },
+  tristeza: { label: 'Tristeza', chip: 'bg-sky-400/15 text-sky-200 ring-1 ring-sky-400/30' },
+  enojo: { label: 'Enojo', chip: 'bg-rose-400/15 text-rose-200 ring-1 ring-rose-400/30' },
+  miedo: { label: 'Miedo', chip: 'bg-violet-400/15 text-violet-200 ring-1 ring-violet-400/30' },
+  sorpresa: { label: 'Sorpresa', chip: 'bg-fuchsia-400/15 text-fuchsia-200 ring-1 ring-fuchsia-400/30' },
+  asco: { label: 'Asco', chip: 'bg-lime-400/15 text-lime-200 ring-1 ring-lime-400/30' },
+  neutral: { label: 'Neutral', chip: 'bg-slate-400/15 text-slate-200 ring-1 ring-slate-400/30' },
 };
 
-const SPEAKER_PALETTE = [
-  'bg-sky-100 text-sky-800 ring-sky-200',
-  'bg-violet-100 text-violet-800 ring-violet-200',
-  'bg-amber-100 text-amber-800 ring-amber-200',
-  'bg-teal-100 text-teal-800 ring-teal-200',
-  'bg-pink-100 text-pink-800 ring-pink-200',
-];
+const SPEAKER_SLOTS = 8;
 
+/** Identity color of a speaker label: fixed categorical order, never by rank. */
 export function speakerColor(label: string): string {
-  if (label === 'Kognia') return 'bg-brand-700 text-white ring-brand-800';
+  if (label === 'Kognia') return 'var(--kv-violet)';
   const match = /Hablante (\d+)/.exec(label);
-  if (!match) return 'bg-slate-100 text-slate-600 ring-slate-200';
-  return SPEAKER_PALETTE[(Number(match[1]) - 1) % SPEAKER_PALETTE.length];
+  if (!match) return 'var(--kv-ink-subtle)';
+  const slot = Number(match[1]);
+  return slot <= SPEAKER_SLOTS ? `var(--kv-series-${slot})` : 'var(--kv-ink-subtle)';
 }
 
 export function formatNumber(value: number): string {

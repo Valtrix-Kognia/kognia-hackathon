@@ -121,6 +121,21 @@ export class VoiceRoomService implements OnDestroy {
     }
   }
 
+  /** Send a typed request; the agent's room input handles the 'lk.chat' topic. */
+  async sendText(text: string): Promise<boolean> {
+    const room = this.room;
+    const clean = text.trim();
+    if (!room || room.state !== 'connected' || !clean) return false;
+    try {
+      await room.localParticipant.sendText(clean, { topic: 'lk.chat' });
+      this.store.addTypedMessage(clean);
+      return true;
+    } catch {
+      this.toasts.show('error', 'No se pudo enviar el mensaje escrito.');
+      return false;
+    }
+  }
+
   async setTurnMode(mode: TurnMode): Promise<void> {
     this.store.turnMode.set(mode);
     if (!this.room) return;

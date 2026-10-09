@@ -17,6 +17,7 @@ const option = (name, fallback) => {
 const url = option('url', 'http://localhost:4200');
 const mode = option('mode', 'wake_word');
 const chromePath = option('chrome', 'C:/Program Files/Google/Chrome/Application/chrome.exe');
+const screensDir = option('screens', null);
 const wav = resolve(wavArg);
 
 const header = readFileSync(wav);
@@ -55,6 +56,17 @@ try {
 console.log(`conectado en ${Date.now() - started} ms; reproduciendo ${durationS.toFixed(1)} s de audio`);
 
 await page.waitForTimeout((durationS + 25) * 1000);
+
+if (screensDir) {
+  const { mkdirSync } = await import('node:fs');
+  mkdirSync(resolve(screensDir), { recursive: true });
+  await page.setViewportSize({ width: 1600, height: 1000 });
+  for (const tab of ['Visualización', 'Mapa', 'Evidencia', 'Análisis']) {
+    await page.getByRole('tab', { name: tab }).click();
+    await page.waitForTimeout(tab === 'Mapa' ? 2500 : 800);
+    await page.screenshot({ path: resolve(screensDir, `${tab}.png`) });
+  }
+}
 
 const downloadPromise = page.waitForEvent('download');
 await page.getByRole('button', { name: 'Exportar' }).click();

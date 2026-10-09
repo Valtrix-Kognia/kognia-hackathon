@@ -64,6 +64,10 @@ export class ConversationStore {
   );
   private awaiting: { turnId: string; action: TurnDecisionPayload['action']; decisionAt: number; speakingAt?: number } | null = null;
   private measurementSink: (m: PlaybackMeasurement) => void = () => undefined;
+  private sessionStartedAt = Date.now();
+  private typedCounter = 0;
+  /** Human corrections of transcript segments, kept apart from the original STT text. */
+  readonly corrections = signal<ReadonlyMap<string, string>>(new Map());
   private readonly decisionLog = signal<TurnDecisionPayload[]>([]);
 
   readonly segments = computed(() =>
@@ -91,6 +95,9 @@ export class ConversationStore {
     this.agentLive.set(null);
     this.lastDecision.set(null);
     this.decisionLog.set([]);
+    this.corrections.set(new Map());
+    this.sessionStartedAt = Date.now();
+    this.typedCounter = 0;
     this.decisionCounts.set({ ...EMPTY_COUNTS });
     this.latencyTurns.set([]);
     this.playback.set([]);
@@ -114,9 +121,43 @@ export class ConversationStore {
       decisions: this.decisionLog(),
       emotions: this.emotions(),
       latency_turns: this.latencyTurns(),
+      corrections: Object.fromEntries(this.corrections()),
       browser_playback: this.playback(),
       browser_playback_ms: this.browserPlaybackMs(),
     };
+  }
+
+  /** A request typed by the user (sent to the agent over lk.chat). */
+  addTypedMessage(text: string): void {
+    const sessionId = this.sessionId();
+    if (!sessionId || !text.trim()) return;
+    const now = Date.now() - this.sessionStartedAt;
+    const id = `txt-${++this.typedCounter}`;
+    this.segmentsById.update((m) =>
+      new Map(m).set(id, {
+        id,
+        session_id: sessionId,
+        role: 'user',
+        speaker_id: 'texto',
+        speaker_label: 'Texto escrito',
+        text: text.trim(),
+        start_ms: now,
+        end_ms: now,
+        is_final: true,
+        interrupted: false,
+        timestamp: new Date().toISOString(),
+      }),
+    );
+  }
+
+  setCorrection(segmentId: string, text: string | null): void {
+    this.corrections.update((m) => {
+      const next = new Map(m);
+      const original = this.segmentsById().get(segmentId)?.text;
+      if (!text || !text.trim() || text.trim() === original) next.delete(segmentId);
+      else next.set(segmentId, text.trim());
+      return next;
+    });
   }
 
   setMeasurementSink(sink: (m: PlaybackMeasurement) => void): void {

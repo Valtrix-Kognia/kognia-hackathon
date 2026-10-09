@@ -1,0 +1,20 @@
+{
+  "session_id": "kognia-476165241062aac0",
+  "exported_at": "2026-10-09T17:53:59.748Z",
+  "session_info": {
+    "stt": "deepgram/nova-3",
+    "llm": "google/gemini-2.5-flash",
+    "tts": "cartesia/sonic-3",
+    "diarization": true,
+    "noise_model": "quail_l",
+    "turn_mode": "wake_word"
+  },
+  "turn_mode": "wake_word",
+  "segments": [],
+  "speakers": {},
+  "decisions": [],
+  "emotions": [],
+  "latency_turns": [],
+  "browser_playback": [],
+  "browser_playback_ms": []
+}

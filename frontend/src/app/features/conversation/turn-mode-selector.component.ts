@@ -26,21 +26,21 @@ const REASONS: Record<string, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-2">
-      <div class="grid grid-cols-2 gap-1 rounded-xl bg-slate-100 p-1" role="radiogroup" aria-label="Modo de turnos">
+      <div class="grid grid-cols-2 gap-1 rounded-xl bg-kv-bg/60 p-1 ring-1 ring-kv-border" role="radiogroup" aria-label="Modo de turnos">
         @for (option of options; track option.mode) {
           <button
             type="button"
             role="radio"
             [attr.aria-checked]="store.turnMode() === option.mode"
             class="rounded-lg px-3 py-2 text-xs font-medium transition"
-            [class]="store.turnMode() === option.mode ? 'bg-white text-brand-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
+            [class]="store.turnMode() === option.mode ? 'bg-kv-elevated text-kv-ink shadow-sm ring-1 ring-kv-border' : 'text-kv-muted hover:text-kv-ink'"
             (click)="select(option.mode)"
           >
             {{ option.label }}
           </button>
         }
       </div>
-      <p class="text-xs text-slate-500">
+      <p class="text-xs text-kv-muted">
         @if (store.turnMode() === 'wake_word') {
           Empieza con <strong>“Kognia, …”</strong> (también respondo preguntas claras sobre IPS). Las demás conversaciones se transcriben pero no se responden.
           Durante 8 s puedes hacer una pregunta de seguimiento sin repetirlo. Para interrumpir, di “Kognia”.
@@ -69,10 +69,10 @@ export class TurnModeSelectorComponent {
     const d = this.store.lastDecision();
     if (!d) return null;
     const label = REASONS[d.reason] ?? d.reason;
-    if (d.action === 'respond') return { label, icon: ShieldCheck, tone: 'bg-emerald-50 text-emerald-700' };
-    if (d.action === 'ask_repeat') return { label, icon: RefreshCcw, tone: 'bg-amber-50 text-amber-800' };
-    if (d.action === 'hold' || d.action === 'listen') return { label, icon: MessageCircleQuestion, tone: 'bg-sky-50 text-sky-800' };
-    return { label, icon: d.reason === 'no_dirigido_a_kognia' ? VolumeX : MessageCircleQuestion, tone: 'bg-slate-100 text-slate-600' };
+    if (d.action === 'respond') return { label, icon: ShieldCheck, tone: 'bg-emerald-500/10 text-emerald-200' };
+    if (d.action === 'ask_repeat') return { label, icon: RefreshCcw, tone: 'bg-amber-400/10 text-amber-200' };
+    if (d.action === 'hold' || d.action === 'listen') return { label, icon: MessageCircleQuestion, tone: 'bg-sky-500/10 text-sky-200' };
+    return { label, icon: d.reason === 'no_dirigido_a_kognia' ? VolumeX : MessageCircleQuestion, tone: 'bg-kv-elevated text-kv-muted' };
   });
 
   protected select(mode: TurnMode): void {

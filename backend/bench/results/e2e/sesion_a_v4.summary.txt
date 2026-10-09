@@ -1,0 +1,103 @@
+{
+  "interventions": 13,
+  "decision_matches_expected": "10/13",
+  "failed": [
+    {
+      "category": "larga_con_pausa",
+      "text": "digas cuántos prestadores públicos hay en Antioquia.",
+      "expected": "respond",
+      "action": "ignore",
+      "reason": "no_dirigido_a_kognia",
+      "activation": "ninguna"
+    },
+    {
+      "category": "solo_palabra_activacion",
+      "text": "Kognia.",
+      "expected": "respond",
+      "action": "sin_decision",
+      "reason": null,
+      "activation": null
+    },
+    {
+      "category": "ambiental",
+      "text": "Oye, ¿viste el partido de anoche? Estuvo buenísimo.",
+      "expected": "ignore",
+      "action": "sin_decision",
+      "reason": null,
+      "activation": null
+    }
+  ],
+  "first_audio_ms": {
+    "n": 2,
+    "p50": 4914.2,
+    "p95": 4914.2
+  },
+  "end_of_turn_ms": {
+    "n": 7,
+    "p50": 802.9,
+    "p95": 861.3
+  },
+  "llm_ttft_ms": {
+    "n": 2,
+    "p50": 1684.1,
+    "p95": 1684.1
+  },
+  "tts_ttfb_ms": {
+    "n": 2,
+    "p50": 456.0,
+    "p95": 456.0
+  },
+  "socrata_http_ms": {
+    "n": 4,
+    "p50": 0.0,
+    "p95": 0.0
+  },
+  "browser_decision_to_audible_ms": {
+    "n": 1,
+    "p50": 4344,
+    "p95": 4344
+  },
+  "browser_superseded": 3,
+  "by_category": {
+    "corta": {
+      "ok": "1/1",
+      "first_audio_p50": 4914.2
+    },
+    "larga_con_pausa": {
+      "ok": "1/2",
+      "first_audio_p50": null
+    },
+    "solo_palabra_activacion": {
+      "ok": "1/2",
+      "first_audio_p50": null
+    },
+    "variante_cognia": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "ambiental": {
+      "ok": "1/2",
+      "first_audio_p50": null
+    },
+    "variante_konia": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "dominio_sin_activacion": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "tercera_persona": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "cuarta_persona": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "fuera_de_fuente": {
+      "ok": "1/1",
+      "first_audio_p50": 4914.2
+    }
+  }
+}

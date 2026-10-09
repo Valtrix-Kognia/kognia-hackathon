@@ -1,0 +1,1 @@
+{"registros":469,"prestadores":139,"sedes":148,"metadata":{"dataset_id":"s2ru-bqt6","source":"https://www.datos.gov.co/api/v3/views/s2ru-bqt6/query.json","queried_at":"2026-10-09T18:13:49.923206Z","filters":{"departamento":"Quindío"},"limitations":["Cada fila del dataset es una línea de capacidad instalada de una sede; una fila no equivale a una IPS."]}}
