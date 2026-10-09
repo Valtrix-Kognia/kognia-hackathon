@@ -51,6 +51,7 @@ class SessionTokenService:
                     can_subscribe=True,
                     can_publish_data=True,
                     can_publish_sources=["microphone"],
+                    can_update_own_metadata=True,
                 )
             )
             .with_room_config(

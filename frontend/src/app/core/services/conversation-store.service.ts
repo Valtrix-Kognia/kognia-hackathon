@@ -51,7 +51,7 @@ export class ConversationStore {
   readonly queries = signal<TrackedQuery[]>([]);
   readonly lastError = signal<ErrorPayload | null>(null);
   readonly agentLive = signal<AgentLiveText | null>(null);
-  readonly turnMode = signal<TurnMode>('wake_word');
+  readonly turnMode = signal<TurnMode>('open');
   readonly lastDecision = signal<TurnDecisionPayload | null>(null);
   readonly decisionCounts = signal<Record<TurnDecisionPayload['action'], number>>({ ...EMPTY_COUNTS });
   readonly latencyTurns = signal<TurnLatencyPayload[]>([]);

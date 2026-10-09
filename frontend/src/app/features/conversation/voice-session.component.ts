@@ -35,11 +35,11 @@ type OrbState =
 const STATES: Record<OrbState, { label: string; hint: string; icon: typeof Ear; tone: string }> = {
   desconectado: { label: 'Desconectado', hint: 'Inicia una conversación para hablar con Kognia', icon: PowerOff, tone: 'text-kv-muted' },
   conectando: { label: 'Conectando', hint: 'Preparando la sala de voz segura', icon: Loader, tone: 'text-amber-300' },
-  escuchando: { label: 'Escuchando', hint: 'Di “Kognia…” y haz tu pregunta', icon: Ear, tone: 'text-emerald-300' },
+  escuchando: { label: 'Escuchando', hint: 'Haz tu pregunta con naturalidad', icon: Ear, tone: 'text-emerald-300' },
   usuario_hablando: { label: 'Te escucho', hint: 'Transcribiendo en vivo', icon: Mic, tone: 'text-cyan-300' },
   procesando: { label: 'Procesando', hint: 'Interpretando la pregunta', icon: Sparkles, tone: 'text-blue-300' },
   consultando: { label: 'Consultando datos', hint: 'API oficial datos.gov.co', icon: Database, tone: 'text-violet-300' },
-  respondiendo: { label: 'Kognia responde', hint: 'Puedes interrumpir diciendo “Kognia”', icon: AudioLines, tone: 'text-violet-200' },
+  respondiendo: { label: 'Kognia responde', hint: 'Puedes interrumpir hablando', icon: AudioLines, tone: 'text-violet-200' },
   error: { label: 'Sin conexión', hint: 'Reconecta para continuar', icon: CircleAlert, tone: 'text-red-300' },
 };
 

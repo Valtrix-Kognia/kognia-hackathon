@@ -45,6 +45,7 @@ def test_create_session_returns_scoped_token_without_secrets() -> None:
     claims = jwt.decode(body["token"], options={"verify_signature": False})
     assert claims["video"]["room"] == body["room_name"]
     assert claims["video"]["roomJoin"] is True
+    assert claims["video"]["canUpdateOwnMetadata"] is True
     assert claims["roomConfig"]["agents"][0]["agentName"] == "kognia-voice"
 
 

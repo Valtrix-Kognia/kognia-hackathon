@@ -19,8 +19,8 @@ import { ToastService } from './toast.service';
 const AGENT_TRANSCRIPTION_TOPIC = 'lk.transcription';
 const TURN_MODE_ATTRIBUTE = 'kognia.turn_mode';
 const CLIENT_METRICS_TOPIC = 'kognia.client_metrics';
-/** The dashboard always uses explicit activation ("Kognia, …") for the shared microphone. */
-const ACTIVATION_MODE: TurnMode = 'wake_word';
+/** Natural conversation: Kognia answers without a wake word and can be interrupted by speaking. */
+const ACTIVATION_MODE: TurnMode = 'open';
 
 /**
  * Shared-microphone capture. Noise suppression runs once, server side (ai-coustics QUAIL_L,
@@ -171,7 +171,7 @@ export class VoiceRoomService implements OnDestroy {
     this.connection.set('connected');
     this.toasts.show(
       'success',
-      'Conectado. Empieza tus preguntas con “Kognia…”.',
+      'Conectado. Habla con naturalidad: Kognia te está escuchando.',
       4000,
     );
     await room.localParticipant.setAttributes({ [TURN_MODE_ATTRIBUTE]: ACTIVATION_MODE }).catch(() => undefined);

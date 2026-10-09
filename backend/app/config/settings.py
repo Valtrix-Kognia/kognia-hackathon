@@ -1,7 +1,9 @@
+import json
 from functools import lru_cache
+from typing import Annotated
 
 from pydantic import Field, SecretStr, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -31,17 +33,19 @@ class Settings(BaseSettings):
     tool_filler_delay_s: float = Field(default=0.7, le=10)
     endpointing_min_delay_s: float = Field(default=0.5, ge=0.1, le=2.0)
     endpointing_max_delay_s: float = Field(default=3.0, ge=0.5, le=6.0)
-    turn_mode: str = Field(default="wake_word", pattern="^(open|wake_word)$")
+    turn_mode: str = Field(default="open", pattern="^(open|wake_word)$")
     follow_up_window_s: float = Field(default=8.0, ge=0, le=30)
     session_token_ttl_minutes: int = Field(default=30, gt=0, le=240)
 
-    cors_origins: list[str] = ["http://localhost:4200"]
+    cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:4200"]
     rate_limit_per_minute: int = Field(default=60, gt=0)
 
     @field_validator("cors_origins", mode="before")
     @classmethod
     def _split_origins(cls, value: object) -> object:
-        if isinstance(value, str) and not value.startswith("["):
+        if isinstance(value, str):
+            if value.strip().startswith("["):
+                return json.loads(value)
             return [origin.strip() for origin in value.split(",") if origin.strip()]
         return value
 
