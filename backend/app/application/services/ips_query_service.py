@@ -2,6 +2,7 @@ import asyncio
 from datetime import UTC, datetime
 from typing import Any
 
+from app.application.services.aggregate_cache import AggregateCache
 from app.application.services.value_catalog import NIVEL_SIN_DATO, ValueCatalog
 from app.config.settings import Settings
 from app.domain.errors import InvalidIdentifierError
@@ -61,17 +62,24 @@ class IpsQueryService:
     """Domain queries over dataset s2ru-bqt6. All SoQL is built from whitelisted parts."""
 
     def __init__(
-        self, client: SocrataClient, catalog: ValueCatalog, settings: Settings
+        self,
+        client: SocrataClient,
+        catalog: ValueCatalog,
+        settings: Settings,
+        aggregates: AggregateCache | None = None,
     ) -> None:
         self._client = client
         self._catalog = catalog
         self._settings = settings
+        self._aggregates = aggregates
 
     @property
     def network_requests(self) -> int:
         return self._client.requests_sent
 
     async def warm_up(self) -> None:
+        if self._aggregates:
+            self._aggregates.start_loading()
         await self._catalog.snapshot()
 
     async def territory_names(self) -> list[str]:
@@ -132,6 +140,19 @@ class IpsQueryService:
 
     async def count(self, request: FilterRequest) -> CountResult:
         filters, notes = await self.resolve_filters(request)
+        cached = self._cached_counts(filters)
+        if cached is not None:
+            values, fetched_at = cached
+            return CountResult(
+                registros=values[Metric.REGISTROS],
+                prestadores=values[Metric.PRESTADORES],
+                sedes=values[Metric.SEDES],
+                metadata=self._metadata(
+                    filters,
+                    [ROW_UNIT_NOTE, *notes, _aggregate_note(fetched_at)],
+                    fetched_at,
+                ),
+            )
         query = SoqlQuery(
             projections=[
                 Projection(METRIC_EXPRESSIONS[Metric.REGISTROS], "registros"),
@@ -160,6 +181,28 @@ class IpsQueryService:
         top_n = max(1, min(top_n, MAX_TOP_N))
         filters, notes = await self.resolve_filters(request)
         column = Column(dimension.value)
+        ranked = self._cached_ranking(dimension, metric, filters)
+        if ranked is not None:
+            rows_cached, fetched_at = ranked
+            rows_cached.sort(key=lambda r: (r[1], r[0]) if ascending else (-r[1], r[0]))
+            notes.append(
+                "La columna departamento incluye distritos reportados por separado "
+                "(Barranquilla, Cartagena, Santa Marta, Cali y Buenaventura)."
+            )
+            return GroupResult(
+                dimension=dimension.value,
+                metric=metric,
+                metric_description=METRIC_DESCRIPTIONS[metric],
+                buckets=[
+                    GroupBucket(label=lbl, value=val)
+                    for lbl, val in rows_cached[:top_n]
+                ],
+                metadata=self._metadata(
+                    filters,
+                    [ROW_UNIT_NOTE, *notes, _aggregate_note(fetched_at)],
+                    fetched_at,
+                ),
+            )
         query = SoqlQuery(
             projections=[column, Projection(METRIC_EXPRESSIONS[metric], "valor")],
             group_by=[column],
@@ -310,14 +353,57 @@ class IpsQueryService:
                 [Column.NOMBRE_PRESTADOR, Column.NOMBRE_SEDE], filters.nombre
             )
 
-    def _metadata(self, filters: IpsFilters, limitations: list[str]) -> QueryMetadata:
+    def _cached_counts(self, filters: IpsFilters):
+        if self._aggregates is None or any(
+            (
+                filters.municipios,
+                filters.nivel_atencion,
+                filters.grupo_capacidad,
+                filters.nombre,
+            )
+        ):
+            return None
+        return self._aggregates.lookup(filters.departamento, filters.naturaleza)
+
+    def _cached_ranking(
+        self, dimension: Dimension, metric: Metric, filters: IpsFilters
+    ):
+        if (
+            self._aggregates is None
+            or dimension is not Dimension.DEPARTAMENTO
+            or any(
+                (
+                    filters.departamento,
+                    filters.municipios,
+                    filters.nivel_atencion,
+                    filters.grupo_capacidad,
+                    filters.nombre,
+                )
+            )
+        ):
+            return None
+        return self._aggregates.ranking(metric, filters.naturaleza)
+
+    def _metadata(
+        self,
+        filters: IpsFilters,
+        limitations: list[str],
+        queried_at: datetime | None = None,
+    ) -> QueryMetadata:
         return QueryMetadata(
             dataset_id=self._settings.socrata_dataset_id,
             source=self._settings.socrata_query_url,
-            queried_at=datetime.now(UTC),
+            queried_at=queried_at or datetime.now(UTC),
             filters=filters.describe(),
             limitations=list(dict.fromkeys(limitations)),
         )
+
+
+def _aggregate_note(fetched_at: datetime) -> str:
+    return (
+        "Cifra tomada de los agregados descargados de la API oficial a las "
+        f"{fetched_at.strftime('%H:%M')} UTC."
+    )
 
 
 def _to_int(value: Any) -> int:

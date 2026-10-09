@@ -66,16 +66,25 @@ describe('ConversationStore', () => {
     expect(store.latestQuery()?.status).toBe('completed');
   });
 
-  it('tracks turn decisions, mode and browser playback latency', () => {
+  it('measures browser playback per turn and marks superseded turns', () => {
+    const sent: unknown[] = [];
+    store.setMeasurementSink((m) => sent.push(m));
     store.apply(event('turn.mode', 1, { mode: 'open' }));
     expect(store.turnMode()).toBe('open');
-    store.apply(event('turn.decision', 2, { action: 'ignore', reason: 'muletilla', mode: 'open', text: 'ok' }));
-    store.markAgentAudible(1000);
-    expect(store.browserPlaybackMs()).toEqual([]);
-    store.apply(event('turn.decision', 3, { action: 'respond', reason: 'conversacion_abierta', mode: 'open', text: '¿Cuántas?' }));
+    const decision = (seq: number, turn_id: string, action: string) =>
+      event('turn.decision', seq, { turn_id, action, reason: 'x', mode: 'open', activation: 'ninguna', text: '', merged_from: [] });
+    store.apply(decision(2, 't1', 'ignore'));
+    store.markAgentAudible(performance.now() + 10);
+    expect(store.playback()).toEqual([]);
+    store.apply(decision(3, 't2', 'respond'));
+    store.apply(decision(4, 't3', 'respond'));
+    store.apply({ ...event('agent.speaking', 5, {}), turn_id: 't3' });
     store.markAgentAudible(performance.now() + 1500);
-    expect(store.browserPlaybackMs().length).toBe(1);
-    expect(store.decisionCounts()).toEqual({ respond: 1, ignore: 1, ask_repeat: 0 });
+    const statuses = store.playback().map((m) => [m.turn_id, m.status]);
+    expect(statuses).toEqual([['t2', 'reemplazado'], ['t3', 'medido']]);
+    expect(store.playback()[1].speaking_event_to_audible_ms).toBeGreaterThan(0);
+    expect(sent.length).toBe(2);
+    expect(store.decisionCounts().respond).toBe(2);
   });
 
   it('resets everything on a new session', () => {

@@ -6,9 +6,12 @@ import { VoiceRoomService } from '../../core/services/voice-room.service';
 
 const REASONS: Record<string, string> = {
   palabra_activacion: 'Respondiendo: se dijo “Kognia”',
-  solo_palabra_activacion: 'Respondiendo: se dijo “Kognia”',
+  solo_palabra_activacion: 'Te escucho: haz tu pregunta',
   seguimiento: 'Respondiendo: pregunta de seguimiento',
   pregunta_sobre_ips: 'Respondiendo: pregunta clara sobre IPS',
+  solicitud_consolidada: 'Respondiendo: solicitud unida (venía en varias partes)',
+  solicitud_incompleta: 'Esperando el resto de la pregunta…',
+  activacion_ambigua: 'Ignorado: “Kognia” no se reconoció con claridad',
   conversacion_abierta: 'Respondiendo',
   no_dirigido_a_kognia: 'Ignorado: no iba dirigido a Kognia',
   muletilla: 'Ignorado: expresión breve',
@@ -68,6 +71,7 @@ export class TurnModeSelectorComponent {
     const label = REASONS[d.reason] ?? d.reason;
     if (d.action === 'respond') return { label, icon: ShieldCheck, tone: 'bg-emerald-50 text-emerald-700' };
     if (d.action === 'ask_repeat') return { label, icon: RefreshCcw, tone: 'bg-amber-50 text-amber-800' };
+    if (d.action === 'hold' || d.action === 'listen') return { label, icon: MessageCircleQuestion, tone: 'bg-sky-50 text-sky-800' };
     return { label, icon: d.reason === 'no_dirigido_a_kognia' ? VolumeX : MessageCircleQuestion, tone: 'bg-slate-100 text-slate-600' };
   });
 

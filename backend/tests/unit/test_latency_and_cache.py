@@ -12,25 +12,58 @@ def test_percentile_interpolates() -> None:
     assert percentile([1.0, 2.0, 3.0, 4.0], 50) == 2.5
 
 
-def test_turn_breakdown_and_first_audio() -> None:
-    service = LatencyMetricsService()
-    service.on_user_message(
-        "m1",
-        {
-            "end_of_turn_delay": 0.5,
-            "transcription_delay": 0.2,
-            "stopped_speaking_at": 1000.0,
-        },
+class Clocks:
+    def __init__(self) -> None:
+        self.perf = 100.0
+        self.wall = 1000.0
+
+    def advance(self, seconds: float) -> None:
+        self.perf += seconds
+        self.wall += seconds
+
+
+def test_turn_trace_correlates_stages_tools_and_browser() -> None:
+    clocks = Clocks()
+    published: list[tuple[str, dict]] = []
+    service = LatencyMetricsService(
+        publish=lambda kind, data: published.append((kind, data)),
+        perf_clock=lambda: clocks.perf,
+        wall_clock=lambda: clocks.wall,
     )
-    service.on_tool(ToolTiming("count_ips", 800.0, cache_hit=False))
+    service.start_turn("t1", "respond")
+    service.on_user_message({"end_of_turn_delay": 0.5, "stopped_speaking_at": 999.4})
+    clocks.advance(0.2)
+    service.mark("llm_start", numbered=True)
+    clocks.advance(0.9)
+    service.mark("llm_first_token", numbered=True)
+    service.on_tool(ToolTiming("count_ips", 800.0, cache_hit=False, http_ms=650.0))
+    clocks.advance(1.0)
+    service.mark("llm_start", numbered=True)
     assert service.on_agent_message({}) is None
-    service.on_agent_speaking(1001.5)
-    payload = service.on_agent_message({"e2e_latency": 3.0, "llm_node_ttft": 0.8})
+    clocks.advance(0.5)
+    service.on_agent_speaking(clocks.wall)
+    payload = service.on_agent_message({"e2e_latency": 3.2, "llm_node_ttft": 0.8})
     assert payload is not None
-    assert payload["stages_ms"]["first_audio"] == 1500.0
-    assert payload["stages_ms"]["e2e_latency"] == 3000.0
-    assert payload["socrata_ms"] == 800.0
-    assert payload["summary"]["e2e_p50_ms"] == 3000.0
+    assert payload["turn_id"] == "t1"
+    assert payload["marks_ms"]["user_stopped"] == -600.0
+    assert payload["marks_ms"]["llm_start_1"] == 200.0
+    assert payload["marks_ms"]["llm_start_2"] == 2100.0
+    assert payload["stages_ms"]["first_audio"] == 3200.0
+    assert payload["socrata_http_ms"] == 650.0
+    assert published[-1][0] == "metrics.turn"
+    service.on_client_metrics("t1", {"decision_to_audible_ms": 2900})
+    assert published[-1][0] == "metrics.client"
+    assert service.summary()["browser_audible_p50_ms"] == 2900
+
+
+def test_unanswered_turn_is_closed_when_next_starts_and_late_events_attach() -> None:
+    service = LatencyMetricsService()
+    service.start_turn("t1", "respond")
+    service.start_turn("t2", "ignore")
+    service.annotate("t1", "speech_interrupted")
+    assert service.current_turn_id == "t2"
+    service.close_without_llm("ignorado")
+    assert service.current_turn_id is None
 
 
 async def test_cache_hits_and_dedupes_inflight() -> None:

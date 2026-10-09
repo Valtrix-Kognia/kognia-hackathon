@@ -1,0 +1,247 @@
+{
+  "summary": {
+    "A_actual": {
+      "n": 8,
+      "ttft_p50_ms": 1935.0,
+      "ttft_p95_ms": 2832.2,
+      "tool_correct": "7/8"
+    },
+    "B_reasoning_none": {
+      "n": 8,
+      "ttft_p50_ms": 1530.6,
+      "ttft_p95_ms": 2824.0,
+      "tool_correct": "6/8"
+    },
+    "C_prompt_compacto": {
+      "n": 8,
+      "ttft_p50_ms": 2123.4,
+      "ttft_p95_ms": 3985.7,
+      "tool_correct": "6/8"
+    },
+    "D_historial_20": {
+      "n": 8,
+      "ttft_p50_ms": 2196.6,
+      "ttft_p95_ms": 2429.9,
+      "tool_correct": "8/8"
+    },
+    "E_flash_lite": {
+      "n": 8,
+      "ttft_p50_ms": 1491.0,
+      "ttft_p95_ms": 1975.9,
+      "tool_correct": "5/8"
+    }
+  },
+  "samples": {
+    "A_actual": [
+      {
+        "ttft_ms": 3125.0,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1943.1,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1449.2,
+        "tool": "search_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2262.8,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1927.0,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1015.8,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2288.4,
+        "tool": null,
+        "ok": false
+      },
+      {
+        "ttft_ms": 1353.6,
+        "tool": "group_ips",
+        "ok": true
+      }
+    ],
+    "B_reasoning_none": [
+      {
+        "ttft_ms": 2534.6,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1126.8,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2677.4,
+        "tool": "search_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2902.9,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1154.7,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 934.2,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1906.5,
+        "tool": null,
+        "ok": false
+      },
+      {
+        "ttft_ms": 1086.4,
+        "tool": null,
+        "ok": false
+      }
+    ],
+    "C_prompt_compacto": [
+      {
+        "ttft_ms": 1010.8,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2246.9,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1686.8,
+        "tool": "search_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 3017.2,
+        "tool": null,
+        "ok": false
+      },
+      {
+        "ttft_ms": 2095.5,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1769.6,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 4507.2,
+        "tool": "search_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2151.4,
+        "tool": null,
+        "ok": false
+      }
+    ],
+    "D_historial_20": [
+      {
+        "ttft_ms": 1618.3,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2327.2,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2288.5,
+        "tool": "search_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2472.3,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 975.7,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2351.1,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 2104.6,
+        "tool": "search_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1473.1,
+        "tool": "count_ips",
+        "ok": true
+      }
+    ],
+    "E_flash_lite": [
+      {
+        "ttft_ms": 1651.0,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1926.6,
+        "tool": null,
+        "ok": false
+      },
+      {
+        "ttft_ms": 2002.4,
+        "tool": null,
+        "ok": false
+      },
+      {
+        "ttft_ms": 1841.0,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 998.5,
+        "tool": "count_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1330.9,
+        "tool": "group_ips",
+        "ok": true
+      },
+      {
+        "ttft_ms": 1089.5,
+        "tool": null,
+        "ok": false
+      },
+      {
+        "ttft_ms": 1034.8,
+        "tool": "count_ips",
+        "ok": true
+      }
+    ]
+  },
+  "prompt_chars": 2602
+}

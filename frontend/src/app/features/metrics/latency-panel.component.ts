@@ -34,7 +34,12 @@ const STAGES: { key: 'end_of_turn_delay' | 'transcription_delay' | 'llm_node_ttf
 
         @if (last(); as turn) {
           <div>
-            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">Último turno</p>
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+              Último turno · <span class="font-mono normal-case">{{ turn.turn_id }}</span>
+              @if (browserForLast(); as b) {
+                · navegador {{ b }}
+              }
+            </p>
             <ul class="space-y-1.5 text-xs">
               @for (stage of lastStages(); track stage.label) {
                 <li class="grid grid-cols-[7.5rem_1fr_4rem] items-center gap-2">
@@ -66,13 +71,21 @@ export class LatencyPanelComponent {
 
   protected readonly kpis = computed(() => {
     const summary = this.last()?.summary;
-    const browser = this.store.browserPlaybackMs();
+    const browser = [...this.store.browserPlaybackMs()];
     const fmt = (v: number | null | undefined) => (v == null ? '—' : `${(v / 1000).toFixed(2)} s`);
     return [
       { label: 'Primer audio p50 / p95', value: `${fmt(summary?.first_audio_p50_ms)} / ${fmt(summary?.first_audio_p95_ms)}` },
       { label: 'Respuesta p50 / p95', value: `${fmt(summary?.e2e_p50_ms)} / ${fmt(summary?.e2e_p95_ms)}` },
       { label: 'Reproducción en navegador p50', value: fmt(percentile(browser, 50)) },
     ];
+  });
+
+  protected readonly browserForLast = computed(() => {
+    const turn = this.last();
+    if (!turn) return null;
+    const m = this.store.playback().find((p) => p.turn_id === turn.turn_id);
+    if (!m) return null;
+    return m.status === 'medido' ? `${m.decision_to_audible_ms} ms` : 'reemplazado';
   });
 
   protected readonly lastStages = computed(() => {

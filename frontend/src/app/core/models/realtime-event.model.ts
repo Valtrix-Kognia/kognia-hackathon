@@ -18,12 +18,15 @@ export type EventType =
   | 'error.occurred'
   | 'metrics.turn'
   | 'turn.decision'
-  | 'turn.mode';
+  | 'turn.mode'
+  | 'metrics.client'
+  | 'agent.interrupted';
 
 export interface RealtimeEvent<T = unknown> {
   type: EventType;
   session_id: string;
   seq: number;
+  turn_id?: string | null;
   emitted_at: string;
   payload: T;
 }
@@ -98,14 +101,22 @@ export interface SessionStartedPayload {
 export type TurnMode = 'open' | 'wake_word';
 
 export interface TurnDecisionPayload {
-  action: 'respond' | 'ignore' | 'ask_repeat';
+  turn_id: string;
+  action: 'respond' | 'ignore' | 'ask_repeat' | 'hold' | 'listen';
   reason: string;
   mode: TurnMode;
+  activation: 'confirmada' | 'probable' | 'ambigua' | 'ninguna';
   text: string;
+  merged_from: string[];
 }
 
 export interface TurnLatencyPayload {
-  turn_index: number;
+  turn_id: string;
+  decision: string;
+  outcome: string;
+  marks_ms: Record<string, number>;
+  socrata_http_ms: number;
+  events: { name: string; at_ms: number }[];
   stages_ms: Partial<
     Record<
       | 'transcription_delay'
@@ -126,7 +137,17 @@ export interface TurnLatencyPayload {
     e2e_p95_ms: number | null;
     first_audio_p50_ms: number | null;
     first_audio_p95_ms: number | null;
+    browser_audible_p50_ms: number | null;
+    browser_audible_p95_ms: number | null;
   };
+}
+
+export interface PlaybackMeasurement {
+  turn_id: string;
+  action: TurnDecisionPayload['action'];
+  status: 'medido' | 'reemplazado';
+  decision_to_audible_ms?: number;
+  speaking_event_to_audible_ms?: number;
 }
 
 export interface ErrorPayload {

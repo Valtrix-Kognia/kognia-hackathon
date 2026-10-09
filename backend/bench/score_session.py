@@ -46,11 +46,24 @@ def main(export_path: Path, reference_path: Path) -> None:
             matches.append((ref, None))
 
     persons = sorted({r["person"] for r in reference})
-    labels = sorted({s["speaker_label"] for _, s in matches if s and s["speaker_label"] != "Hablante desconocido"})
+    labels = sorted(
+        {
+            s["speaker_label"]
+            for _, s in matches
+            if s and s["speaker_label"] != "Hablante desconocido"
+        }
+    )
     best_correct = 0
     for perm in itertools.permutations(persons, min(len(persons), len(labels))):
         mapping = dict(zip(labels, perm, strict=False))
-        best_correct = max(best_correct, sum(1 for r, s in matches if s and mapping.get(s["speaker_label"]) == r["person"]))
+        best_correct = max(
+            best_correct,
+            sum(
+                1
+                for r, s in matches
+                if s and mapping.get(s["speaker_label"]) == r["person"]
+            ),
+        )
     matched = [m for m in matches if m[1] is not None]
 
     decisions = export.get("decisions", [])
@@ -60,10 +73,20 @@ def main(export_path: Path, reference_path: Path) -> None:
     not_addressed_refs = [r for r in reference if r.get("addressed") is False]
 
     def answered(ref: dict) -> bool:
-        return any(similarity(ref["text"], d["text"]) >= MATCH_THRESHOLD for d in responded)
+        return any(
+            similarity(ref["text"], d["text"]) >= MATCH_THRESHOLD for d in responded
+        )
 
-    e2e = [t["stages_ms"]["e2e_latency"] for t in export.get("latency_turns", []) if "e2e_latency" in t["stages_ms"]]
-    first = [t["stages_ms"]["first_audio"] for t in export.get("latency_turns", []) if "first_audio" in t["stages_ms"]]
+    e2e = [
+        t["stages_ms"]["e2e_latency"]
+        for t in export.get("latency_turns", [])
+        if "e2e_latency" in t["stages_ms"]
+    ]
+    first = [
+        t["stages_ms"]["first_audio"]
+        for t in export.get("latency_turns", [])
+        if "first_audio" in t["stages_ms"]
+    ]
     report = {
         "reference_interventions": len(reference),
         "omitted_interventions": sum(1 for _, s in matches if s is None),
@@ -74,17 +97,31 @@ def main(export_path: Path, reference_path: Path) -> None:
             ),
             3,
         ),
-        "speaker_attribution_acc": round(best_correct / len(matched), 3) if matched else None,
-        "unknown_speaker_segments": sum(1 for _, s in matched if s["speaker_label"] == "Hablante desconocido"),
+        "speaker_attribution_acc": round(best_correct / len(matched), 3)
+        if matched
+        else None,
+        "unknown_speaker_segments": sum(
+            1 for _, s in matched if s["speaker_label"] == "Hablante desconocido"
+        ),
         "speakers_in_reference": len(persons),
         "speaker_labels_detected": len(labels),
         "false_activations": sum(1 for r in not_addressed_refs if answered(r)),
         "missed_activations": sum(1 for r in addressed_refs if not answered(r)),
         "ask_repeat": len(asked),
         "overlap_segments": sum(1 for s in segments if s.get("overlap_suspected")),
-        "e2e_ms": {"p50": percentile(e2e, 50), "p95": percentile(e2e, 95), "n": len(e2e)},
-        "first_audio_ms": {"p50": percentile(first, 50), "p95": percentile(first, 95), "n": len(first)},
-        "browser_playback_ms_p50": percentile(export.get("browser_playback_ms", []), 50),
+        "e2e_ms": {
+            "p50": percentile(e2e, 50),
+            "p95": percentile(e2e, 95),
+            "n": len(e2e),
+        },
+        "first_audio_ms": {
+            "p50": percentile(first, 50),
+            "p95": percentile(first, 95),
+            "n": len(first),
+        },
+        "browser_playback_ms_p50": percentile(
+            export.get("browser_playback_ms", []), 50
+        ),
     }
     print(json.dumps(report, ensure_ascii=False, indent=2))
 

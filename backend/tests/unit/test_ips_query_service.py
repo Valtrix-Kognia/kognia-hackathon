@@ -110,3 +110,55 @@ async def test_details_rejects_non_numeric_id() -> None:
 async def test_details_returns_none_when_empty() -> None:
     service, _ = build([[]])
     assert await service.details("123") is None
+
+
+async def test_counts_and_ranking_served_from_preloaded_aggregates() -> None:
+    from app.application.services.aggregate_cache import AggregateCache
+    from app.domain.models.dataset_columns import Metric as M
+
+    fake = FakeSocrataClient()
+    aggregates = AggregateCache(fake, ttl_s=60)  # type: ignore[arg-type]
+    fake._responses = [
+        [{"registros": "10", "prestadores": "9", "sedes": "8"}],
+        [{"naturaleza": "Pública", "registros": "6", "prestadores": "5", "sedes": "4"}],
+        [
+            {
+                "departamento": "Quindío",
+                "registros": "4",
+                "prestadores": "3",
+                "sedes": "3",
+            },
+            {
+                "departamento": "Antioquia",
+                "registros": "6",
+                "prestadores": "6",
+                "sedes": "5",
+            },
+        ],
+        [
+            {
+                "departamento": "Quindío",
+                "naturaleza": "Pública",
+                "registros": "2",
+                "prestadores": "1",
+                "sedes": "1",
+            }
+        ],
+    ]
+    aggregates.start_loading()
+    await aggregates._task
+    service = IpsQueryService(
+        fake, ValueCatalog(fake, 60), Settings(_env_file=None), aggregates
+    )  # type: ignore[arg-type]
+    before = len(fake.queries)
+    count = await service.count(FilterRequest(departamento="quindio"))
+    assert (count.prestadores, count.sedes) == (3, 3)
+    assert any("agregados descargados" in n for n in count.metadata.limitations)
+    ranking = await service.group(
+        Dimension.DEPARTAMENTO, M.PRESTADORES, FilterRequest(), top_n=1
+    )
+    assert [(b.label, b.value) for b in ranking.buckets] == [("Antioquia", 6)]
+    assert len(fake.queries) == before
+    fake._responses = [[{"registros": "1", "prestadores": "1", "sedes": "1"}]]
+    await service.count(FilterRequest(departamento="quindio", nivel_atencion="1"))
+    assert len(fake.queries) == before + 1

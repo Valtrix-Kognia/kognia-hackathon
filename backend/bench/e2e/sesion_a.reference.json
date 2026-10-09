@@ -1,0 +1,93 @@
+[
+  {
+    "person": "A",
+    "text": "Kognia, ¿cuántas IPS hay en Caldas?",
+    "addressed": true,
+    "category": "corta",
+    "expected": "respond"
+  },
+  {
+    "person": "A",
+    "text": "Kognia, necesito que me",
+    "addressed": true,
+    "category": "larga_con_pausa",
+    "expected": "respond"
+  },
+  {
+    "person": "A",
+    "text": "digas cuántos prestadores públicos hay en Antioquia.",
+    "addressed": true,
+    "category": "larga_con_pausa",
+    "expected": "respond"
+  },
+  {
+    "person": "A",
+    "text": "Kognia.",
+    "addressed": true,
+    "category": "solo_palabra_activacion",
+    "expected": "respond"
+  },
+  {
+    "person": "A",
+    "text": "¿Qué departamentos tienen más prestadores?",
+    "addressed": true,
+    "category": "solo_palabra_activacion",
+    "expected": "respond"
+  },
+  {
+    "person": "A",
+    "text": "Cognia, busca hospitales en Armenia.",
+    "addressed": true,
+    "category": "variante_cognia",
+    "expected": "respond"
+  },
+  {
+    "person": "B",
+    "text": "¿Ya almorzaron? Todavía no, después de la demo vamos.",
+    "addressed": false,
+    "category": "ambiental",
+    "expected": "ignore"
+  },
+  {
+    "person": "A",
+    "text": "Konia, ¿cuántas camas hay en Risaralda?",
+    "addressed": true,
+    "category": "variante_konia",
+    "expected": "respond"
+  },
+  {
+    "person": "C",
+    "text": "¿Cuántas sedes hay en Bogotá?",
+    "addressed": true,
+    "category": "dominio_sin_activacion",
+    "expected": "respond"
+  },
+  {
+    "person": "C",
+    "text": "Kognia, ¿cuántas ambulancias hay en Nariño?",
+    "addressed": true,
+    "category": "tercera_persona",
+    "expected": "respond"
+  },
+  {
+    "person": "D",
+    "text": "Oye, ¿viste el partido de anoche? Estuvo buenísimo.",
+    "addressed": false,
+    "category": "ambiental",
+    "expected": "ignore"
+  },
+  {
+    "person": "D",
+    "text": "Kognia, ¿qué niveles de atención aparecen en los datos?",
+    "addressed": true,
+    "category": "cuarta_persona",
+    "expected": "respond"
+  },
+  {
+    "person": "B",
+    "text": "Kognia, ¿cuál es la mejor IPS de Colombia?",
+    "addressed": true,
+    "category": "fuera_de_fuente",
+    "expected": "respond"
+  }
+]

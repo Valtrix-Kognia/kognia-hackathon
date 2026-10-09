@@ -13,6 +13,7 @@ from app.domain.errors import DomainError
 from app.domain.models.dataset_columns import Dimension, Metric
 from app.domain.models.filter_request import FilterRequest
 from app.infrastructure.socrata.errors import SocrataError
+from app.infrastructure.socrata.socrata_client import http_durations_ms
 from app.voice.event_publisher import EventPublisher
 from app.voice.latency_metrics import LatencyMetricsService, ToolTiming
 
@@ -82,16 +83,30 @@ class IpsToolset(llm.Toolset):
             "ips.query.started",
             {"query_id": query_id, "tool": tool, "arguments": clean_args},
         )
-        started = time.perf_counter()
         requests_before = self._service.network_requests
+        start_ms = self._latency.relative_ms() if self._latency else None
+        http_times: list[float] = []
+        call_ms = [0.0]
+        if self._latency:
+            self._latency.mark("tool_start", numbered=True)
+
+        async def timed_call() -> BaseModel | None:
+            token = http_durations_ms.set(http_times)
+            began = time.perf_counter()
+            try:
+                return await call()
+            finally:
+                call_ms[0] = (time.perf_counter() - began) * 1000
+                http_durations_ms.reset(token)
+
         try:
             if self._filler_delay_s is None:
-                result = await call()
+                result = await timed_call()
             else:
                 async with context.with_filler(
                     self._filler, delay=self._filler_delay_s, max_steps=1
                 ):
-                    result = await call()
+                    result = await timed_call()
         except DomainError as exc:
             self._fail(query_id, tool, clean_args, str(exc))
             raise ToolError(str(exc)) from exc
@@ -101,11 +116,15 @@ class IpsToolset(llm.Toolset):
             raise ToolError(exc.user_message + " No hay datos para responder.") from exc
         finally:
             if self._latency is not None:
+                self._latency.mark("tool_end", numbered=True)
                 self._latency.on_tool(
                     ToolTiming(
                         tool=tool,
-                        duration_ms=round((time.perf_counter() - started) * 1000, 1),
+                        duration_ms=round(call_ms[0], 1),
                         cache_hit=self._service.network_requests == requests_before,
+                        http_ms=round(sum(http_times), 1),
+                        start_ms=start_ms,
+                        end_ms=self._latency.relative_ms(),
                     )
                 )
         self._events.publish(

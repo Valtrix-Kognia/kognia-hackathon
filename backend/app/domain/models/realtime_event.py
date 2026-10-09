@@ -4,6 +4,7 @@ from typing import Any, Literal
 from pydantic import BaseModel
 
 EVENTS_TOPIC = "kognia.events"
+CLIENT_METRICS_TOPIC = "kognia.client_metrics"
 
 EventType = Literal[
     "session.started",
@@ -22,6 +23,8 @@ EventType = Literal[
     "metrics.turn",
     "turn.decision",
     "turn.mode",
+    "metrics.client",
+    "agent.interrupted",
 ]
 
 
@@ -31,5 +34,6 @@ class RealtimeEvent(BaseModel):
     type: EventType
     session_id: str
     seq: int
+    turn_id: str | None = None
     emitted_at: datetime
     payload: dict[str, Any]

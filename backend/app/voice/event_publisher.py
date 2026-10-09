@@ -14,12 +14,25 @@ logger = logging.getLogger("kognia.events")
 SendText = Callable[[str], Awaitable[Any]]
 
 
+class _Unset:
+    pass
+
+
+UNSET = _Unset()
+
+
 class EventPublisher:
     """Serializes dashboard events and sends them in order without blocking the voice pipeline."""
 
-    def __init__(self, session_id: str, send_text: SendText) -> None:
+    def __init__(
+        self,
+        session_id: str,
+        send_text: SendText,
+        turn_id_provider: Callable[[], str | None] = lambda: None,
+    ) -> None:
         self._session_id = session_id
         self._send_text = send_text
+        self._turn_id_provider = turn_id_provider
         self._seq = itertools.count(1)
         self._queue: asyncio.Queue[str | None] = asyncio.Queue(maxsize=500)
         self._task: asyncio.Task[None] | None = None
@@ -31,7 +44,10 @@ class EventPublisher:
             )
 
     def publish(
-        self, event_type: EventType, payload: BaseModel | dict[str, Any]
+        self,
+        event_type: EventType,
+        payload: BaseModel | dict[str, Any],
+        turn_id: str | _Unset | None = UNSET,
     ) -> None:
         data = (
             payload.model_dump(mode="json")
@@ -42,6 +58,9 @@ class EventPublisher:
             type=event_type,
             session_id=self._session_id,
             seq=next(self._seq),
+            turn_id=self._turn_id_provider()
+            if isinstance(turn_id, _Unset)
+            else turn_id,
             emitted_at=datetime.now(UTC),
             payload=data,
         )

@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import time
 
@@ -18,7 +19,7 @@ from livekit.agents import (
 
 from app.config.container import build_http_client, build_ips_service
 from app.config.settings import get_settings
-from app.domain.models.realtime_event import EVENTS_TOPIC
+from app.domain.models.realtime_event import CLIENT_METRICS_TOPIC, EVENTS_TOPIC
 from app.emotions.emotion_analyzer import EmotionAnalyzer
 from app.emotions.emotion_worker import EmotionWorker
 from app.emotions.pysentimiento_classifier import PysentimientoClassifier
@@ -93,7 +94,13 @@ async def entrypoint(ctx: JobContext) -> None:
     async def send_event(text: str) -> None:
         await ctx.room.local_participant.send_text(text, topic=EVENTS_TOPIC)
 
-    events = EventPublisher(session_id, send_event)
+    latency: LatencyMetricsService
+    events = EventPublisher(
+        session_id, send_event, turn_id_provider=lambda: latency.current_turn_id
+    )
+    latency = LatencyMetricsService(
+        publish=lambda kind, data: events.publish(kind, data)
+    )
     speakers = SpeakerRegistry()
     tracker = TranscriptTracker(
         session_id,
@@ -110,7 +117,13 @@ async def entrypoint(ctx: JobContext) -> None:
         on_result=lambda a: events.publish("emotion.analyzed", a),
     )
     controller = ConversationController(
-        events, tracker, SpeakerDiarizationService(), turns, emotions, started_wall
+        events,
+        tracker,
+        SpeakerDiarizationService(),
+        turns,
+        emotions,
+        latency,
+        started_wall,
     )
 
     session = AgentSession(
@@ -124,6 +137,10 @@ async def entrypoint(ctx: JobContext) -> None:
         stt_context_options=STTContextOptions(keyterms=BASE_KEYTERMS),
         turn_handling=TurnHandlingOptions(
             turn_detection=inference.TurnDetector(),
+            endpointing={
+                "min_delay": settings.endpointing_min_delay_s,
+                "max_delay": settings.endpointing_max_delay_s,
+            },
             interruption={
                 "mode": "adaptive",
                 "min_words": 2,
@@ -136,11 +153,11 @@ async def entrypoint(ctx: JobContext) -> None:
         ),
         max_tool_steps=4,
     )
-    latency = LatencyMetricsService()
     observer = SessionObserver(
         session, events, tracker, controller, latency, started_at
     )
     observer.attach()
+    controller.bind_current_speech(lambda: session.current_speech)
 
     async def warm_up() -> None:
         await ips_service.warm_up()
@@ -160,6 +177,20 @@ async def entrypoint(ctx: JobContext) -> None:
         apply_turn_mode(changed)
 
     ctx.room.on("participant_attributes_changed", on_attributes_changed)
+
+    def on_data(packet: rtc.DataPacket) -> None:
+        if packet.topic != CLIENT_METRICS_TOPIC:
+            return
+        try:
+            data = json.loads(packet.data.decode("utf-8"))
+            turn_id = str(data.pop("turn_id"))
+        except (ValueError, KeyError, UnicodeDecodeError):
+            logger.warning("discarding malformed client metrics packet")
+            return
+        allowed = {k: v for k, v in data.items() if isinstance(v, int | float | str)}
+        latency.on_client_metrics(turn_id, allowed)
+
+    ctx.room.on("data_received", on_data)
 
     async def cleanup() -> None:
         warm_task.cancel()
@@ -182,6 +213,7 @@ async def entrypoint(ctx: JobContext) -> None:
             )
         ],
         controller=controller,
+        latency=latency,
     )
     await session.start(
         agent=agent,

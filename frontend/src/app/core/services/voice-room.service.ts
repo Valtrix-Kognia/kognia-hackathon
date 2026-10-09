@@ -9,7 +9,8 @@ import {
   RoomEvent,
   Track,
 } from 'livekit-client';
-import { EVENTS_TOPIC, RealtimeEvent, TurnMode } from '../models/realtime-event.model';
+import { EVENTS_TOPIC, PlaybackMeasurement, RealtimeEvent, TurnMode } from '../models/realtime-event.model';
+import { AgentAudioMonitor } from './agent-audio-monitor';
 import { ConnectionState, MicState, VoiceSession } from '../models/voice-session.model';
 import { ConversationStore } from './conversation-store.service';
 import { SessionApiService } from './session-api.service';
@@ -17,6 +18,7 @@ import { ToastService } from './toast.service';
 
 const AGENT_TRANSCRIPTION_TOPIC = 'lk.transcription';
 const TURN_MODE_ATTRIBUTE = 'kognia.turn_mode';
+const CLIENT_METRICS_TOPIC = 'kognia.client_metrics';
 
 /**
  * Shared-microphone capture. Noise suppression runs once, server side (ai-coustics QUAIL_L,
@@ -39,6 +41,11 @@ export class VoiceRoomService implements OnDestroy {
   private userInitiatedDisconnect = false;
   private readonly audioElements = new Set<HTMLMediaElement>();
   private readonly onDeviceChange = () => void this.refreshDevices();
+  private readonly audioMonitor = new AgentAudioMonitor((at) => this.store.markAgentAudible(at));
+
+  constructor() {
+    this.store.setMeasurementSink((m) => void this.sendMeasurement(m));
+  }
 
   readonly connection = signal<ConnectionState>('idle');
   readonly mic = signal<MicState>('off');
@@ -130,6 +137,7 @@ export class VoiceRoomService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.audioMonitor.dispose();
     void this.teardown();
   }
 
@@ -222,6 +230,7 @@ export class VoiceRoomService implements OnDestroy {
           document.body.appendChild(element);
           this.audioElements.add(element);
           this.agentTrack.set(track.mediaStreamTrack);
+          this.audioMonitor.attach(track.mediaStreamTrack);
         }),
       )
       .on(RoomEvent.TrackUnsubscribed, (track: RemoteTrack) =>
@@ -231,13 +240,6 @@ export class VoiceRoomService implements OnDestroy {
             this.audioElements.delete(el);
           });
           if (this.agentTrack() === track.mediaStreamTrack) this.agentTrack.set(null);
-        }),
-      )
-      .on(RoomEvent.ActiveSpeakersChanged, (speakers) =>
-        run(() => {
-          if (speakers.some((p) => p.identity !== room.localParticipant.identity)) {
-            this.store.markAgentAudible(performance.now());
-          }
         }),
       )
       .on(RoomEvent.AudioPlaybackStatusChanged, () => run(() => this.audioBlocked.set(!room.canPlaybackAudio)))
@@ -274,6 +276,17 @@ export class VoiceRoomService implements OnDestroy {
     });
   }
 
+  private async sendMeasurement(measurement: PlaybackMeasurement): Promise<void> {
+    const room = this.room;
+    if (!room || room.state !== 'connected') return;
+    const payload = new TextEncoder().encode(JSON.stringify(measurement));
+    try {
+      await room.localParticipant.publishData(payload, { reliable: true, topic: CLIENT_METRICS_TOPIC });
+    } catch {
+      console.warn('No se pudo enviar la medición de reproducción');
+    }
+  }
+
   private async refreshDevices(): Promise<void> {
     try {
       const devices = await Room.getLocalDevices('audioinput', false);
@@ -296,6 +309,7 @@ export class VoiceRoomService implements OnDestroy {
       room.removeAllListeners();
       await room.disconnect();
     }
+    this.audioMonitor.detach();
     this.audioElements.forEach((el) => el.remove());
     this.audioElements.clear();
     this.localTrack.set(null);

@@ -12,10 +12,11 @@ class Settings(BaseSettings):
     socrata_domain: str = "https://www.datos.gov.co"
     socrata_dataset_id: str = "s2ru-bqt6"
     socrata_app_token: SecretStr | None = None
-    socrata_timeout_s: float = Field(default=20.0, gt=0, le=120)
-    socrata_max_retries: int = Field(default=2, ge=0, le=5)
+    socrata_timeout_s: float = Field(default=10.0, gt=0, le=120)
+    socrata_max_retries: int = Field(default=1, ge=0, le=5)
     socrata_max_response_bytes: int = Field(default=8_000_000, gt=0)
     catalog_ttl_s: int = Field(default=6 * 3600, gt=0)
+    aggregate_ttl_s: float = Field(default=1800, gt=0)
     socrata_cache_ttl_s: float = Field(default=600, ge=0)
     socrata_cache_max_entries: int = Field(default=256, gt=0)
 
@@ -28,6 +29,8 @@ class Settings(BaseSettings):
     )
     noise_enhancement_level: float | None = Field(default=None, ge=0, le=1)
     tool_filler_delay_s: float = Field(default=0.7, le=10)
+    endpointing_min_delay_s: float = Field(default=0.5, ge=0.1, le=2.0)
+    endpointing_max_delay_s: float = Field(default=3.0, ge=0.5, le=6.0)
     turn_mode: str = Field(default="wake_word", pattern="^(open|wake_word)$")
     follow_up_window_s: float = Field(default=8.0, ge=0, le=30)
     session_token_ttl_minutes: int = Field(default=30, gt=0, le=240)

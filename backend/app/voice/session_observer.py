@@ -61,6 +61,20 @@ class SessionObserver:
 
     def _on_speech_created(self, ev: SpeechCreatedEvent) -> None:
         self._controller.on_agent_speech(ev.speech_handle)
+        turn_id = self._latency.current_turn_id
+        self._latency.event("speech_created", source=ev.source)
+        handle = ev.speech_handle
+
+        def on_done(_handle: object) -> None:
+            if handle.interrupted:
+                self._latency.annotate(
+                    turn_id, "speech_interrupted", speech_id=handle.id
+                )
+                self._events.publish(
+                    "agent.interrupted", {"speech_id": handle.id}, turn_id=turn_id
+                )
+
+        handle.add_done_callback(on_done)
 
     def _on_agent_state(self, ev: AgentStateChangedEvent) -> None:
         if ev.new_state == "speaking":
@@ -77,19 +91,18 @@ class SessionObserver:
         if not isinstance(item, ChatMessage):
             return
         if item.role == "user":
-            self._latency.on_user_message(item.id, dict(item.metrics))
+            self._latency.on_user_message(dict(item.metrics))
             return
         if item.role != "assistant":
             return
-        turn_metrics = self._latency.on_agent_message(dict(item.metrics))
-        if turn_metrics:
-            self._events.publish("metrics.turn", turn_metrics)
+        turn_id = self._latency.current_turn_id
+        self._latency.on_agent_message(dict(item.metrics))
         segment = self._tracker.on_agent_message(
             item.text_content or "", item.interrupted, self._speaking_since_ms
         )
         self._speaking_since_ms = None
         if segment:
-            self._events.publish("transcript.final", segment)
+            self._events.publish("transcript.final", segment, turn_id=turn_id)
 
     def _on_error(self, ev: ErrorEvent) -> None:
         source = (

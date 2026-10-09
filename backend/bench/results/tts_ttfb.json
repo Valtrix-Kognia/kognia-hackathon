@@ -1,0 +1,57 @@
+{
+  "summary": {
+    "cartesia/sonic-3": {
+      "n_ok": 9,
+      "ttfb_p50_ms": 995.6,
+      "ttfb_p95_ms": 1367.8799999999999,
+      "leading_silence_p50_ms": 50.0
+    },
+    "cartesia/sonic-turbo": {
+      "n_ok": 9,
+      "ttfb_p50_ms": 1019.6,
+      "ttfb_p95_ms": 1222.34,
+      "leading_silence_p50_ms": 50.0
+    },
+    "cartesia/sonic-3.5": {
+      "n_ok": 9,
+      "ttfb_p50_ms": 1031.8,
+      "ttfb_p95_ms": 1283.8,
+      "leading_silence_p50_ms": 130.0
+    }
+  },
+  "samples": {
+    "cartesia/sonic-3": [
+      922.5,
+      1451.6,
+      923.3,
+      1025.6,
+      995.6,
+      1137.3,
+      986.1,
+      1242.3,
+      993.3
+    ],
+    "cartesia/sonic-turbo": [
+      925.3,
+      1019.6,
+      874.0,
+      943.6,
+      1039.2,
+      1150.7,
+      974.7,
+      1270.1,
+      1145.2
+    ],
+    "cartesia/sonic-3.5": [
+      1065.0,
+      940.4,
+      841.5,
+      1033.6,
+      1142.8,
+      1377.8,
+      1008.7,
+      1031.8,
+      894.4
+    ]
+  }
+}

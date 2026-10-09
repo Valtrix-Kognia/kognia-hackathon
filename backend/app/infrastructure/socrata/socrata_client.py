@@ -1,6 +1,8 @@
 import asyncio
 import json
 import logging
+import time
+from contextvars import ContextVar
 from typing import Any
 
 import httpx
@@ -20,6 +22,9 @@ from app.infrastructure.socrata.query_cache import QueryCache
 logger = logging.getLogger("kognia.socrata")
 
 _RETRYABLE_STATUS = {429, 500, 502, 503, 504}
+http_durations_ms: ContextVar[list[float] | None] = ContextVar(
+    "socrata_http_durations_ms", default=None
+)
 MAX_PAGE_SIZE = 5000
 
 
@@ -86,6 +91,7 @@ class SocrataClient:
         last_error: SocrataError = SocrataUnavailableError("No attempt executed")
         for attempt in range(1, attempts + 1):
             self.requests_sent += 1
+            started = time.perf_counter()
             try:
                 response = await self._http.request(
                     method,
@@ -95,12 +101,15 @@ class SocrataClient:
                     timeout=self._settings.socrata_timeout_s,
                 )
             except httpx.TimeoutException:
+                _record_http(started)
                 last_error = SocrataTimeoutError("Socrata request timed out")
             except httpx.TransportError as exc:
+                _record_http(started)
                 last_error = SocrataUnavailableError(
                     f"Transport error: {type(exc).__name__}"
                 )
             else:
+                _record_http(started)
                 if response.status_code < 400:
                     return self._decode(response)
                 last_error = self._error_for(response)
@@ -134,3 +143,9 @@ class SocrataClient:
         if status >= 500:
             return SocrataUnavailableError(f"HTTP {status}")
         return SocrataQueryError(f"HTTP {status}: {response.text[:300]}")
+
+
+def _record_http(started: float) -> None:
+    durations = http_durations_ms.get()
+    if durations is not None:
+        durations.append((time.perf_counter() - started) * 1000)

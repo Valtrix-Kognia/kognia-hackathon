@@ -8,10 +8,13 @@ import {
   SpeakerIdentified,
   TranscriptSegment,
   TurnDecisionPayload,
+  PlaybackMeasurement,
   TurnLatencyPayload,
   TurnMode,
 } from '../models/realtime-event.model';
 import { AgentActivity } from '../models/voice-session.model';
+
+const EMPTY_COUNTS: Record<TurnDecisionPayload['action'], number> = { respond: 0, ignore: 0, ask_repeat: 0, hold: 0, listen: 0 };
 
 export type QueryStatus = 'running' | 'completed' | 'failed';
 
@@ -50,15 +53,17 @@ export class ConversationStore {
   readonly agentLive = signal<AgentLiveText | null>(null);
   readonly turnMode = signal<TurnMode>('wake_word');
   readonly lastDecision = signal<TurnDecisionPayload | null>(null);
-  readonly decisionCounts = signal<Record<TurnDecisionPayload['action'], number>>({
-    respond: 0,
-    ignore: 0,
-    ask_repeat: 0,
-  });
+  readonly decisionCounts = signal<Record<TurnDecisionPayload['action'], number>>({ ...EMPTY_COUNTS });
   readonly latencyTurns = signal<TurnLatencyPayload[]>([]);
-  /** Browser-side: turn decision received -> agent audible (LiveKit active speaker). */
-  readonly browserPlaybackMs = signal<number[]>([]);
-  private pendingResponseAt: number | null = null;
+  /** Browser-side playback per turn: decision received -> agent audio energy onset. */
+  readonly playback = signal<PlaybackMeasurement[]>([]);
+  readonly browserPlaybackMs = computed(() =>
+    this.playback()
+      .filter((m) => m.status === 'medido' && m.decision_to_audible_ms !== undefined)
+      .map((m) => m.decision_to_audible_ms as number),
+  );
+  private awaiting: { turnId: string; action: TurnDecisionPayload['action']; decisionAt: number; speakingAt?: number } | null = null;
+  private measurementSink: (m: PlaybackMeasurement) => void = () => undefined;
   private readonly decisionLog = signal<TurnDecisionPayload[]>([]);
 
   readonly segments = computed(() =>
@@ -86,10 +91,10 @@ export class ConversationStore {
     this.agentLive.set(null);
     this.lastDecision.set(null);
     this.decisionLog.set([]);
-    this.decisionCounts.set({ respond: 0, ignore: 0, ask_repeat: 0 });
+    this.decisionCounts.set({ ...EMPTY_COUNTS });
     this.latencyTurns.set([]);
-    this.browserPlaybackMs.set([]);
-    this.pendingResponseAt = null;
+    this.playback.set([]);
+    this.awaiting = null;
   }
 
   setOffline(): void {
@@ -109,15 +114,32 @@ export class ConversationStore {
       decisions: this.decisionLog(),
       emotions: this.emotions(),
       latency_turns: this.latencyTurns(),
+      browser_playback: this.playback(),
       browser_playback_ms: this.browserPlaybackMs(),
     };
   }
 
+  setMeasurementSink(sink: (m: PlaybackMeasurement) => void): void {
+    this.measurementSink = sink;
+  }
+
+  /** Called on each agent-audio onset detected in this browser. */
   markAgentAudible(nowMs: number): void {
-    if (this.pendingResponseAt === null) return;
-    const elapsed = Math.round(nowMs - this.pendingResponseAt);
-    this.pendingResponseAt = null;
-    this.browserPlaybackMs.update((list) => [...list, elapsed].slice(-50));
+    const pending = this.awaiting;
+    if (!pending || nowMs < pending.decisionAt) return;
+    this.awaiting = null;
+    this.recordPlayback({
+      turn_id: pending.turnId,
+      action: pending.action,
+      status: 'medido',
+      decision_to_audible_ms: Math.round(nowMs - pending.decisionAt),
+      speaking_event_to_audible_ms: pending.speakingAt !== undefined ? Math.round(nowMs - pending.speakingAt) : undefined,
+    });
+  }
+
+  private recordPlayback(measurement: PlaybackMeasurement): void {
+    this.playback.update((list) => [...list, measurement].slice(-100));
+    this.measurementSink(measurement);
   }
 
   applyAgentLiveText(id: string, text: string): void {
@@ -143,7 +165,12 @@ export class ConversationStore {
         this.lastDecision.set(decision);
         this.decisionLog.update((list) => [...list, decision]);
         this.decisionCounts.update((c) => ({ ...c, [decision.action]: c[decision.action] + 1 }));
-        this.pendingResponseAt = decision.action === 'ignore' ? null : performance.now();
+        if (decision.action !== 'ignore' && decision.action !== 'hold') {
+          if (this.awaiting) {
+            this.recordPlayback({ turn_id: this.awaiting.turnId, action: this.awaiting.action, status: 'reemplazado' });
+          }
+          this.awaiting = { turnId: decision.turn_id, action: decision.action, decisionAt: performance.now() };
+        }
         return true;
       }
       case 'metrics.turn':
@@ -152,9 +179,15 @@ export class ConversationStore {
       case 'session.ended':
         this.setOffline();
         return true;
+      case 'agent.speaking':
+        if (this.awaiting && event.turn_id === this.awaiting.turnId && this.awaiting.speakingAt === undefined) {
+          this.awaiting.speakingAt = performance.now();
+        }
+        if (this.isStale('agent.state', event.seq)) return false;
+        this.agentState.set('speaking');
+        return true;
       case 'agent.listening':
       case 'agent.thinking':
-      case 'agent.speaking':
         if (this.isStale('agent.state', event.seq)) return false;
         this.agentState.set(event.type.slice('agent.'.length) as AgentActivity);
         return true;
@@ -175,6 +208,9 @@ export class ConversationStore {
       case 'ips.query.completed':
       case 'ips.query.failed':
         return this.applyQuery(event as RealtimeEvent<IpsQueryEvent>);
+      case 'metrics.client':
+      case 'agent.interrupted':
+        return true;
       case 'error.occurred':
         this.lastError.set(event.payload as ErrorPayload);
         return true;

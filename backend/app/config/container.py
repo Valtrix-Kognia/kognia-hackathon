@@ -1,5 +1,6 @@
 import httpx
 
+from app.application.services.aggregate_cache import AggregateCache
 from app.application.services.ips_query_service import IpsQueryService
 from app.application.services.value_catalog import ValueCatalog
 from app.config.settings import Settings
@@ -18,4 +19,5 @@ def build_ips_service(
 ) -> IpsQueryService:
     client = SocrataClient(settings, http_client)
     catalog = ValueCatalog(client, ttl_s=settings.catalog_ttl_s)
-    return IpsQueryService(client, catalog, settings)
+    aggregates = AggregateCache(client, ttl_s=settings.aggregate_ttl_s)
+    return IpsQueryService(client, catalog, settings, aggregates)

@@ -1,0 +1,86 @@
+[
+  {
+    "person": "A",
+    "text": "Kognia, Kognia, ¿cuántas clínicas hay en Cali?",
+    "addressed": true,
+    "category": "wake_repetida",
+    "expected": "respond"
+  },
+  {
+    "person": "B",
+    "text": "Kognia, ¿cuántas IPS privadas hay en Santander?",
+    "addressed": true,
+    "category": "ruido_ventilador",
+    "expected": "respond"
+  },
+  {
+    "person": "B",
+    "text": "Kognia, ¿cuántas IPS hay en el Quindío?",
+    "addressed": true,
+    "category": "voces_superpuestas",
+    "expected": "ask_repeat_or_respond"
+  },
+  {
+    "person": "C",
+    "text": "Yo quisiera saber qué departamentos tienen más prestadores.",
+    "addressed": true,
+    "category": "voces_superpuestas",
+    "expected": "ask_repeat_or_respond"
+  },
+  {
+    "person": "A",
+    "text": "Kognia, ¿qué departamentos tienen más sedes y cuántas tiene cada uno?",
+    "addressed": true,
+    "category": "interrupcion",
+    "expected": "respond"
+  },
+  {
+    "person": "A",
+    "text": "Kognia, para. ¿Cuántas IPS hay en Huila?",
+    "addressed": true,
+    "category": "interrupcion",
+    "expected": "respond"
+  },
+  {
+    "person": "C",
+    "text": "Kognia, ¿cuántas IPS hay en Sucre?",
+    "addressed": true,
+    "category": "corta",
+    "expected": "respond"
+  },
+  {
+    "person": "D",
+    "text": "¿Alguien tiene el cargador del portátil?",
+    "addressed": false,
+    "category": "ambiental",
+    "expected": "ignore"
+  },
+  {
+    "person": "D",
+    "text": "Kognia, quisiera saber, eh,",
+    "addressed": true,
+    "category": "larga_con_pausa",
+    "expected": "respond"
+  },
+  {
+    "person": "D",
+    "text": "cuántas sedes de naturaleza mixta hay en todo el país.",
+    "addressed": true,
+    "category": "larga_con_pausa",
+    "expected": "respond"
+  },
+  {
+    "person": "B",
+    "text": "Kognia, busca la clínica San Rafael en Pasto.",
+    "addressed": true,
+    "category": "tercera_persona",
+    "expected": "respond"
+  },
+  {
+    "person": "C",
+    "text": "Cognia, ¿cuántos consultorios hay en Boyacá?",
+    "addressed": true,
+    "category": "variante_cognia",
+    "expected": "respond"
+  }
+]
