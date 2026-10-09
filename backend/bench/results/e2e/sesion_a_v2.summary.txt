@@ -1,0 +1,95 @@
+{
+  "interventions": 13,
+  "decision_matches_expected": "11/13",
+  "failed": [
+    {
+      "category": "dominio_sin_activacion",
+      "text": "¿Cuántas sedes hay en Bogotá?",
+      "expected": "respond",
+      "action": "ignore",
+      "reason": "omitido_mientras_hablaba",
+      "activation": "ninguna"
+    },
+    {
+      "category": "cuarta_persona",
+      "text": "Kognia, ¿qué niveles de atención aparecen en los datos?",
+      "expected": "respond",
+      "action": "ignore",
+      "reason": "no_dirigido_a_kognia",
+      "activation": "ninguna"
+    }
+  ],
+  "first_audio_ms": {
+    "n": 7,
+    "p50": 3427.6,
+    "p95": 5041.17
+  },
+  "end_of_turn_ms": {
+    "n": 7,
+    "p50": 668.8,
+    "p95": 1155.72
+  },
+  "llm_ttft_ms": {
+    "n": 7,
+    "p50": 1221.1,
+    "p95": 1776.71
+  },
+  "tts_ttfb_ms": {
+    "n": 7,
+    "p50": 453.6,
+    "p95": 840.45
+  },
+  "socrata_http_ms": {
+    "n": 5,
+    "p50": 0.0,
+    "p95": 832.64
+  },
+  "browser_decision_to_audible_ms": {
+    "n": 9,
+    "p50": 2281.0,
+    "p95": 5911.4
+  },
+  "browser_superseded": 0,
+  "by_category": {
+    "corta": {
+      "ok": "1/1",
+      "first_audio_p50": 4964.1
+    },
+    "larga_con_pausa": {
+      "ok": "2/2",
+      "first_audio_p50": 5074.2
+    },
+    "solo_palabra_activacion": {
+      "ok": "2/2",
+      "first_audio_p50": 4846.2
+    },
+    "variante_cognia": {
+      "ok": "1/1",
+      "first_audio_p50": 2132.2
+    },
+    "ambiental": {
+      "ok": "2/2",
+      "first_audio_p50": null
+    },
+    "variante_konia": {
+      "ok": "1/1",
+      "first_audio_p50": 3427.6
+    },
+    "dominio_sin_activacion": {
+      "ok": "0/1",
+      "first_audio_p50": null
+    },
+    "tercera_persona": {
+      "ok": "1/1",
+      "first_audio_p50": 2521.5
+    },
+    "cuarta_persona": {
+      "ok": "0/1",
+      "first_audio_p50": null
+    },
+    "fuera_de_fuente": {
+      "ok": "1/1",
+      "first_audio_p50": 2007.9
+    }
+  }
+}

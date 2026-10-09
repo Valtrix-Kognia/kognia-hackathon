@@ -114,3 +114,23 @@ def test_probable_variant_activates() -> None:
     turns, _ = manager()
     d = turns.decide([diarize(alt(("0", "Cocnea, ¿cuántas IPS hay en Caldas?")))], "")
     assert (d.action, d.activation) == ("respond", "probable")
+
+
+def test_short_wake_fragment_merges_despite_speaker_id_flip() -> None:
+    turns, clock = manager()
+    assert turns.decide([diarize(alt(("0", "Kognia.")))], "").action == "listen"
+    clock.now += 1.5
+    d = turns.decide(
+        [diarize(alt(("1", "¿Qué niveles de atención aparecen en los datos?")))], ""
+    )
+    assert (d.action, d.reason) == ("respond", "solicitud_consolidada")
+
+
+def test_long_fragment_from_other_speaker_is_not_merged() -> None:
+    turns, clock = manager()
+    turns.decide(
+        [diarize(alt(("0", "Kognia, quisiera saber cuántas sedes hay en")))], ""
+    )
+    clock.now += 1.5
+    d = turns.decide([diarize(alt(("1", "oye ya almorzaste")))], "")
+    assert d.action == "ignore"

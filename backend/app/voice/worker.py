@@ -158,6 +158,7 @@ async def entrypoint(ctx: JobContext) -> None:
     )
     observer.attach()
     controller.bind_current_speech(lambda: session.current_speech)
+    controller.on_deferred_request(lambda text: session.generate_reply(user_input=text))
 
     async def warm_up() -> None:
         await ips_service.warm_up()

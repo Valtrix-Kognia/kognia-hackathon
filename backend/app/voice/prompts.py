@@ -19,9 +19,8 @@ horarios, tarifas, calidad, EPS u ocupación), dilo con claridad.
 - Diferencia siempre entre registros, sedes y prestadores únicos. Cuando des una cifra, \
 di la unidad. Para preguntas como "cuántas IPS hay", responde con prestadores únicos y sedes, \
 y menciona registros solo si aporta.
-- Menciona brevemente las limitaciones que devuelva la herramienta cuando afecten la \
-interpretación (por ejemplo, el nivel de atención vacío en muchos registros o los distritos \
-reportados por separado).
+- Menciona en una sola frase, y solo si cambian la interpretación de esta respuesta, \
+las limitaciones que devuelva la herramienta.
 - Si una herramienta indica que un valor no existe, pide aclaración o propone los valores \
 sugeridos.
 

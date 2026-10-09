@@ -1,0 +1,1479 @@
+{
+  "session_id": "kognia-302e0dd73cd6d30c",
+  "exported_at": "2026-10-09T17:26:34.576Z",
+  "session_info": {
+    "stt": "deepgram/nova-3",
+    "llm": "google/gemini-2.5-flash",
+    "tts": "cartesia/sonic-3",
+    "diarization": true,
+    "noise_model": "quail_l",
+    "turn_mode": "wake_word"
+  },
+  "turn_mode": "wake_word",
+  "segments": [
+    {
+      "id": "a-1",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "Hola, soy Kognia Voice y puedo responder preguntas sobre las IPS de Colombia con datos oficiales.",
+      "start_ms": 3375,
+      "end_ms": 9125,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:22:47.394100Z"
+    },
+    {
+      "id": "u-2",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "0",
+      "speaker_label": "Hablante 1",
+      "text": "Kognia, Kognia,",
+      "start_ms": 10148,
+      "end_ms": 11268,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:22:51.855951Z"
+    },
+    {
+      "id": "u-3",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "1",
+      "speaker_label": "Hablante 2",
+      "text": "¿cuántas clínicas hay en Cali?",
+      "start_ms": 11398,
+      "end_ms": 12918,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:22:52.161063Z"
+    },
+    {
+      "id": "a-4",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "No encontré Cali en la lista de municipios del Valle del Cauca. ¿Te refieres a Alcalá o Calima, o a otro municipio?",
+      "start_ms": 21734,
+      "end_ms": 28625,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:23:06.898773Z"
+    },
+    {
+      "id": "u-6",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "1",
+      "speaker_label": "Hablante 2",
+      "text": "Kognia, ¿cuántas IPS privadas",
+      "start_ms": 30738,
+      "end_ms": 33538,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:23:12.819234Z"
+    },
+    {
+      "id": "u-7",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "hay en Santander?",
+      "start_ms": 34218,
+      "end_ms": 35258,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:23:14.496888Z"
+    },
+    {
+      "id": "a-9",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "En Santander hay 514 prestadores únicos y 619 sedes de IPS privadas. Ten en cuenta que cada fila del conjunto de datos representa una línea de capacidad instalada de una",
+      "start_ms": 43828,
+      "end_ms": 55156,
+      "is_final": true,
+      "interrupted": true,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:23:33.416043Z"
+    },
+    {
+      "id": "u-8",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "0",
+      "speaker_label": "Hablante 1",
+      "text": "Kognia.",
+      "start_ms": 53318,
+      "end_ms": 53878,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:23:33.404313Z"
+    },
+    {
+      "id": "u-10",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "¿Cuántas IPS",
+      "start_ms": 54298,
+      "end_ms": 55258,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": true,
+      "timestamp": "2026-10-09T17:23:37.896187Z"
+    },
+    {
+      "id": "u-11",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "desconocido",
+      "speaker_label": "Hablante desconocido",
+      "text": "hay",
+      "start_ms": 55258,
+      "end_ms": 56058,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": true,
+      "timestamp": "2026-10-09T17:23:37.896187Z"
+    },
+    {
+      "id": "u-12",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "en el",
+      "start_ms": 56378,
+      "end_ms": 56618,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": true,
+      "timestamp": "2026-10-09T17:23:37.896187Z"
+    },
+    {
+      "id": "u-13",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "0",
+      "speaker_label": "Hablante 1",
+      "text": "Quindío? Tienen más",
+      "start_ms": 56618,
+      "end_ms": 58058,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": true,
+      "timestamp": "2026-10-09T17:23:37.896187Z"
+    },
+    {
+      "id": "u-14",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "1",
+      "speaker_label": "Hablante 2",
+      "text": "prestadores.",
+      "start_ms": 58058,
+      "end_ms": 58538,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": true,
+      "timestamp": "2026-10-09T17:23:37.896187Z"
+    },
+    {
+      "id": "u-15",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "1",
+      "speaker_label": "Hablante 2",
+      "text": "Kognia, ¿qué departamentos tienen más sedes y cuántas tiene cada 1?",
+      "start_ms": 76308,
+      "end_ms": 79668,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:23:59.192338Z"
+    },
+    {
+      "id": "u-16",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "1",
+      "speaker_label": "Hablante 2",
+      "text": "Kognia, para: ¿Cuántas IPS hay en Huila?",
+      "start_ms": 84128,
+      "end_ms": 86768,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:24:06.295951Z"
+    },
+    {
+      "id": "a-17",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "Los",
+      "start_ms": 85172,
+      "end_ms": 85750,
+      "is_final": true,
+      "interrupted": true,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:24:04.011400Z"
+    },
+    {
+      "id": "a-18",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "En Huila hay 207 prestadores únicos y 242 sedes de IPS. Cada fila del conjunto de datos es una línea de capacidad instalada de una sede, no una IPS.",
+      "start_ms": 91531,
+      "end_ms": 101437,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:24:19.697096Z"
+    },
+    {
+      "id": "u-19",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "0",
+      "speaker_label": "Hablante 1",
+      "text": "Kognia,",
+      "start_ms": 103928,
+      "end_ms": 104648,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:24:23.911106Z"
+    },
+    {
+      "id": "u-20",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "1",
+      "speaker_label": "Hablante 2",
+      "text": "¿cuántas IPS hay en Sucre?",
+      "start_ms": 104998,
+      "end_ms": 106758,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:24:26.162274Z"
+    },
+    {
+      "id": "u-21",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "¿Alguien tiene el cargador del portátil?",
+      "start_ms": 124578,
+      "end_ms": 126738,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:24:46.019627Z"
+    },
+    {
+      "id": "u-22",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "0",
+      "speaker_label": "Hablante 1",
+      "text": "Kognia.",
+      "start_ms": 144528,
+      "end_ms": 145088,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:04.245453Z"
+    },
+    {
+      "id": "u-23",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "Quisiera saber",
+      "start_ms": 145988,
+      "end_ms": 146868,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:06.358422Z"
+    },
+    {
+      "id": "u-24",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "cuántas sedes de naturaleza mixta hay en todo el país.",
+      "start_ms": 149018,
+      "end_ms": 151418,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:10.991843Z"
+    },
+    {
+      "id": "a-25",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "En todo el país hay 14 prestadores únicos y 15 sedes de IPS con naturaleza mixta. Ten en cuenta que cada fila del conjunto de datos es una línea de capacidad instalada de una sede, no una IPS.",
+      "start_ms": 156984,
+      "end_ms": 167047,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:25.318805Z"
+    },
+    {
+      "id": "u-26",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "Kognia",
+      "start_ms": 169168,
+      "end_ms": 169808,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:28.894446Z"
+    },
+    {
+      "id": "u-27",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "2",
+      "speaker_label": "Hablante 3",
+      "text": "busca la Clínica San Rafael en Pasto.",
+      "start_ms": 169978,
+      "end_ms": 172938,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:32.295430Z"
+    },
+    {
+      "id": "a-28",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "Un momento, consulto los datos oficiales.",
+      "start_ms": 176875,
+      "end_ms": 181484,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:39.746107Z"
+    },
+    {
+      "id": "u-29",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "0",
+      "speaker_label": "Hablante 1",
+      "text": "Kognia.",
+      "start_ms": 191228,
+      "end_ms": 191948,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:51.468357Z"
+    },
+    {
+      "id": "u-30",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "user",
+      "speaker_id": "1",
+      "speaker_label": "Hablante 2",
+      "text": "¿Cuántos consultorios hay en Boyacá?",
+      "start_ms": 192388,
+      "end_ms": 194308,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:25:53.809572Z"
+    },
+    {
+      "id": "a-31",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "role": "agent",
+      "speaker_id": "agente",
+      "speaker_label": "Kognia",
+      "text": "No encontré ninguna sede llamada Clínica San Rafael en Pasto.",
+      "start_ms": 199203,
+      "end_ms": 202828,
+      "is_final": true,
+      "interrupted": false,
+      "overlap_suspected": false,
+      "timestamp": "2026-10-09T17:26:01.096761Z"
+    }
+  ],
+  "speakers": {
+    "0": "Hablante 1",
+    "1": "Hablante 2",
+    "2": "Hablante 3"
+  },
+  "decisions": [
+    {
+      "turn_id": "t1",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia, Kognia, ¿cuántas clínicas hay en Cali?",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t2",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia, ¿cuántas IPS privadas hay en Santander?",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t3",
+      "action": "ask_repeat",
+      "reason": "habla_superpuesta",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia. ¿Cuántas IPS hay en el Quindío? Tienen más prestadores.",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t4",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia, ¿qué departamentos tienen más sedes y cuántas tiene cada 1?",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t5",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia, para: ¿Cuántas IPS hay en Huila?",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t6",
+      "action": "listen",
+      "reason": "solo_palabra_activacion",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia,",
+      "merged_from": []
+    },
+    {
+      "turn_id": null,
+      "action": "ignore",
+      "reason": "omitido_mientras_hablaba",
+      "mode": "wake_word",
+      "activation": "ninguna",
+      "text": "¿cuántas IPS hay en Sucre?",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t7",
+      "action": "ignore",
+      "reason": "no_dirigido_a_kognia",
+      "mode": "wake_word",
+      "activation": "ninguna",
+      "text": "¿Alguien tiene el cargador del portátil?",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t8",
+      "action": "listen",
+      "reason": "solo_palabra_activacion",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia.",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t9",
+      "action": "ignore",
+      "reason": "no_dirigido_a_kognia",
+      "mode": "wake_word",
+      "activation": "ninguna",
+      "text": "Quisiera saber",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t10",
+      "action": "respond",
+      "reason": "pregunta_sobre_ips",
+      "mode": "wake_word",
+      "activation": "ninguna",
+      "text": "cuántas sedes de naturaleza mixta hay en todo el país.",
+      "merged_from": []
+    },
+    {
+      "turn_id": "t11",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "mode": "wake_word",
+      "activation": "confirmada",
+      "text": "Kognia",
+      "merged_from": []
+    }
+  ],
+  "emotions": [
+    {
+      "segment_id": "u-2",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 1",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:22:51.860563Z"
+    },
+    {
+      "segment_id": "u-3",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 2",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.803,
+      "emotion": "neutral",
+      "emotion_score": 0.979,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:22:52.164226Z"
+    },
+    {
+      "segment_id": "u-6",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 2",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.685,
+      "emotion": "neutral",
+      "emotion_score": 0.985,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:12.820752Z"
+    },
+    {
+      "segment_id": "u-7",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.9,
+      "emotion": "neutral",
+      "emotion_score": 0.884,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:14.498419Z"
+    },
+    {
+      "segment_id": "u-8",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 1",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:33.408320Z"
+    },
+    {
+      "segment_id": "u-10",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:37.900192Z"
+    },
+    {
+      "segment_id": "u-11",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante desconocido",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:37.913161Z"
+    },
+    {
+      "segment_id": "u-12",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:37.935807Z"
+    },
+    {
+      "segment_id": "u-13",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 1",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.804,
+      "emotion": "neutral",
+      "emotion_score": 0.986,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:37.959078Z"
+    },
+    {
+      "segment_id": "u-14",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 2",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:38.261302Z"
+    },
+    {
+      "segment_id": "u-15",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 2",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.906,
+      "emotion": "neutral",
+      "emotion_score": 0.997,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:23:59.198886Z"
+    },
+    {
+      "segment_id": "u-16",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 2",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.749,
+      "emotion": "neutral",
+      "emotion_score": 0.992,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:24:06.299952Z"
+    },
+    {
+      "segment_id": "u-19",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 1",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:24:23.913179Z"
+    },
+    {
+      "segment_id": "u-20",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 2",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.733,
+      "emotion": "neutral",
+      "emotion_score": 0.983,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:24:26.164425Z"
+    },
+    {
+      "segment_id": "u-21",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.835,
+      "emotion": "neutral",
+      "emotion_score": 0.982,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:24:46.022283Z"
+    },
+    {
+      "segment_id": "u-22",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 1",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:25:04.252941Z"
+    },
+    {
+      "segment_id": "u-23",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:25:06.360424Z"
+    },
+    {
+      "segment_id": "u-24",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "ok",
+      "sentiment": "negativo",
+      "sentiment_score": 0.574,
+      "emotion": "neutral",
+      "emotion_score": 0.983,
+      "low_confidence": true,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:25:10.995094Z"
+    },
+    {
+      "segment_id": "u-26",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:25:28.895435Z"
+    },
+    {
+      "segment_id": "u-27",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 3",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.93,
+      "emotion": "neutral",
+      "emotion_score": 0.993,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:25:32.300411Z"
+    },
+    {
+      "segment_id": "u-29",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 1",
+      "status": "texto_insuficiente",
+      "sentiment": null,
+      "sentiment_score": null,
+      "emotion": null,
+      "emotion_score": null,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:25:51.471389Z"
+    },
+    {
+      "segment_id": "u-30",
+      "session_id": "kognia-302e0dd73cd6d30c",
+      "speaker_label": "Hablante 2",
+      "status": "ok",
+      "sentiment": "neutral",
+      "sentiment_score": 0.872,
+      "emotion": "neutral",
+      "emotion_score": 0.99,
+      "low_confidence": false,
+      "model": "pysentimiento/robertuito-{sentiment,emotion}-analysis",
+      "source": "texto",
+      "analyzed_at": "2026-10-09T17:25:53.811087Z"
+    }
+  ],
+  "latency_turns": [
+    {
+      "turn_id": "t1",
+      "decision": "respond",
+      "outcome": "respondido",
+      "marks_ms": {
+        "decision": 0,
+        "user_stopped": -618.7,
+        "llm_first_token_1": 3344.9,
+        "tool_start_1": 3354.6,
+        "tool_end_1": 3358.7,
+        "llm_start_1": 3399.7,
+        "llm_first_token_2": 7238.1,
+        "tts_first_text_1": 7242.9,
+        "tts_first_audio_1": 7691,
+        "playout_started": 7693.5
+      },
+      "stages_ms": {
+        "transcription_delay": 477.2,
+        "end_of_turn_delay": 614.1,
+        "on_user_turn_completed_delay": 1.8,
+        "llm_node_ttft": 3838.8,
+        "llm_node_ttfs": 3897.4,
+        "tts_node_ttfb": 394.3,
+        "playback_latency": 0,
+        "e2e_latency": 8310.2,
+        "first_audio": 8312.2
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 1,
+          "cache_hit": true,
+          "http_ms": 0,
+          "start_ms": 3354.6,
+          "end_ms": 3358.7
+        }
+      ],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [],
+      "client": {
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 8870,
+        "speaking_event_to_audible_ms": 1314
+      },
+      "summary": {
+        "turns": 1,
+        "first_audio_p50_ms": 8312.2,
+        "first_audio_p95_ms": 8312.2,
+        "e2e_p50_ms": 8310.2,
+        "e2e_p95_ms": 8310.2,
+        "e2e_mean_ms": 8310.2,
+        "llm_ttft_p50_ms": 3838.8,
+        "browser_audible_p50_ms": 8870,
+        "browser_audible_p95_ms": 8870
+      }
+    },
+    {
+      "turn_id": "t2",
+      "decision": "respond",
+      "outcome": "respondido",
+      "marks_ms": {
+        "decision": 0,
+        "user_stopped": -693.6,
+        "llm_first_token_1": 4012.2,
+        "tool_start_1": 4017.2,
+        "tool_end_1": 4019.2,
+        "llm_start_1": 5022.3,
+        "llm_first_token_2": 6718.3,
+        "tts_first_text_1": 6813.7,
+        "tts_first_audio_1": 7362.6,
+        "playout_started": 7365.1
+      },
+      "stages_ms": {
+        "transcription_delay": 461.7,
+        "end_of_turn_delay": 633.8,
+        "on_user_turn_completed_delay": 1.6,
+        "llm_node_ttft": 1696.4,
+        "llm_node_ttfs": 1911.6,
+        "tts_node_ttfb": 429.1,
+        "playback_latency": 0,
+        "e2e_latency": 8056.7,
+        "first_audio": 8058.7
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 0.3,
+          "cache_hit": true,
+          "http_ms": 0,
+          "start_ms": 4017.1,
+          "end_ms": 4019.2
+        }
+      ],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [
+        {
+          "name": "wake_word_interrupt",
+          "at_ms": 18673.2
+        }
+      ],
+      "client": {
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 7685,
+        "speaking_event_to_audible_ms": 782
+      },
+      "summary": {
+        "turns": 2,
+        "first_audio_p50_ms": 8185.5,
+        "first_audio_p95_ms": 8299.5,
+        "e2e_p50_ms": 8183.5,
+        "e2e_p95_ms": 8297.5,
+        "e2e_mean_ms": 8183.5,
+        "llm_ttft_p50_ms": 2767.6,
+        "browser_audible_p50_ms": 8277.5,
+        "browser_audible_p95_ms": 8810.8
+      }
+    },
+    {
+      "turn_id": "t3",
+      "decision": "ask_repeat",
+      "outcome": "pidio_repetir",
+      "marks_ms": {
+        "decision": 0,
+        "tts_first_text_1": 116.7,
+        "tts_first_audio_1": 480,
+        "playout_started": 483.4,
+        "llm_first_token_1": 1979.2
+      },
+      "stages_ms": {},
+      "tools": [],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [
+        {
+          "name": "speech_created",
+          "at_ms": 1.1,
+          "source": "say"
+        }
+      ],
+      "client": {
+        "action": "ask_repeat",
+        "status": "medido",
+        "decision_to_audible_ms": 1154,
+        "speaking_event_to_audible_ms": 1105
+      },
+      "summary": {
+        "turns": 2,
+        "first_audio_p50_ms": 8185.5,
+        "first_audio_p95_ms": 8299.5,
+        "e2e_p50_ms": 8183.5,
+        "e2e_p95_ms": 8297.5,
+        "e2e_mean_ms": 8183.5,
+        "llm_ttft_p50_ms": 2767.6,
+        "browser_audible_p50_ms": 7685,
+        "browser_audible_p95_ms": 8751.5
+      }
+    },
+    {
+      "turn_id": "t4",
+      "decision": "respond",
+      "outcome": "respondido",
+      "marks_ms": {
+        "decision": 0,
+        "user_stopped": -833.5,
+        "llm_first_token_1": 2388.5,
+        "tool_start_1": 2397.5,
+        "tool_end_1": 2400.7,
+        "llm_start_1": 2434.1,
+        "llm_first_token_2": 3290.6,
+        "tts_first_text_1": 3291.8,
+        "tts_first_audio_1": 4172.3,
+        "playout_started": 4174.4
+      },
+      "stages_ms": {
+        "transcription_delay": 757.7,
+        "end_of_turn_delay": 790.6,
+        "on_user_turn_completed_delay": 2.7,
+        "llm_node_ttft": 857,
+        "llm_node_ttfs": 1195.4,
+        "tts_node_ttfb": 543.3,
+        "playback_latency": 0,
+        "e2e_latency": 5005.7,
+        "first_audio": 5007.9
+      },
+      "tools": [
+        {
+          "tool": "group_ips",
+          "duration_ms": 0.5,
+          "cache_hit": true,
+          "http_ms": 0,
+          "start_ms": 2397.4,
+          "end_ms": 2400.7
+        }
+      ],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [
+        {
+          "name": "wake_word_interrupt",
+          "at_ms": 4651.3
+        }
+      ],
+      "client": {},
+      "summary": {
+        "turns": 3,
+        "first_audio_p50_ms": 8058.7,
+        "first_audio_p95_ms": 8286.9,
+        "e2e_p50_ms": 8056.7,
+        "e2e_p95_ms": 8284.9,
+        "e2e_mean_ms": 7124.2,
+        "llm_ttft_p50_ms": 1696.4,
+        "browser_audible_p50_ms": 7685,
+        "browser_audible_p95_ms": 8751.5
+      }
+    },
+    {
+      "turn_id": "t5",
+      "decision": "respond",
+      "outcome": "respondido",
+      "marks_ms": {
+        "decision": 0,
+        "user_stopped": -945.8,
+        "llm_first_token_1": 1361,
+        "tool_start_1": 1373,
+        "tool_end_1": 1374.2,
+        "llm_start_1": 1388.2,
+        "llm_first_token_2": 2360.4,
+        "tts_first_text_1": 2465.6,
+        "tts_first_audio_1": 3408.8,
+        "playout_started": 3410.4
+      },
+      "stages_ms": {
+        "transcription_delay": 862.1,
+        "end_of_turn_delay": 897.2,
+        "on_user_turn_completed_delay": 1.4,
+        "llm_node_ttft": 972.7,
+        "llm_node_ttfs": 1473,
+        "tts_node_ttfb": 548.1,
+        "playback_latency": 0,
+        "e2e_latency": 4355.2,
+        "first_audio": 4356.2
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 0.3,
+          "cache_hit": true,
+          "http_ms": 0,
+          "start_ms": 1373,
+          "end_ms": 1374.2
+        }
+      ],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [],
+      "client": {
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 4399,
+        "speaking_event_to_audible_ms": 1099
+      },
+      "summary": {
+        "turns": 4,
+        "first_audio_p50_ms": 6533.3,
+        "first_audio_p95_ms": 8274.2,
+        "e2e_p50_ms": 6531.2,
+        "e2e_p95_ms": 8272.2,
+        "e2e_mean_ms": 6431.9,
+        "llm_ttft_p50_ms": 1334.6,
+        "browser_audible_p50_ms": 5039,
+        "browser_audible_p95_ms": 8633
+      }
+    },
+    {
+      "turn_id": "t6",
+      "decision": "listen",
+      "outcome": "escuchando_solicitud",
+      "marks_ms": {
+        "decision": 0,
+        "tts_first_text_1": 4.6,
+        "tts_first_audio_1": 309.4,
+        "playout_started": 311.3
+      },
+      "stages_ms": {},
+      "tools": [],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [
+        {
+          "name": "speech_created",
+          "at_ms": 1.2,
+          "source": "say"
+        }
+      ],
+      "client": {},
+      "summary": {
+        "turns": 4,
+        "first_audio_p50_ms": 6533.3,
+        "first_audio_p95_ms": 8274.2,
+        "e2e_p50_ms": 6531.2,
+        "e2e_p95_ms": 8272.2,
+        "e2e_mean_ms": 6431.9,
+        "llm_ttft_p50_ms": 1334.6,
+        "browser_audible_p50_ms": 5039,
+        "browser_audible_p95_ms": 8633
+      }
+    },
+    {
+      "turn_id": "t7",
+      "decision": "ignore",
+      "outcome": "ignorado",
+      "marks_ms": {
+        "decision": 0
+      },
+      "stages_ms": {},
+      "tools": [],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [],
+      "client": {},
+      "summary": {
+        "turns": 4,
+        "first_audio_p50_ms": 6533.3,
+        "first_audio_p95_ms": 8274.2,
+        "e2e_p50_ms": 6531.2,
+        "e2e_p95_ms": 8272.2,
+        "e2e_mean_ms": 6431.9,
+        "llm_ttft_p50_ms": 1334.6,
+        "browser_audible_p50_ms": 4719,
+        "browser_audible_p95_ms": 8573.8
+      }
+    },
+    {
+      "turn_id": "t8",
+      "decision": "listen",
+      "outcome": "escuchando_solicitud",
+      "marks_ms": {
+        "decision": 0,
+        "tts_first_text_1": 6.1,
+        "tts_first_audio_1": 294.4,
+        "playout_started": 295,
+        "llm_first_token_1": 1247.3
+      },
+      "stages_ms": {},
+      "tools": [],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [
+        {
+          "name": "speech_created",
+          "at_ms": 2,
+          "source": "say"
+        }
+      ],
+      "client": {},
+      "summary": {
+        "turns": 4,
+        "first_audio_p50_ms": 6533.3,
+        "first_audio_p95_ms": 8274.2,
+        "e2e_p50_ms": 6531.2,
+        "e2e_p95_ms": 8272.2,
+        "e2e_mean_ms": 6431.9,
+        "llm_ttft_p50_ms": 1334.6,
+        "browser_audible_p50_ms": 4719,
+        "browser_audible_p95_ms": 8573.8
+      }
+    },
+    {
+      "turn_id": "t9",
+      "decision": "ignore",
+      "outcome": "ignorado",
+      "marks_ms": {
+        "decision": 0
+      },
+      "stages_ms": {},
+      "tools": [],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [],
+      "client": {},
+      "summary": {
+        "turns": 4,
+        "first_audio_p50_ms": 6533.3,
+        "first_audio_p95_ms": 8274.2,
+        "e2e_p50_ms": 6531.2,
+        "e2e_p95_ms": 8272.2,
+        "e2e_mean_ms": 6431.9,
+        "llm_ttft_p50_ms": 1334.6,
+        "browser_audible_p50_ms": 4399,
+        "browser_audible_p95_ms": 8514.5
+      }
+    },
+    {
+      "turn_id": "t10",
+      "decision": "respond",
+      "outcome": "respondido",
+      "marks_ms": {
+        "decision": 0,
+        "llm_first_token_1": 2680.2,
+        "tool_start_1": 2704,
+        "tool_end_1": 2709.5,
+        "llm_start_1": 2725.7,
+        "llm_first_token_2": 3601.1,
+        "tts_first_text_1": 3604.8,
+        "tts_first_audio_1": 4207.1,
+        "playout_started": 4209.1
+      },
+      "stages_ms": {
+        "on_user_turn_completed_delay": 1.8,
+        "llm_node_ttft": 876,
+        "llm_node_ttfs": 1044.1,
+        "tts_node_ttfb": 437.9,
+        "playback_latency": 1
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 0.2,
+          "cache_hit": true,
+          "http_ms": 0,
+          "start_ms": 2704,
+          "end_ms": 2709.5
+        }
+      ],
+      "socrata_ms": 0,
+      "socrata_http_ms": 0,
+      "events": [],
+      "client": {
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 3922,
+        "speaking_event_to_audible_ms": 826
+      },
+      "summary": {
+        "turns": 5,
+        "first_audio_p50_ms": 6533.3,
+        "first_audio_p95_ms": 8274.2,
+        "e2e_p50_ms": 6531.2,
+        "e2e_p95_ms": 8272.2,
+        "e2e_mean_ms": 6431.9,
+        "llm_ttft_p50_ms": 972.7,
+        "browser_audible_p50_ms": 4160.5,
+        "browser_audible_p95_ms": 8455.2
+      }
+    },
+    {
+      "turn_id": "t11",
+      "decision": "respond",
+      "outcome": "respondido",
+      "marks_ms": {
+        "decision": 0,
+        "llm_start_1": 52.8,
+        "llm_start_2": 88.3,
+        "user_stopped": -565.2,
+        "llm_first_token_1": 1696.7,
+        "tool_start_1": 1703.8,
+        "tts_first_text_1": 2441,
+        "tts_first_audio_1": 2837.3,
+        "playout_started": 2838.8,
+        "llm_start_3": 19169.1,
+        "llm_first_token_2": 20337.5,
+        "llm_start_4": 21516.5,
+        "llm_first_token_3": 22734.7,
+        "tool_end_1": 23555.2,
+        "llm_start_5": 23563,
+        "llm_first_token_4": 24696.9,
+        "tts_first_text_2": 24698.2,
+        "tts_first_audio_2": 25156.6
+      },
+      "stages_ms": {
+        "transcription_delay": 0,
+        "end_of_turn_delay": 551.1,
+        "on_user_turn_completed_delay": 1.3,
+        "llm_node_ttft": 1134.5,
+        "llm_node_ttfs": 1281.5,
+        "tts_node_ttfb": 312.7,
+        "playback_latency": 0,
+        "e2e_latency": 25721.2,
+        "first_audio": 3404
+      },
+      "tools": [
+        {
+          "tool": "search_ips",
+          "duration_ms": 21851.3,
+          "cache_hit": false,
+          "http_ms": 26024,
+          "start_ms": 1703.8,
+          "end_ms": 23555.2
+        }
+      ],
+      "socrata_ms": 21851.3,
+      "socrata_http_ms": 26024,
+      "events": [
+        {
+          "name": "speech_created",
+          "at_ms": 1.5,
+          "source": "generate_reply"
+        },
+        {
+          "name": "speech_created",
+          "at_ms": 2436.2,
+          "source": "say"
+        },
+        {
+          "name": "speech_created",
+          "at_ms": 19164.1,
+          "source": "generate_reply"
+        },
+        {
+          "name": "speech_created",
+          "at_ms": 21504.3,
+          "source": "generate_reply"
+        },
+        {
+          "name": "speech_interrupted",
+          "at_ms": 21662.8,
+          "speech_id": "speech_ea39e7e1be90"
+        }
+      ],
+      "client": {
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 4252,
+        "speaking_event_to_audible_ms": 1514
+      },
+      "summary": {
+        "turns": 6,
+        "first_audio_p50_ms": 5007.9,
+        "first_audio_p95_ms": 8261.5,
+        "e2e_p50_ms": 8056.7,
+        "e2e_p95_ms": 22239,
+        "e2e_mean_ms": 10289.8,
+        "llm_ttft_p50_ms": 1053.6,
+        "browser_audible_p50_ms": 4252,
+        "browser_audible_p95_ms": 8396
+      }
+    }
+  ],
+  "browser_playback": [
+    {
+      "turn_id": "t1",
+      "action": "respond",
+      "status": "medido",
+      "decision_to_audible_ms": 8870,
+      "speaking_event_to_audible_ms": 1314
+    },
+    {
+      "turn_id": "t2",
+      "action": "respond",
+      "status": "medido",
+      "decision_to_audible_ms": 7685,
+      "speaking_event_to_audible_ms": 782
+    },
+    {
+      "turn_id": "t3",
+      "action": "ask_repeat",
+      "status": "medido",
+      "decision_to_audible_ms": 1154,
+      "speaking_event_to_audible_ms": 1105
+    },
+    {
+      "turn_id": "t4",
+      "action": "respond",
+      "status": "medido",
+      "decision_to_audible_ms": 5039,
+      "speaking_event_to_audible_ms": 842
+    },
+    {
+      "turn_id": "t5",
+      "action": "respond",
+      "status": "medido",
+      "decision_to_audible_ms": 4399,
+      "speaking_event_to_audible_ms": 1099
+    },
+    {
+      "turn_id": "t6",
+      "action": "listen",
+      "status": "medido",
+      "decision_to_audible_ms": 1089,
+      "speaking_event_to_audible_ms": 851
+    },
+    {
+      "turn_id": "t8",
+      "action": "listen",
+      "status": "medido",
+      "decision_to_audible_ms": 1651,
+      "speaking_event_to_audible_ms": 1370
+    },
+    {
+      "turn_id": "t10",
+      "action": "respond",
+      "status": "medido",
+      "decision_to_audible_ms": 3922,
+      "speaking_event_to_audible_ms": 826
+    },
+    {
+      "turn_id": "t11",
+      "action": "respond",
+      "status": "medido",
+      "decision_to_audible_ms": 4252,
+      "speaking_event_to_audible_ms": 1514
+    }
+  ],
+  "browser_playback_ms": [
+    8870,
+    7685,
+    1154,
+    5039,
+    4399,
+    1089,
+    1651,
+    3922,
+    4252
+  ]
+}

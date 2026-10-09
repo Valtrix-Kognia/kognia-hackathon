@@ -76,15 +76,18 @@ describe('ConversationStore', () => {
     store.apply(decision(2, 't1', 'ignore'));
     store.markAgentAudible(performance.now() + 10);
     expect(store.playback()).toEqual([]);
-    store.apply(decision(3, 't2', 'respond'));
-    store.apply(decision(4, 't3', 'respond'));
-    store.apply({ ...event('agent.speaking', 5, {}), turn_id: 't3' });
+    store.apply(decision(6, 't9', 'respond'));
+    store.markAgentAudible(performance.now() + 20);
+    expect(store.playback()).toEqual([]);
+    store.apply(decision(7, 't2', 'respond'));
+    store.apply(decision(8, 't3', 'respond'));
+    store.apply({ ...event('agent.speaking', 9, {}), turn_id: 't3' });
     store.markAgentAudible(performance.now() + 1500);
     const statuses = store.playback().map((m) => [m.turn_id, m.status]);
-    expect(statuses).toEqual([['t2', 'reemplazado'], ['t3', 'medido']]);
-    expect(store.playback()[1].speaking_event_to_audible_ms).toBeGreaterThan(0);
-    expect(sent.length).toBe(2);
-    expect(store.decisionCounts().respond).toBe(2);
+    expect(statuses).toEqual([['t9', 'reemplazado'], ['t2', 'reemplazado'], ['t3', 'medido']]);
+    expect(store.playback()[2].speaking_event_to_audible_ms).toBeGreaterThan(0);
+    expect(sent.length).toBe(3);
+    expect(store.decisionCounts().respond).toBe(3);
   });
 
   it('resets everything on a new session', () => {

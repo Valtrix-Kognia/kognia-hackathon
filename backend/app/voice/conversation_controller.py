@@ -11,7 +11,12 @@ from app.voice.latency_metrics import LatencyMetricsService
 from app.voice.speaker_diarization import DiarizedUtterance, SpeakerDiarizationService
 from app.voice.transcript_tracker import TranscriptTracker
 from app.voice.turn_alignment import align_to_committed
-from app.voice.turn_manager import TurnDecision, TurnManagementService, TurnMode
+from app.voice.turn_manager import (
+    TurnDecision,
+    TurnManagementService,
+    TurnMode,
+    is_domain_request,
+)
 from app.voice.wake_word import find_wake_word
 
 logger = logging.getLogger("kognia.conversation")
@@ -48,6 +53,12 @@ class ConversationController:
         self._current_speech: Callable[[], SpeechHandle | None] = lambda: (
             self._agent_speech
         )
+        self._deferred: list[str] = []
+        self._deferred_handler: Callable[[str], None] = lambda _text: None
+
+    def on_deferred_request(self, handler: Callable[[str], None]) -> None:
+        """Called with a request asked while Kognia spoke, once it finishes speaking."""
+        self._deferred_handler = handler
 
     def bind_current_speech(self, provider: Callable[[], SpeechHandle | None]) -> None:
         """Use the session's authoritative current speech for interruption decisions."""
@@ -103,7 +114,8 @@ class ConversationController:
                     },
                 )
             self._emotions.submit(segment)
-        self._maybe_interrupt_for_wake_word(utterance.text)
+        if not self._maybe_interrupt_for_wake_word(utterance.text):
+            self._maybe_defer(utterance)
 
     def complete_turn(self, committed_text: str) -> TurnDecision:
         buffered, self._pending = self._pending, []
@@ -170,6 +182,32 @@ class ConversationController:
 
     def on_agent_finished_speaking(self) -> None:
         self._turns.mark_agent_replied()
+        if self._deferred and not self._speaking_uninterruptible():
+            text = " ".join(self._deferred)
+            self._deferred = []
+            self.start_programmatic_turn(text, "diferido_mientras_hablaba")
+            self._deferred_handler(text)
+
+    def start_programmatic_turn(self, text: str, reason: str) -> str:
+        """Open a traced turn for a reply that does not go through a LiveKit commit."""
+        turn_id = f"t{next(self._turn_counter)}"
+        self._latency.start_turn(turn_id, "respond")
+        self._latency.mark("decision")
+        self._events.publish(
+            "turn.decision",
+            {
+                "turn_id": turn_id,
+                "action": "respond",
+                "reason": reason,
+                "mode": self._turns.mode.value,
+                "activation": find_wake_word(text).level.value,
+                "text": text,
+                "merged_from": [],
+            },
+            turn_id=turn_id,
+        )
+        logger.info("turn decision %s respond (%s): %s", turn_id, reason, text)
+        return turn_id
 
     def _apply_interruptibility(self) -> None:
         handle = self._agent_speech
@@ -180,12 +218,34 @@ class ConversationController:
         except RuntimeError:
             logger.debug("speech handle no longer accepts interruption changes")
 
-    def _maybe_interrupt_for_wake_word(self, text: str) -> None:
+    def _maybe_interrupt_for_wake_word(self, text: str) -> bool:
         if self._turns.mode is not TurnMode.WAKE_WORD or not find_wake_word(text).found:
-            return
+            return False
         handle = self._current_speech()
         if handle is None or handle.done() or handle.interrupted:
-            return
+            return False
         logger.info("wake word heard while speaking: interrupting speech %s", handle.id)
         self._latency.annotate(self._latency.current_turn_id, "wake_word_interrupt")
         handle.interrupt(force=True)
+        return True
+
+    def _speaking_uninterruptible(self) -> bool:
+        handle = self._current_speech()
+        return (
+            handle is not None
+            and not handle.done()
+            and not handle.interrupted
+            and not handle.allow_interruptions
+        )
+
+    def _maybe_defer(self, utterance: DiarizedUtterance) -> None:
+        if (
+            self._turns.mode is TurnMode.WAKE_WORD
+            and self._speaking_uninterruptible()
+            and is_domain_request(utterance.text)
+            and not utterance.overlap_suspected
+        ):
+            self._deferred.append(utterance.text)
+            if utterance in self._pending:
+                self._pending.remove(utterance)
+            logger.info("deferring request heard while speaking: %s", utterance.text)

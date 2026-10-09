@@ -37,6 +37,9 @@ _TRAILING_INCOMPLETE = {
     "MUESTRAME", "COMPARA", "CUENTAME", "EH", "ESTE", "PUES",
 }  # fmt: skip
 
+SHORT_FRAGMENT_WORDS = 3
+QUICK_CONTINUATION_S = 3.0
+
 Action = Literal["respond", "ignore", "ask_repeat", "hold", "listen"]
 
 
@@ -154,7 +157,7 @@ class TurnManagementService:
         merged_from = (pending.text, current) if pending else ()
 
         wake = self._wake.detect(text)
-        domain_request = _is_domain_request(text)
+        domain_request = is_domain_request(text)
         addressed_turn = (
             self.mode is TurnMode.OPEN
             or wake.found
@@ -247,7 +250,14 @@ class TurnManagementService:
         window = self._listen_window_s if pending.wake_only else self._merge_window_s
         if self._clock() - pending.at > window:
             return None
-        if pending.speaker is not None and speakers and speakers != {pending.speaker}:
+        short_fragment = len(normalize(pending.text).split()) < SHORT_FRAGMENT_WORDS
+        quick = self._clock() - pending.at <= QUICK_CONTINUATION_S
+        different = (
+            pending.speaker is not None
+            and bool(speakers)
+            and speakers != {pending.speaker}
+        )
+        if different and not (short_fragment and quick and len(speakers) == 1):
             return None
         return pending
 
@@ -298,7 +308,7 @@ def is_incomplete_request(request: str) -> bool:
     return tokens[-1] in _TRAILING_INCOMPLETE
 
 
-def _is_domain_request(text: str) -> bool:
+def is_domain_request(text: str) -> bool:
     """A question or command about the dataset's subject, even if STT clipped "Kognia"."""
     norm = normalize(text)
     tokens = set(norm.split())

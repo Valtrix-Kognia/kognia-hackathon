@@ -114,7 +114,6 @@ async def test_details_returns_none_when_empty() -> None:
 
 async def test_counts_and_ranking_served_from_preloaded_aggregates() -> None:
     from app.application.services.aggregate_cache import AggregateCache
-    from app.domain.models.dataset_columns import Metric as M
 
     fake = FakeSocrataClient()
     aggregates = AggregateCache(fake, ttl_s=60)  # type: ignore[arg-type]
@@ -155,7 +154,7 @@ async def test_counts_and_ranking_served_from_preloaded_aggregates() -> None:
     assert (count.prestadores, count.sedes) == (3, 3)
     assert any("agregados descargados" in n for n in count.metadata.limitations)
     ranking = await service.group(
-        Dimension.DEPARTAMENTO, M.PRESTADORES, FilterRequest(), top_n=1
+        Dimension.DEPARTAMENTO, Metric.PRESTADORES, FilterRequest(), top_n=1
     )
     assert [(b.label, b.value) for b in ranking.buckets] == [("Antioquia", 6)]
     assert len(fake.queries) == before

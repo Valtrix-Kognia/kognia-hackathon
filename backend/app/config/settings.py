@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     socrata_domain: str = "https://www.datos.gov.co"
     socrata_dataset_id: str = "s2ru-bqt6"
     socrata_app_token: SecretStr | None = None
-    socrata_timeout_s: float = Field(default=10.0, gt=0, le=120)
+    socrata_timeout_s: float = Field(default=8.0, gt=0, le=120)
     socrata_max_retries: int = Field(default=1, ge=0, le=5)
     socrata_max_response_bytes: int = Field(default=8_000_000, gt=0)
     catalog_ttl_s: int = Field(default=6 * 3600, gt=0)

@@ -126,7 +126,9 @@ export class ConversationStore {
   /** Called on each agent-audio onset detected in this browser. */
   markAgentAudible(nowMs: number): void {
     const pending = this.awaiting;
-    if (!pending || nowMs < pending.decisionAt) return;
+    // Only audio after this turn's own agent.speaking event counts; otherwise a pause in a
+    // previous answer still playing would be mistaken for this turn's first audio.
+    if (!pending || pending.speakingAt === undefined || nowMs < pending.speakingAt) return;
     this.awaiting = null;
     this.recordPlayback({
       turn_id: pending.turnId,

@@ -27,3 +27,6 @@ Thumbs.db
 # Coding agents
 .claude/settings.local.json
 .claude/worktrees/
+
+# Logs del agente: pueden contener tokens de sesión
+backend/bench/results/e2e/agent_*.log

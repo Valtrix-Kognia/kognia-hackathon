@@ -115,3 +115,11 @@ async def test_response_size_limit() -> None:
 async def test_page_bounds_are_validated(client: SocrataClient) -> None:
     with pytest.raises(ValueError):
         await client.query("SELECT *", page_size=100_000)
+
+
+@respx.mock
+async def test_timeout_is_not_retried(client: SocrataClient) -> None:
+    route = respx.post(URL).mock(side_effect=httpx.ReadTimeout("slow"))
+    with pytest.raises(SocrataTimeoutError):
+        await client.query("SELECT 1")
+    assert route.call_count == 1

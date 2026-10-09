@@ -100,9 +100,9 @@ class SocrataClient:
                     headers=self._headers(),
                     timeout=self._settings.socrata_timeout_s,
                 )
-            except httpx.TimeoutException:
+            except httpx.TimeoutException as exc:
                 _record_http(started)
-                last_error = SocrataTimeoutError("Socrata request timed out")
+                raise SocrataTimeoutError("Socrata request timed out") from exc
             except httpx.TransportError as exc:
                 _record_http(started)
                 last_error = SocrataUnavailableError(

@@ -8,7 +8,7 @@ from livekit.agents import RunContext, llm
 from livekit.agents.llm import ToolError, function_tool
 from pydantic import BaseModel
 
-from app.application.services.ips_query_service import IpsQueryService
+from app.application.services.ips_query_service import ROW_UNIT_NOTE, IpsQueryService
 from app.domain.errors import DomainError
 from app.domain.models.dataset_columns import Dimension, Metric
 from app.domain.models.filter_request import FilterRequest
@@ -43,6 +43,16 @@ _DIMENSIONS: dict[str, Dimension] = {
     "grupo_capacidad": Dimension.GRUPO_CAPACIDAD,
     "descripcion_capacidad": Dimension.DESCRIPCION_CAPACIDAD,
 }
+
+
+def spoken_limitations(limitations: list[str]) -> list[str]:
+    """Notes the LLM should consider saying. The row-unit and data-snapshot notes stay in
+    the dashboard only: repeating them made every answer 8-12 s long (e2e traces)."""
+    return [
+        note
+        for note in limitations
+        if note != ROW_UNIT_NOTE and "agregados descargados" not in note
+    ]
 
 
 class IpsToolset(llm.Toolset):
@@ -186,7 +196,7 @@ class IpsToolset(llm.Toolset):
                 "sedes_unicas": r.sedes,
                 "registros": r.registros,
                 "filtros_aplicados": r.metadata.filters,
-                "limitaciones": r.metadata.limitations,
+                "limitaciones": spoken_limitations(r.metadata.limitations),
             },
         )
 
@@ -250,7 +260,7 @@ class IpsToolset(llm.Toolset):
                 "unidad": r.metric_description,
                 "grupos": [{"valor": b.label, "total": b.value} for b in r.buckets],
                 "filtros_aplicados": r.metadata.filters,
-                "limitaciones": r.metadata.limitations,
+                "limitaciones": spoken_limitations(r.metadata.limitations),
             },
         )
 
@@ -303,7 +313,7 @@ class IpsToolset(llm.Toolset):
                     for i in r.items
                 ],
                 "filtros_aplicados": r.metadata.filters,
-                "limitaciones": r.metadata.limitations,
+                "limitaciones": spoken_limitations(r.metadata.limitations),
             },
         )
 
