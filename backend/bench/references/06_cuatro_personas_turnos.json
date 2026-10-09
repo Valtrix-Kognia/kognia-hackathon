@@ -1,0 +1,6 @@
+[
+  {"person": "P1", "text": "Kognia, ¿cuántas IPS hay en Caldas?", "addressed": true},
+  {"person": "P2", "text": "Kognia, ¿cuántas son privadas?", "addressed": true},
+  {"person": "P3", "text": "Kognia, busca hospitales en Manizales.", "addressed": true},
+  {"person": "P4", "text": "Kognia, ¿qué niveles de atención aparecen en los datos?", "addressed": true}
+]

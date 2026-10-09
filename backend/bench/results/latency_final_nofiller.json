@@ -1,0 +1,261 @@
+{
+  "summary": {
+    "label": "final_nofiller",
+    "turns_sent": 8,
+    "turns_measured": 6,
+    "failed_turns": [],
+    "first_audio": {
+      "n": 6,
+      "p50": 4011.6,
+      "p95": 7035.5
+    },
+    "e2e_latency": {
+      "n": 6,
+      "p50": 4011.2,
+      "p95": 7035.275000000001
+    },
+    "end_of_turn_delay": {
+      "n": 6,
+      "p50": 553.8499999999999,
+      "p95": 2495.7250000000004
+    },
+    "transcription_delay": {
+      "n": 6,
+      "p50": 482.4,
+      "p95": 566.3
+    },
+    "llm_node_ttft": {
+      "n": 6,
+      "p50": 1023.85,
+      "p95": 2949.575
+    },
+    "tts_node_ttfb": {
+      "n": 6,
+      "p50": 471.4,
+      "p95": 676.875
+    },
+    "socrata_ms": {
+      "n": 3,
+      "p50": 1210.8,
+      "p95": 3642.6899999999996
+    }
+  },
+  "turns": [
+    {
+      "turn_index": 1,
+      "user_message_id": "item_c968f03ca498",
+      "stages_ms": {
+        "transcription_delay": 577.3,
+        "end_of_turn_delay": 597.8,
+        "on_user_turn_completed_delay": 1.0,
+        "first_audio": 3973.5,
+        "llm_node_ttft": 986.4,
+        "llm_node_ttfs": 1242.5,
+        "tts_node_ttfb": 497.1,
+        "playback_latency": 0.0,
+        "e2e_latency": 3972.7
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 832.7,
+          "cache_hit": false
+        }
+      ],
+      "socrata_ms": 832.7,
+      "summary": {
+        "turns": 1,
+        "first_audio_p50_ms": 3973.5,
+        "first_audio_p95_ms": 3973.5,
+        "e2e_p50_ms": 3972.7,
+        "e2e_p95_ms": 3972.7,
+        "e2e_mean_ms": 3972.7,
+        "llm_ttft_p50_ms": 986.4
+      }
+    },
+    {
+      "turn_index": 4,
+      "user_message_id": "item_42eda9e8a2ae",
+      "stages_ms": {
+        "transcription_delay": 533.3,
+        "end_of_turn_delay": 2495.5,
+        "on_user_turn_completed_delay": 1.1,
+        "first_audio": 7855.1,
+        "llm_node_ttft": 840.2,
+        "llm_node_ttfs": 987.7,
+        "tts_node_ttfb": 445.7,
+        "playback_latency": 0.0,
+        "e2e_latency": 7855.1
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 3912.9,
+          "cache_hit": false
+        }
+      ],
+      "socrata_ms": 3912.9,
+      "summary": {
+        "turns": 2,
+        "first_audio_p50_ms": 5914.3,
+        "first_audio_p95_ms": 7661.0,
+        "e2e_p50_ms": 5913.9,
+        "e2e_p95_ms": 7661.0,
+        "e2e_mean_ms": 5913.9,
+        "llm_ttft_p50_ms": 913.3
+      }
+    },
+    {
+      "turn_index": 5,
+      "user_message_id": "item_01b8966fe6ab",
+      "stages_ms": {
+        "transcription_delay": 0,
+        "end_of_turn_delay": 2495.8,
+        "on_user_turn_completed_delay": 1.0,
+        "first_audio": 4049.7,
+        "llm_node_ttft": 3468.0,
+        "llm_node_ttfs": 5439.1,
+        "tts_node_ttfb": 657.3,
+        "playback_latency": 0.0,
+        "e2e_latency": 4049.7
+      },
+      "tools": [],
+      "socrata_ms": 0,
+      "summary": {
+        "turns": 3,
+        "first_audio_p50_ms": 4049.7,
+        "first_audio_p95_ms": 7474.6,
+        "e2e_p50_ms": 4049.7,
+        "e2e_p95_ms": 7474.6,
+        "e2e_mean_ms": 5292.5,
+        "llm_ttft_p50_ms": 986.4
+      }
+    },
+    {
+      "turn_index": 6,
+      "user_message_id": "item_3d1bfe6d10c3",
+      "stages_ms": {
+        "transcription_delay": 484.0,
+        "end_of_turn_delay": 509.9,
+        "on_user_turn_completed_delay": 0.6,
+        "first_audio": 4576.7,
+        "llm_node_ttft": 997.7,
+        "llm_node_ttfs": 1192.7,
+        "tts_node_ttfb": 683.4,
+        "playback_latency": 0.0,
+        "e2e_latency": 4575.8
+      },
+      "tools": [
+        {
+          "tool": "count_ips",
+          "duration_ms": 1210.8,
+          "cache_hit": false
+        }
+      ],
+      "socrata_ms": 1210.8,
+      "summary": {
+        "turns": 4,
+        "first_audio_p50_ms": 4313.2,
+        "first_audio_p95_ms": 7363.3,
+        "e2e_p50_ms": 4312.8,
+        "e2e_p95_ms": 7363.2,
+        "e2e_mean_ms": 5113.3,
+        "llm_ttft_p50_ms": 992.0
+      }
+    },
+    {
+      "turn_index": 7,
+      "user_message_id": "item_fb1d3f914b0b",
+      "stages_ms": {
+        "transcription_delay": 389.3,
+        "end_of_turn_delay": 413.6,
+        "on_user_turn_completed_delay": 1.0,
+        "first_audio": 2112.6,
+        "llm_node_ttft": 1050.0,
+        "llm_node_ttfs": 1312.0,
+        "tts_node_ttfb": 406.2,
+        "playback_latency": 0.0,
+        "e2e_latency": 2111.5
+      },
+      "tools": [],
+      "socrata_ms": 0,
+      "summary": {
+        "turns": 5,
+        "first_audio_p50_ms": 4049.7,
+        "first_audio_p95_ms": 7199.4,
+        "e2e_p50_ms": 4049.7,
+        "e2e_p95_ms": 7199.2,
+        "e2e_mean_ms": 4513.0,
+        "llm_ttft_p50_ms": 997.7
+      }
+    },
+    {
+      "turn_index": 8,
+      "user_message_id": "item_c4a319a26a63",
+      "stages_ms": {
+        "transcription_delay": 480.8,
+        "end_of_turn_delay": 508.8,
+        "on_user_turn_completed_delay": 0.8,
+        "first_audio": 2292.9,
+        "llm_node_ttft": 1394.3,
+        "llm_node_ttfs": 1436.1,
+        "tts_node_ttfb": 371.2,
+        "playback_latency": 0.0,
+        "e2e_latency": 2292.5
+      },
+      "tools": [],
+      "socrata_ms": 0,
+      "summary": {
+        "turns": 6,
+        "first_audio_p50_ms": 4011.6,
+        "first_audio_p95_ms": 7035.5,
+        "e2e_p50_ms": 4011.2,
+        "e2e_p95_ms": 7035.3,
+        "e2e_mean_ms": 4142.9,
+        "llm_ttft_p50_ms": 1023.9
+      }
+    }
+  ],
+  "raw": [
+    {
+      "question": "¿Cuántas IPS hay en el Quindío?",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"¿Cuántas IPS hay en el Quindío?\",\n  \"heard\": \"¿Cuántas IPS hay en el Quindío?\",\n  \"events\": [\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:06:40.777Z\",\n      \"role\": \"user\",\n      \"text\": \"¿Cuántas IPS hay en el Quindío?\"\n    },\n    {\n      \"type\": \"tool_call\",\n      \"time\": \"2026-10-09T16:06:42.382Z\",\n      \"name\": \"count_ips\",\n      \"arguments\": \"{\\\"departamento\\\": \\\"Quind\\\\u00edo\\\"}\",\n      \"output\": \"{'prestadores_unicos': 139, 'sedes_unicas': 148, 'registros': 469, 'filtros_aplicados': {'departamento': 'Quindío'}, 'limitaciones': ['Cada fila del dataset es una línea de capacidad instalada de una sede; una fila no equivale a una IPS.']}\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:06:53.544Z\",\n      \"role\": \"assistant\",\n      \"text\": \"En el Quindío, de acuerdo con los datos, hay 139 prestadores de servicios de salud únicos, que operan en 148 sedes. En el panel puedes ver el detalle.\",\n      \"metrics\": {\n        \"e2e_latency\": 3.9727048873901367,\n        \"llm_ttft\": 0.9864350999705493,\n        \"tts_ttfb\": 0.49708960007410496\n      }\n    }\n  ],\n  \"reply\": \"En el Quindío, de acuerdo con los datos, hay 139 prestadores de servicios de salud únicos, que operan en 148 sedes. En el panel puedes ver el detalle.\",\n  \"duration_ms\": 19256\n}\n"
+    },
+    {
+      "question": "¿Qué departamentos tienen más prestadores?",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"¿Qué departamentos tienen más prestadores?\",\n  \"heard\": \"Departamentos\\ntienen más prestadores?\",\n  \"events\": [\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:07:02.572Z\",\n      \"role\": \"user\",\n      \"text\": \"Departamentos\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:07:02.761Z\",\n      \"role\": \"user\",\n      \"text\": \"tienen más prestadores?\"\n    },\n    {\n      \"type\": \"tool_call\",\n      \"time\": \"2026-10-09T16:07:09.449Z\",\n      \"name\": \"group_ips\",\n      \"arguments\": \"{\\\"dimension\\\": \\\"departamento\\\", \\\"metrica\\\": \\\"prestadores\\\", \\\"orden\\\": \\\"mayor_a_menor\\\", \\\"top_n\\\": 10}\",\n      \"output\": \"{'unidad': 'prestadores únicos según código de prestador REPS', 'grupos': [{'valor': 'Bogotá D.C', 'total': 1270.0}, {'valor': 'Antioquia', 'total': 837.0}, {'valor': 'Santander', 'total': 597.0}, {'valor': 'Cali', 'total': 491.0}, {'valor': 'Barranquilla', 'total': 462.0}, {'valor': 'Cundinamarca', 'total': 370.0}, {'valor': 'Córdoba', 'total': 354.0}, {'valor': 'Cesar', 'total': 329.0}, {'valor': 'Cartagena', 'total': 320.0}, {'valor': 'Boyacá', 'total': 312.0}], 'filtros_aplicados': {}, 'limitaciones': ['Cada fila del dataset es una línea de capacidad instalada de una sede; una fila no equivale a una IPS.', 'La columna departamento incluye distritos reportados por separado (Barranquilla, Cartagena, Santa Marta, Cali y Buenaventura).']}\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:07:30.437Z\",\n      \"role\": \"assistant\",\n      \"text\": \"Los departamentos con más prestadores son: Bogotá D.C. con 1.270, Antioquia con 837 y Santander con 597. En el panel puedes ver el detalle de los 10 primeros. Ten en cuenta que la columna de departamento incluye distritos reportados por separado como Barranquilla y Cartagena.\",\n      \"metrics\": {\n        \"llm_ttft\": 0.8362855999730527,\n        \"tts_ttfb\": 0.4775167000479996\n      }\n    }\n  ],\n  \"reply\": \"Los departamentos con más prestadores son: Bogotá D.C. con 1.270, Antioquia con 837 y Santander con 597. En el panel puedes ver el detalle de los 10 primeros. Ten en cuenta que la columna de departamento incluye distritos reportados por separado como Barranquilla y Cartagena.\",\n  \"duration_ms\": 36694\n}\n"
+    },
+    {
+      "question": "¿Cuántas sedes públicas hay en Antioquia?",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"¿Cuántas sedes públicas hay en Antioquia?\",\n  \"heard\": \"¿Cuántas sedes públicas hay en Antioquia?\",\n  \"events\": [\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:07:39.774Z\",\n      \"role\": \"user\",\n      \"text\": \"¿Cuántas sedes públicas hay en Antioquia?\"\n    },\n    {\n      \"type\": \"tool_call\",\n      \"time\": \"2026-10-09T16:07:43.694Z\",\n      \"name\": \"count_ips\",\n      \"arguments\": \"{\\\"departamento\\\": \\\"Antioquia\\\", \\\"naturaleza\\\": \\\"P\\\\u00fablica\\\"}\",\n      \"output\": \"{'prestadores_unicos': 125, 'sedes_unicas': 131, 'registros': 1701, 'filtros_aplicados': {'departamento': 'Antioquia', 'naturaleza': 'Pública'}, 'limitaciones': ['Cada fila del dataset es una línea de capacidad instalada de una sede; una fila no equivale a una IPS.']}\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:07:53.757Z\",\n      \"role\": \"assistant\",\n      \"text\": \"En Antioquia hay 131 sedes de prestadores públicos, que corresponden a 125 prestadores únicos. En el panel puedes ver el detalle.\",\n      \"metrics\": {\n        \"e2e_latency\": 7.855083703994751,\n        \"llm_ttft\": 0.8401995000895113,\n        \"tts_ttfb\": 0.4457041999557987\n      }\n    }\n  ],\n  \"reply\": \"En Antioquia hay 131 sedes de prestadores públicos, que corresponden a 125 prestadores únicos. En el panel puedes ver el detalle.\",\n  \"duration_ms\": 23119\n}\n"
+    },
+    {
+      "question": "¿Qué niveles de atención aparecen en los datos?",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"¿Qué niveles de atención aparecen en los datos?\",\n  \"heard\": \"¿Qué? Niveles de\",\n  \"events\": [\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:08:08.451Z\",\n      \"role\": \"user\",\n      \"text\": \"¿Qué? Niveles de\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:08:32.837Z\",\n      \"role\": \"assistant\",\n      \"text\": \"No comprendo tu pregunta. Por favor, sé más específico sobre qué quieres saber acerca de los niveles.\",\n      \"metrics\": {\n        \"e2e_latency\": 4.049746990203857,\n        \"llm_ttft\": 3.467950699967332,\n        \"tts_ttfb\": 0.6573431000579149\n      }\n    }\n  ],\n  \"reply\": \"No comprendo tu pregunta. Por favor, sé más específico sobre qué quieres saber acerca de los niveles.\",\n  \"duration_ms\": 38870\n}\n"
+    },
+    {
+      "question": "¿Cuántas camas hay en Risaralda?",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"¿Cuántas camas hay en Risaralda?\",\n  \"heard\": \"¿Cuántas camas hay en Risaralda?\",\n  \"events\": [\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:08:39.809Z\",\n      \"role\": \"user\",\n      \"text\": \"¿Cuántas camas hay en Risaralda?\"\n    },\n    {\n      \"type\": \"tool_call\",\n      \"time\": \"2026-10-09T16:08:41.988Z\",\n      \"name\": \"count_ips\",\n      \"arguments\": \"{\\\"departamento\\\": \\\"Risaralda\\\", \\\"grupo_capacidad\\\": \\\"camas\\\"}\",\n      \"output\": \"{'prestadores_unicos': 26, 'sedes_unicas': 26, 'registros': 108, 'filtros_aplicados': {'departamento': 'Risaralda', 'grupo_capacidad': 'CAMAS'}, 'limitaciones': ['Cada fila del dataset es una línea de capacidad instalada de una sede; una fila no equivale a una IPS.']}\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:08:56.946Z\",\n      \"role\": \"assistant\",\n      \"text\": \"En Risaralda, se reportan 108 registros de capacidad instalada de camas en 26 sedes. Ten en cuenta que cada registro es una línea de capacidad instalada, no una cama individual. En el panel puedes ver el detalle.\",\n      \"metrics\": {\n        \"e2e_latency\": 4.575802803039551,\n        \"llm_ttft\": 0.9977012000745162,\n        \"tts_ttfb\": 0.6833831999683753\n      }\n    }\n  ],\n  \"reply\": \"En Risaralda, se reportan 108 registros de capacidad instalada de camas en 26 sedes. Ten en cuenta que cada registro es una línea de capacidad instalada, no una cama individual. En el panel puedes ver el detalle.\",\n  \"duration_ms\": 23907\n}\n"
+    },
+    {
+      "question": "¿Qué especialidades ofrece el hospital San Juan de Dios?",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"¿Qué especialidades ofrece el hospital San Juan de Dios?\",\n  \"heard\": \"¿Qué especialidades ofrece el hospital San Juan de Dios?\",\n  \"events\": [\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:09:05.700Z\",\n      \"role\": \"user\",\n      \"text\": \"¿Qué especialidades ofrece el hospital San Juan de Dios?\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:09:16.649Z\",\n      \"role\": \"assistant\",\n      \"text\": \"La información disponible no incluye datos sobre las especialidades médicas que ofrecen las IPS. Solo tengo detalles sobre su capacidad instalada, como camas, consultorios y salas.\",\n      \"metrics\": {\n        \"e2e_latency\": 2.1115450859069824,\n        \"llm_ttft\": 1.049997300026007,\n        \"tts_ttfb\": 0.4061649999348447\n      }\n    }\n  ],\n  \"reply\": \"La información disponible no incluye datos sobre las especialidades médicas que ofrecen las IPS. Solo tengo detalles sobre su capacidad instalada, como camas, consultorios y salas.\",\n  \"duration_ms\": 19503\n}\n"
+    },
+    {
+      "question": "Busca la clínica Avidanti en Manizales.",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"Busca la clínica Avidanti en Manizales.\",\n  \"heard\": \"\",\n  \"events\": [],\n  \"reply\": \"\",\n  \"silent\": true,\n  \"duration_ms\": 21938\n}\n"
+    },
+    {
+      "question": "Gracias, eso es todo.",
+      "exit_code": 0,
+      "stdout": "{\n  \"text\": \"Gracias, eso es todo.\",\n  \"heard\": \"Gracias, eso es todo.\",\n  \"events\": [\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:09:45.631Z\",\n      \"role\": \"user\",\n      \"text\": \"Gracias, eso es todo.\"\n    },\n    {\n      \"type\": \"message\",\n      \"time\": \"2026-10-09T16:09:52.412Z\",\n      \"role\": \"assistant\",\n      \"text\": \"De nada. Si tienes más preguntas sobre las IPS de Colombia, no dudes en consultarme.\",\n      \"metrics\": {\n        \"e2e_latency\": 2.2925145626068115,\n        \"llm_ttft\": 1.394314100034535,\n        \"tts_ttfb\": 0.37115369993261993\n      }\n    }\n  ],\n  \"reply\": \"De nada. Si tienes más preguntas sobre las IPS de Colombia, no dudes en consultarme.\",\n  \"duration_ms\": 13423\n}\n"
+    }
+  ]
+}

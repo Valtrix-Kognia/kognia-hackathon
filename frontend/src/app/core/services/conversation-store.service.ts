@@ -7,6 +7,9 @@ import {
   SessionStartedPayload,
   SpeakerIdentified,
   TranscriptSegment,
+  TurnDecisionPayload,
+  TurnLatencyPayload,
+  TurnMode,
 } from '../models/realtime-event.model';
 import { AgentActivity } from '../models/voice-session.model';
 
@@ -45,6 +48,18 @@ export class ConversationStore {
   readonly queries = signal<TrackedQuery[]>([]);
   readonly lastError = signal<ErrorPayload | null>(null);
   readonly agentLive = signal<AgentLiveText | null>(null);
+  readonly turnMode = signal<TurnMode>('wake_word');
+  readonly lastDecision = signal<TurnDecisionPayload | null>(null);
+  readonly decisionCounts = signal<Record<TurnDecisionPayload['action'], number>>({
+    respond: 0,
+    ignore: 0,
+    ask_repeat: 0,
+  });
+  readonly latencyTurns = signal<TurnLatencyPayload[]>([]);
+  /** Browser-side: turn decision received -> agent audible (LiveKit active speaker). */
+  readonly browserPlaybackMs = signal<number[]>([]);
+  private pendingResponseAt: number | null = null;
+  private readonly decisionLog = signal<TurnDecisionPayload[]>([]);
 
   readonly segments = computed(() =>
     [...this.segmentsById().values()].sort((a, b) => a.start_ms - b.start_ms || a.end_ms - b.end_ms),
@@ -53,7 +68,7 @@ export class ConversationStore {
   readonly activity = computed<AgentActivity>(() =>
     this.runningQueries() > 0 && this.agentState() !== 'offline' ? 'querying' : this.agentState(),
   );
-  readonly latestQuery = computed(() => this.queries()[0] ?? null);
+  readonly latestQuery = computed<TrackedQuery | null>(() => this.queries()[0] ?? null);
   readonly emotionBySegment = computed(
     () => new Map(this.emotions().map((e) => [e.segment_id, e] as const)),
   );
@@ -69,11 +84,40 @@ export class ConversationStore {
     this.queries.set([]);
     this.lastError.set(null);
     this.agentLive.set(null);
+    this.lastDecision.set(null);
+    this.decisionLog.set([]);
+    this.decisionCounts.set({ respond: 0, ignore: 0, ask_repeat: 0 });
+    this.latencyTurns.set([]);
+    this.browserPlaybackMs.set([]);
+    this.pendingResponseAt = null;
   }
 
   setOffline(): void {
     this.agentState.set('offline');
     this.agentLive.set(null);
+  }
+
+  /** Session snapshot used by the manual multi-speaker test protocol (bench/score_session.py). */
+  exportSnapshot(): Record<string, unknown> {
+    return {
+      session_id: this.sessionId(),
+      exported_at: new Date().toISOString(),
+      session_info: this.sessionInfo(),
+      turn_mode: this.turnMode(),
+      segments: this.segments().filter((s) => s.is_final),
+      speakers: Object.fromEntries(this.speakers()),
+      decisions: this.decisionLog(),
+      emotions: this.emotions(),
+      latency_turns: this.latencyTurns(),
+      browser_playback_ms: this.browserPlaybackMs(),
+    };
+  }
+
+  markAgentAudible(nowMs: number): void {
+    if (this.pendingResponseAt === null) return;
+    const elapsed = Math.round(nowMs - this.pendingResponseAt);
+    this.pendingResponseAt = null;
+    this.browserPlaybackMs.update((list) => [...list, elapsed].slice(-50));
   }
 
   applyAgentLiveText(id: string, text: string): void {
@@ -85,8 +129,25 @@ export class ConversationStore {
       return false;
     }
     switch (event.type) {
-      case 'session.started':
-        this.sessionInfo.set(event.payload as SessionStartedPayload);
+      case 'session.started': {
+        const info = event.payload as SessionStartedPayload;
+        this.sessionInfo.set(info);
+        if (info.turn_mode) this.turnMode.set(info.turn_mode);
+        return true;
+      }
+      case 'turn.mode':
+        this.turnMode.set((event.payload as { mode: TurnMode }).mode);
+        return true;
+      case 'turn.decision': {
+        const decision = event.payload as TurnDecisionPayload;
+        this.lastDecision.set(decision);
+        this.decisionLog.update((list) => [...list, decision]);
+        this.decisionCounts.update((c) => ({ ...c, [decision.action]: c[decision.action] + 1 }));
+        this.pendingResponseAt = decision.action === 'ignore' ? null : performance.now();
+        return true;
+      }
+      case 'metrics.turn':
+        this.latencyTurns.update((list) => [...list, event.payload as TurnLatencyPayload].slice(-50));
         return true;
       case 'session.ended':
         this.setOffline();

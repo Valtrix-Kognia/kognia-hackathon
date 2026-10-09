@@ -28,7 +28,6 @@ DimensionName = Literal[
 ]
 MetricName = Literal["prestadores", "sedes", "registros", "capacidad_instalada"]
 
-FILLER_DELAY_S = 0.7
 FILLER_PHRASES = (
     "Un momento, consulto los datos oficiales.",
     "Déjame revisar la fuente oficial.",
@@ -53,12 +52,14 @@ class IpsToolset(llm.Toolset):
         service: IpsQueryService,
         events: EventPublisher,
         latency: LatencyMetricsService | None = None,
+        filler_delay_s: float | None = 0.7,
     ) -> None:
         super().__init__(id="ips_tools")
         self._service = service
         self._events = events
         self._latency = latency
         self._filler_count = 0
+        self._filler_delay_s = filler_delay_s
 
     def _filler(self, step: int) -> str | None:
         if step > 0:
@@ -84,10 +85,13 @@ class IpsToolset(llm.Toolset):
         started = time.perf_counter()
         requests_before = self._service.network_requests
         try:
-            async with context.with_filler(
-                self._filler, delay=FILLER_DELAY_S, max_steps=1
-            ):
+            if self._filler_delay_s is None:
                 result = await call()
+            else:
+                async with context.with_filler(
+                    self._filler, delay=self._filler_delay_s, max_steps=1
+                ):
+                    result = await call()
         except DomainError as exc:
             self._fail(query_id, tool, clean_args, str(exc))
             raise ToolError(str(exc)) from exc

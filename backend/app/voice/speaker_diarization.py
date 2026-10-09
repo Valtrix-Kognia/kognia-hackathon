@@ -79,6 +79,9 @@ MIN_SUBSTANTIAL_WORDS = 3
 FLICKER_MAX_WORDS = 1
 RAPID_SWITCHES = 3
 LOW_CONFIDENCE = 0.55
+CLUSTER_CONFIDENCE = 0.80
+CLUSTER_WINDOW = 3
+CLUSTER_MIN_LOW = 2
 
 
 class SpeakerDiarizationService:
@@ -144,8 +147,16 @@ class SpeakerDiarizationService:
         confidences = [c for s in spans for c in s.confidences]
         mean_conf = sum(confidences) / len(confidences) if confidences else 0.0
         short_spans = sum(1 for s in spans if len(s.words) < MIN_SUBSTANTIAL_WORDS)
-        overlap = raw_switches >= RAPID_SWITCHES or (
-            len({s.speaker_id for s in spans if s.speaker_id}) >= 2 and short_spans >= 2
+        overlap = (
+            raw_switches >= RAPID_SWITCHES
+            or (
+                len({s.speaker_id for s in spans if s.speaker_id}) >= 2
+                and short_spans >= 2
+            )
+            or (
+                len({s.speaker_id for s in spans if s.speaker_id}) >= 2
+                and _has_low_confidence_cluster(confidences)
+            )
         )
         return DiarizedUtterance(
             text=text.strip(),
@@ -157,6 +168,16 @@ class SpeakerDiarizationService:
             overlap_suspected=overlap,
             low_confidence=bool(confidences) and mean_conf < LOW_CONFIDENCE,
         )
+
+
+def _has_low_confidence_cluster(confidences: list[float]) -> bool:
+    """Overlapped speech shows up as consecutive low-confidence words (measured in
+    bench/overlap_probe.py); clean speech only has isolated ones."""
+    low = [c < CLUSTER_CONFIDENCE for c in confidences]
+    return any(
+        sum(low[i : i + CLUSTER_WINDOW]) >= CLUSTER_MIN_LOW
+        for i in range(max(0, len(low) - CLUSTER_WINDOW + 1))
+    )
 
 
 def _clean(speaker_id: object) -> str | None:

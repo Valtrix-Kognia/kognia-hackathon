@@ -85,6 +85,7 @@ class ConversationController:
 
     def complete_turn(self, committed_text: str) -> TurnDecision:
         utterances, self._pending = self._pending, []
+        state = self._turns.follow_up_state()
         decision = self._turns.decide(utterances, committed_text)
         self._events.publish(
             "turn.decision",
@@ -95,7 +96,13 @@ class ConversationController:
                 "text": committed_text,
             },
         )
-        logger.info("turn decision %s (%s)", decision.action, decision.reason)
+        logger.info(
+            "turn decision %s (%s) speakers=%s follow_up=%s",
+            decision.action,
+            decision.reason,
+            sorted({s or "?" for u in utterances for s in u.speakers}),
+            state,
+        )
         return decision
 
     def on_agent_speech(self, handle: SpeechHandle) -> None:

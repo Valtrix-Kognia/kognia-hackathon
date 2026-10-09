@@ -1,0 +1,6 @@
+[
+  {"person": "P1", "text": "¿Ya almorzaron?", "addressed": false},
+  {"person": "P2", "text": "Todavía no, después de la demo vamos.", "addressed": false},
+  {"person": "P3", "text": "¿Alguien tiene el cargador del portátil?", "addressed": false},
+  {"person": "P1", "text": "Kognia, ¿cuántas IPS hay en Bogotá?", "addressed": true}
+]

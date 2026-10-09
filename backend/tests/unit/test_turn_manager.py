@@ -126,3 +126,70 @@ def test_switching_mode_resets_follow_up() -> None:
     turns.mark_agent_replied()
     turns.set_mode(TurnMode.WAKE_WORD)
     assert turns.decide([diarize(alt(("0", "y cuántas hay")))], "").action == "ignore"
+
+
+def test_wake_mode_ignores_overlapped_side_conversation_instead_of_asking() -> None:
+    turns, _ = manager(TurnMode.WAKE_WORD)
+    overlapped = diarize(
+        alt(("0", "oye"), ("1", "mira eso"), ("0", "ya"), ("1", "no sé"), ("2", "qué"))
+    )
+    assert turns.decide([overlapped], "").action == "ignore"
+
+
+def test_greeting_does_not_open_follow_up_window() -> None:
+    turns, _ = manager(TurnMode.WAKE_WORD)
+    turns.mark_agent_replied()
+    d = turns.decide([diarize(alt(("0", "ya almorzaron todavía no")))], "")
+    assert (d.action, d.reason) == ("ignore", "no_dirigido_a_kognia")
+
+
+def test_ignored_turn_does_not_open_follow_up_window() -> None:
+    turns, _ = manager(TurnMode.WAKE_WORD)
+    turns.decide([diarize(alt(("0", "oye y cuántas personas vienen")))], "")
+    turns.mark_agent_replied()
+    assert (
+        turns.decide([diarize(alt(("0", "y cuántas son públicas")))], "").action
+        == "ignore"
+    )
+
+
+def test_follow_up_window_counts_from_end_of_last_reply_speech() -> None:
+    turns, clock = manager(TurnMode.WAKE_WORD)
+    turns.decide([diarize(alt(("0", "Kognia cuántas IPS hay en Caldas")))], "")
+    turns.mark_agent_replied()
+    clock.now += 7
+    turns.mark_agent_replied()
+    clock.now += 5
+    assert (
+        turns.decide([diarize(alt(("0", "y cuántas son públicas")))], "").action
+        == "respond"
+    )
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "¿Cuántas IPS hay en Caldas?",
+        "busca hospitales en Armenia",
+        "y cuántas camas hay en Pereira",
+    ],
+)
+def test_wake_mode_answers_clear_domain_request_when_wake_word_was_clipped(
+    text: str,
+) -> None:
+    turns, _ = manager(TurnMode.WAKE_WORD)
+    d = turns.decide([diarize(alt(("0", text)))], "")
+    assert (d.action, d.reason) == ("respond", "pregunta_sobre_ips")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "¿Alguien tiene el cargador del portátil?",
+        "el hospital queda lejos de mi casa",
+        "¿Ya almorzaron?",
+    ],
+)
+def test_wake_mode_still_ignores_side_talk(text: str) -> None:
+    turns, _ = manager(TurnMode.WAKE_WORD)
+    assert turns.decide([diarize(alt(("0", text)))], "").action == "ignore"

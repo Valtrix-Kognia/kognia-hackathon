@@ -171,7 +171,16 @@ async def entrypoint(ctx: JobContext) -> None:
 
     agent = KogniaAgent(
         instructions=SYSTEM_PROMPT,
-        tools=[IpsToolset(ips_service, events, latency)],
+        tools=[
+            IpsToolset(
+                ips_service,
+                events,
+                latency,
+                filler_delay_s=settings.tool_filler_delay_s
+                if settings.tool_filler_delay_s >= 0
+                else None,
+            )
+        ],
         controller=controller,
     )
     await session.start(

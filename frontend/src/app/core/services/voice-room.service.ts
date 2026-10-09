@@ -9,13 +9,22 @@ import {
   RoomEvent,
   Track,
 } from 'livekit-client';
-import { EVENTS_TOPIC, RealtimeEvent } from '../models/realtime-event.model';
+import { EVENTS_TOPIC, RealtimeEvent, TurnMode } from '../models/realtime-event.model';
 import { ConnectionState, MicState, VoiceSession } from '../models/voice-session.model';
 import { ConversationStore } from './conversation-store.service';
 import { SessionApiService } from './session-api.service';
 import { ToastService } from './toast.service';
 
 const AGENT_TRANSCRIPTION_TOPIC = 'lk.transcription';
+const TURN_MODE_ATTRIBUTE = 'kognia.turn_mode';
+
+/**
+ * Shared-microphone capture. Noise suppression runs once, server side (ai-coustics QUAIL_L,
+ * which keeps every voice); the browser's own suppressor is disabled so distant speakers are
+ * not attenuated twice. Echo cancellation stays on so the agent's voice is not re-captured,
+ * and AGC helps people sitting farther from the microphone.
+ */
+const SHARED_MIC_CAPTURE = { echoCancellation: true, noiseSuppression: false, autoGainControl: true, channelCount: 1 };
 
 /** Owns the LiveKit room lifecycle: connect, microphone, agent audio, events and cleanup. */
 @Injectable({ providedIn: 'root' })
@@ -105,6 +114,16 @@ export class VoiceRoomService implements OnDestroy {
     }
   }
 
+  async setTurnMode(mode: TurnMode): Promise<void> {
+    this.store.turnMode.set(mode);
+    if (!this.room) return;
+    try {
+      await this.room.localParticipant.setAttributes({ [TURN_MODE_ATTRIBUTE]: mode });
+    } catch {
+      this.toasts.show('warning', 'No se pudo cambiar el modo de turnos.');
+    }
+  }
+
   async resumeAudio(): Promise<void> {
     await this.room?.startAudio();
     this.audioBlocked.set(!(this.room?.canPlaybackAudio ?? true));
@@ -122,7 +141,7 @@ export class VoiceRoomService implements OnDestroy {
     const room = new Room({
       adaptiveStream: true,
       dynacast: true,
-      audioCaptureDefaults: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      audioCaptureDefaults: SHARED_MIC_CAPTURE,
     });
     this.room = room;
     this.bindRoomEvents(room);
@@ -135,7 +154,12 @@ export class VoiceRoomService implements OnDestroy {
       return;
     }
     this.connection.set('connected');
-    this.toasts.show('success', 'Conectado. Kognia te está escuchando.', 3000);
+    this.toasts.show(
+      'success',
+      this.store.turnMode() === 'wake_word' ? 'Conectado. Empieza tus preguntas con “Kognia…”.' : 'Conectado. Kognia te está escuchando.',
+      4000,
+    );
+    await room.localParticipant.setAttributes({ [TURN_MODE_ATTRIBUTE]: this.store.turnMode() }).catch(() => undefined);
     await this.setMicrophone(room, true);
     await this.resumeAudio();
     navigator.mediaDevices?.addEventListener('devicechange', this.onDeviceChange);
@@ -207,6 +231,13 @@ export class VoiceRoomService implements OnDestroy {
             this.audioElements.delete(el);
           });
           if (this.agentTrack() === track.mediaStreamTrack) this.agentTrack.set(null);
+        }),
+      )
+      .on(RoomEvent.ActiveSpeakersChanged, (speakers) =>
+        run(() => {
+          if (speakers.some((p) => p.identity !== room.localParticipant.identity)) {
+            this.store.markAgentAudible(performance.now());
+          }
         }),
       )
       .on(RoomEvent.AudioPlaybackStatusChanged, () => run(() => this.audioBlocked.set(!room.canPlaybackAudio)))

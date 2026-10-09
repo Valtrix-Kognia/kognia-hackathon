@@ -48,6 +48,9 @@ const STICKY_THRESHOLD_PX = 80;
                   @if (!segment.is_final) {
                     <span class="italic text-slate-400">transcribiendo…</span>
                   }
+                  @if (segment.overlap_suspected) {
+                    <span class="chip bg-orange-50 text-orange-700" title="Se detectaron varias voces simultáneas; la atribución puede ser imprecisa">voces superpuestas</span>
+                  }
                   @if (segment.interrupted) {
                     <span class="chip bg-amber-50 text-amber-700">interrumpido</span>
                   }

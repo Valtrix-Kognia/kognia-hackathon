@@ -27,6 +27,7 @@ class Settings(BaseSettings):
         default="quail_l", pattern="^(none|quail_l|quail_vf_s|quail_vf_l)$"
     )
     noise_enhancement_level: float | None = Field(default=None, ge=0, le=1)
+    tool_filler_delay_s: float = Field(default=0.7, le=10)
     turn_mode: str = Field(default="wake_word", pattern="^(open|wake_word)$")
     follow_up_window_s: float = Field(default=8.0, ge=0, le=30)
     session_token_ttl_minutes: int = Field(default=30, gt=0, le=240)

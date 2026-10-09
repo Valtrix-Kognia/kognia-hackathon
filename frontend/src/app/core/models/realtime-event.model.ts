@@ -15,7 +15,10 @@ export type EventType =
   | 'ips.query.started'
   | 'ips.query.completed'
   | 'ips.query.failed'
-  | 'error.occurred';
+  | 'error.occurred'
+  | 'metrics.turn'
+  | 'turn.decision'
+  | 'turn.mode';
 
 export interface RealtimeEvent<T = unknown> {
   type: EventType;
@@ -38,6 +41,7 @@ export interface TranscriptSegment {
   end_ms: number;
   is_final: boolean;
   interrupted: boolean;
+  overlap_suspected?: boolean;
   timestamp: string;
 }
 
@@ -87,6 +91,42 @@ export interface SessionStartedPayload {
   llm: string;
   tts: string;
   diarization: boolean;
+  noise_model?: string;
+  turn_mode?: TurnMode;
+}
+
+export type TurnMode = 'open' | 'wake_word';
+
+export interface TurnDecisionPayload {
+  action: 'respond' | 'ignore' | 'ask_repeat';
+  reason: string;
+  mode: TurnMode;
+  text: string;
+}
+
+export interface TurnLatencyPayload {
+  turn_index: number;
+  stages_ms: Partial<
+    Record<
+      | 'transcription_delay'
+      | 'end_of_turn_delay'
+      | 'llm_node_ttft'
+      | 'llm_node_ttfs'
+      | 'tts_node_ttfb'
+      | 'first_audio'
+      | 'e2e_latency',
+      number
+    >
+  >;
+  tools: { tool: string; duration_ms: number; cache_hit: boolean }[];
+  socrata_ms: number;
+  summary: {
+    turns: number;
+    e2e_p50_ms: number | null;
+    e2e_p95_ms: number | null;
+    first_audio_p50_ms: number | null;
+    first_audio_p95_ms: number | null;
+  };
 }
 
 export interface ErrorPayload {

@@ -4,10 +4,11 @@ import { ConversationStore } from '../../core/services/conversation-store.servic
 import { VoiceRoomService } from '../../core/services/voice-room.service';
 import { AgentStatusComponent } from './agent-status.component';
 import { AudioVisualizerComponent } from './audio-visualizer.component';
+import { TurnModeSelectorComponent } from './turn-mode-selector.component';
 
 @Component({
   selector: 'app-voice-session',
-  imports: [LucideAngularModule, AgentStatusComponent, AudioVisualizerComponent],
+  imports: [LucideAngularModule, AgentStatusComponent, AudioVisualizerComponent, TurnModeSelectorComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="card overflow-hidden" aria-labelledby="voice-title">
@@ -26,6 +27,7 @@ import { AudioVisualizerComponent } from './audio-visualizer.component';
 
       <div class="space-y-4 p-5">
         <app-agent-status [activity]="store.activity()" />
+        <app-turn-mode-selector />
 
         @if (store.agentLive(); as live) {
           <p class="rounded-xl bg-sky-50 px-3.5 py-2.5 text-sm text-sky-900" aria-live="polite">

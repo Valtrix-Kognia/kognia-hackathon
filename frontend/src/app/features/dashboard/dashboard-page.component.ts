@@ -1,12 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { CirclePlus, LucideAngularModule } from 'lucide-angular';
+import { CirclePlus, Download, LucideAngularModule } from 'lucide-angular';
 import { ConversationStore } from '../../core/services/conversation-store.service';
 import { VoiceRoomService } from '../../core/services/voice-room.service';
 import { ConnectionStatusComponent } from '../../shared/components/connection-status.component';
 import { VoiceSessionComponent } from '../conversation/voice-session.component';
 import { SentimentPanelComponent } from '../emotions/sentiment-panel.component';
 import { IpsResultsComponent } from '../ips/ips-results.component';
+import { LatencyPanelComponent } from '../metrics/latency-panel.component';
 import { TranscriptTimelineComponent } from '../transcription/transcript-timeline.component';
 
 @Component({
@@ -19,6 +20,7 @@ import { TranscriptTimelineComponent } from '../transcription/transcript-timelin
     TranscriptTimelineComponent,
     IpsResultsComponent,
     SentimentPanelComponent,
+    LatencyPanelComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -49,6 +51,15 @@ import { TranscriptTimelineComponent } from '../transcription/transcript-timelin
           <button
             type="button"
             class="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-sm font-medium transition hover:bg-white/20 disabled:opacity-50"
+            [disabled]="!store.sessionId()"
+            (click)="exportSession()"
+            title="Descargar transcripción, decisiones y latencias para evaluación"
+          >
+            <lucide-icon [img]="downloadIcon" [size]="16" /> Exportar
+          </button>
+          <button
+            type="button"
+            class="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-sm font-medium transition hover:bg-white/20 disabled:opacity-50"
             [disabled]="room.connection() === 'connecting'"
             (click)="room.newSession()"
           >
@@ -66,8 +77,9 @@ import { TranscriptTimelineComponent } from '../transcription/transcript-timelin
       <div class="lg:col-span-4 lg:h-[calc(100vh-7.5rem)] lg:min-h-[32rem]">
         <app-transcript-timeline />
       </div>
-      <div class="lg:col-span-4">
+      <div class="space-y-5 lg:col-span-4">
         <app-ips-results />
+        <app-latency-panel />
       </div>
     </main>
 
@@ -81,5 +93,16 @@ export class DashboardPageComponent {
   protected readonly room = inject(VoiceRoomService);
   protected readonly store = inject(ConversationStore);
   protected readonly newIcon = CirclePlus;
+  protected readonly downloadIcon = Download;
+
+  protected exportSession(): void {
+    const blob = new Blob([JSON.stringify(this.store.exportSnapshot(), null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `kognia-${this.store.sessionId() ?? 'sesion'}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
   protected readonly shortId = computed(() => this.room.sessionId()?.slice(-6) ?? '');
 }

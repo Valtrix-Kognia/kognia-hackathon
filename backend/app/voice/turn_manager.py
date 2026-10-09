@@ -35,6 +35,42 @@ _BACKCHANNELS = {
     "PERFECTO",
 }
 
+_DOMAIN_TERMS = {
+    "IPS",
+    "PRESTADOR",
+    "PRESTADORES",
+    "SEDE",
+    "SEDES",
+    "HOSPITAL",
+    "HOSPITALES",
+    "CLINICA",
+    "CLINICAS",
+    "CAMA",
+    "CAMAS",
+    "AMBULANCIA",
+    "AMBULANCIAS",
+    "CONSULTORIO",
+    "CONSULTORIOS",
+    "REPS",
+    "INSTITUCIONES",
+    "CAPACIDAD",
+}
+_REQUEST_STARTS = (
+    "CUANT",
+    "QUE",
+    "CUAL",
+    "DONDE",
+    "COMO",
+    "BUSCA",
+    "MUESTRA",
+    "DIME",
+    "COMPARA",
+    "LISTA",
+    "Y CUANT",
+    "Y QUE",
+    "Y EN",
+)
+
 Action = Literal["respond", "ignore", "ask_repeat"]
 
 
@@ -75,15 +111,38 @@ class TurnManagementService:
         self._clock = clock
         self._last_reply_at: float | None = None
         self._last_addressed_speaker: str | None = None
+        self._answering = False
+
+    def follow_up_state(self) -> dict[str, object]:
+        since = (
+            None
+            if self._last_reply_at is None
+            else round(self._clock() - self._last_reply_at, 1)
+        )
+        return {
+            "since_reply_s": since,
+            "addressed_speaker": self._last_addressed_speaker,
+        }
 
     def set_mode(self, mode: TurnMode) -> None:
         self.mode = mode
         self._last_reply_at = None
+        self._answering = False
 
     def mark_agent_replied(self) -> None:
-        self._last_reply_at = self._clock()
+        """(Re)starts the follow-up window each time a reply to an addressed turn ends
+        speaking (a filler phrase and the answer are separate speeches)."""
+        if self._answering:
+            self._last_reply_at = self._clock()
 
     def decide(
+        self, utterances: list[DiarizedUtterance], fallback_text: str
+    ) -> TurnDecision:
+        decision = self._decide(utterances, fallback_text)
+        self._answering = decision.action == "respond"
+        return decision
+
+    def _decide(
         self, utterances: list[DiarizedUtterance], fallback_text: str
     ) -> TurnDecision:
         text = (
@@ -93,12 +152,21 @@ class TurnManagementService:
         if not text:
             return TurnDecision("ignore", "transcripcion_vacia", self.mode, "")
 
+        wake = find_wake_word(text)
+        domain_request = _is_domain_request(text)
+        addressed_turn = (
+            self.mode is TurnMode.OPEN
+            or wake.found
+            or domain_request
+            or self._is_follow_up(utterances)
+        )
+        if not addressed_turn:
+            return TurnDecision("ignore", "no_dirigido_a_kognia", self.mode, text)
+
         if any(u.overlap_suspected for u in utterances):
             return TurnDecision("ask_repeat", "habla_superpuesta", self.mode, text)
         if utterances and all(u.low_confidence for u in utterances):
             return TurnDecision("ask_repeat", "baja_confianza", self.mode, text)
-
-        wake = find_wake_word(text)
         if not wake.found and _is_backchannel(text):
             return TurnDecision("ignore", "muletilla", self.mode, text)
 
@@ -121,6 +189,18 @@ class TurnManagementService:
                 return TurnDecision(
                     "respond",
                     "seguimiento",
+                    self.mode,
+                    self._labeled(utterances, text),
+                    self._last_addressed_speaker,
+                )
+            if domain_request:
+                speakers = {sp for u in utterances for sp in u.speakers}
+                self._last_addressed_speaker = (
+                    next(iter(speakers)) if len(speakers) == 1 else None
+                )
+                return TurnDecision(
+                    "respond",
+                    "pregunta_sobre_ips",
                     self.mode,
                     self._labeled(utterances, text),
                     self._last_addressed_speaker,
@@ -166,6 +246,14 @@ class TurnManagementService:
             for s in u.spans
         ]
         return " ".join(parts)
+
+
+def _is_domain_request(text: str) -> bool:
+    """A question or command about the dataset's subject, even if STT clipped "Kognia"."""
+    norm = normalize(text)
+    tokens = set(norm.split())
+    asks = "?" in text or norm.startswith(_REQUEST_STARTS)
+    return asks and bool(tokens & _DOMAIN_TERMS)
 
 
 def _is_backchannel(text: str) -> bool:
