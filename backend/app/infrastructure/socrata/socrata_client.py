@@ -53,7 +53,9 @@ class SocrataClient:
         }
         logger.info("socrata query", extra={"soql": soql, "page": page_number})
         payload = await self._request("POST", self._settings.socrata_query_url, body)
-        if not isinstance(payload, list) or not all(isinstance(r, dict) for r in payload):
+        if not isinstance(payload, list) or not all(
+            isinstance(r, dict) for r in payload
+        ):
             raise SocrataResponseError("Expected a JSON array of objects")
         return payload
 
@@ -78,7 +80,9 @@ class SocrataClient:
             except httpx.TimeoutException:
                 last_error = SocrataTimeoutError("Socrata request timed out")
             except httpx.TransportError as exc:
-                last_error = SocrataUnavailableError(f"Transport error: {type(exc).__name__}")
+                last_error = SocrataUnavailableError(
+                    f"Transport error: {type(exc).__name__}"
+                )
             else:
                 if response.status_code < 400:
                     return self._decode(response)

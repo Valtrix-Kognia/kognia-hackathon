@@ -16,7 +16,9 @@ def build(responses=None) -> tuple[IpsQueryService, FakeSocrataClient]:
 
 
 async def test_count_returns_three_units_and_resolves_accents() -> None:
-    service, fake = build([[{"registros": "469", "prestadores": "139", "sedes": "148"}]])
+    service, fake = build(
+        [[{"registros": "469", "prestadores": "139", "sedes": "148"}]]
+    )
     result = await service.count(FilterRequest(departamento="quindio"))
     assert (result.registros, result.prestadores, result.sedes) == (469, 139, 148)
     assert result.metadata.filters == {"departamento": "Quindío"}
@@ -33,7 +35,9 @@ async def test_ambiguous_municipio_includes_both_and_warns() -> None:
 
 async def test_municipio_scoped_to_departamento() -> None:
     service, fake = build([[{"registros": "1", "prestadores": "1", "sedes": "1"}]])
-    result = await service.count(FilterRequest(departamento="Quindío", municipio="Armenia"))
+    result = await service.count(
+        FilterRequest(departamento="Quindío", municipio="Armenia")
+    )
     assert "departamento = 'Quindío' AND municipio = 'ARMENIA'" in fake.queries[0]
     assert not any("varias entidades" in note for note in result.metadata.limitations)
 
@@ -46,7 +50,8 @@ async def test_unknown_departamento_raises_with_suggestions() -> None:
 
 
 @pytest.mark.parametrize(
-    ("raw", "expected"), [("públicas", "Pública"), ("privado", "Privada"), ("MIXTAS", "Mixta")]
+    ("raw", "expected"),
+    [("públicas", "Pública"), ("privado", "Privada"), ("MIXTAS", "Mixta")],
 )
 async def test_naturaleza_variants(raw: str, expected: str) -> None:
     service, _ = build()
@@ -68,8 +73,12 @@ async def test_nivel_sin_dato_uses_is_null() -> None:
 
 
 async def test_group_caps_top_n_and_labels_nulls() -> None:
-    service, fake = build([[{"num_nivel_atencion": "1", "valor": "10"}, {"valor": "40"}]])
-    result = await service.group(Dimension.NIVEL_ATENCION, Metric.SEDES, FilterRequest(), top_n=999)
+    service, fake = build(
+        [[{"num_nivel_atencion": "1", "valor": "10"}, {"valor": "40"}]]
+    )
+    result = await service.group(
+        Dimension.NIVEL_ATENCION, Metric.SEDES, FilterRequest(), top_n=999
+    )
     assert "LIMIT 40" in fake.queries[0]
     assert "count(DISTINCT c_digo_sede) AS valor" in fake.queries[0]
     assert [b.label for b in result.buckets] == ["1", "Sin dato"]
@@ -83,7 +92,9 @@ async def test_valle_warns_about_separate_districts() -> None:
 
 async def test_search_name_is_escaped_and_paginated() -> None:
     service, fake = build([[], [{"sedes": "0"}]])
-    result = await service.search(FilterRequest(nombre="O'Higgins"), page=3, page_size=500)
+    result = await service.search(
+        FilterRequest(nombre="O'Higgins"), page=3, page_size=500
+    )
     assert result.page_size == 25
     assert "LIKE '%O''HIGGINS%'" in fake.queries[0]
     assert result.total_sedes == 0

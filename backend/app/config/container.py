@@ -13,7 +13,9 @@ def build_http_client() -> httpx.AsyncClient:
     )
 
 
-def build_ips_service(settings: Settings, http_client: httpx.AsyncClient) -> IpsQueryService:
+def build_ips_service(
+    settings: Settings, http_client: httpx.AsyncClient
+) -> IpsQueryService:
     client = SocrataClient(settings, http_client)
     catalog = ValueCatalog(client, ttl_s=settings.catalog_ttl_s)
     return IpsQueryService(client, catalog, settings)

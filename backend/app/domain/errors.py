@@ -8,7 +8,9 @@ class UnknownFilterValueError(DomainError):
         self.raw_value = raw_value
         self.suggestions = suggestions
         hint = f" Valores parecidos: {', '.join(suggestions)}." if suggestions else ""
-        super().__init__(f"El valor '{raw_value}' no existe para '{field}' en la fuente oficial.{hint}")
+        super().__init__(
+            f"El valor '{raw_value}' no existe para '{field}' en la fuente oficial.{hint}"
+        )
 
 
 class InvalidIdentifierError(DomainError):

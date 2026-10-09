@@ -60,12 +60,19 @@ _SITE_COLUMNS = [
 class IpsQueryService:
     """Domain queries over dataset s2ru-bqt6. All SoQL is built from whitelisted parts."""
 
-    def __init__(self, client: SocrataClient, catalog: ValueCatalog, settings: Settings) -> None:
+    def __init__(
+        self, client: SocrataClient, catalog: ValueCatalog, settings: Settings
+    ) -> None:
         self._client = client
         self._catalog = catalog
         self._settings = settings
 
-    async def resolve_filters(self, request: FilterRequest) -> tuple[IpsFilters, list[str]]:
+    async def warm_up(self) -> None:
+        await self._catalog.snapshot()
+
+    async def resolve_filters(
+        self, request: FilterRequest
+    ) -> tuple[IpsFilters, list[str]]:
         notes: list[str] = []
         departamento = (
             await self._catalog.resolve_departamento(request.departamento)
@@ -74,7 +81,9 @@ class IpsQueryService:
         )
         municipios: tuple[str, ...] = ()
         if request.municipio:
-            names, deps = await self._catalog.resolve_municipio(request.municipio, departamento)
+            names, deps = await self._catalog.resolve_municipio(
+                request.municipio, departamento
+            )
             municipios = tuple(names)
             if not departamento and len(deps) > 1:
                 notes.append(
@@ -82,7 +91,9 @@ class IpsQueryService:
                     f"({', '.join(deps)}); el resultado las incluye todas."
                 )
         if departamento in SEPARATE_DISTRICTS.values():
-            districts = [d for d, parent in SEPARATE_DISTRICTS.items() if parent == departamento]
+            districts = [
+                d for d, parent in SEPARATE_DISTRICTS.items() if parent == departamento
+            ]
             notes.append(
                 f"En esta fuente {', '.join(districts)} se reportan como entidad territorial "
                 f"separada, por lo que no están incluidos en {departamento}."
@@ -150,7 +161,9 @@ class IpsQueryService:
         self._apply_filters(query, filters)
         rows = await self._client.query(query.render(), page_size=top_n)
         buckets = [
-            GroupBucket(label=row.get(column) or "Sin dato", value=_to_float(row.get("valor")))
+            GroupBucket(
+                label=row.get(column) or "Sin dato", value=_to_float(row.get("valor"))
+            )
             for row in rows
         ]
         if dimension is Dimension.NIVEL_ATENCION and not filters.nivel_atencion:
@@ -185,7 +198,9 @@ class IpsQueryService:
         self._apply_filters(items_query, filters)
         self._apply_filters(total_query, filters)
         rows, total_rows = await asyncio.gather(
-            self._client.query(items_query.render(), page_number=page, page_size=page_size),
+            self._client.query(
+                items_query.render(), page_number=page, page_size=page_size
+            ),
             self._client.query(total_query.render(), page_size=1),
         )
         total = _to_int(total_rows[0].get("sedes")) if total_rows else 0
@@ -239,7 +254,9 @@ class IpsQueryService:
             name=str(metadata.get("name", "")),
             description=str(metadata.get("description", "")).split("\n")[0],
             attribution=metadata.get("attribution"),
-            rows_updated_at=datetime.fromtimestamp(updated, UTC) if isinstance(updated, int) else None,
+            rows_updated_at=datetime.fromtimestamp(updated, UTC)
+            if isinstance(updated, int)
+            else None,
             totals=totals,
             fields={
                 "departamento / municipio": "Ubicación de la sede (algunos distritos aparecen como departamento)",
@@ -281,7 +298,9 @@ class IpsQueryService:
         if filters.grupo_capacidad:
             query.where_equals(Column.GRUPO_CAPACIDAD, filters.grupo_capacidad)
         if filters.nombre:
-            query.where_contains_any([Column.NOMBRE_PRESTADOR, Column.NOMBRE_SEDE], filters.nombre)
+            query.where_contains_any(
+                [Column.NOMBRE_PRESTADOR, Column.NOMBRE_SEDE], filters.nombre
+            )
 
     def _metadata(self, filters: IpsFilters, limitations: list[str]) -> QueryMetadata:
         return QueryMetadata(

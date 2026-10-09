@@ -1,7 +1,12 @@
 import pytest
 
 from app.domain.models.dataset_columns import Column
-from app.infrastructure.socrata.soql import Projection, SoqlQuery, like_contains, quote_literal
+from app.infrastructure.socrata.soql import (
+    Projection,
+    SoqlQuery,
+    like_contains,
+    quote_literal,
+)
 
 
 def test_quote_literal_doubles_single_quotes() -> None:
@@ -16,7 +21,9 @@ def test_injection_attempt_stays_inside_literal() -> None:
     query = SoqlQuery(projections=[Column.DEPARTAMENTO]).where_equals(
         Column.DEPARTAMENTO, "x' OR '1'='1"
     )
-    assert query.render() == "SELECT departamento WHERE departamento = 'x'' OR ''1''=''1'"
+    assert (
+        query.render() == "SELECT departamento WHERE departamento = 'x'' OR ''1''=''1'"
+    )
 
 
 def test_like_contains_removes_wildcards_and_uppercases() -> None:
@@ -37,7 +44,9 @@ def test_invalid_alias_is_rejected() -> None:
 
 def test_numeric_filter_requires_digits() -> None:
     with pytest.raises(ValueError):
-        SoqlQuery(projections=[Column.CODIGO_SEDE]).where_number(Column.CODIGO_SEDE, "1 OR 1=1")
+        SoqlQuery(projections=[Column.CODIGO_SEDE]).where_number(
+            Column.CODIGO_SEDE, "1 OR 1=1"
+        )
 
 
 def test_full_group_query_renders() -> None:

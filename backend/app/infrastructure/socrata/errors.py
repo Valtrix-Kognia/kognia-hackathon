@@ -13,9 +13,7 @@ class SocrataTimeoutError(SocrataUnavailableError):
 
 
 class SocrataRateLimitError(SocrataUnavailableError):
-    user_message = (
-        "La API oficial limitó temporalmente las consultas. Intenta de nuevo en unos segundos."
-    )
+    user_message = "La API oficial limitó temporalmente las consultas. Intenta de nuevo en unos segundos."
 
 
 class SocrataAuthError(SocrataError):

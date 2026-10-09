@@ -11,10 +11,26 @@ from app.infrastructure.socrata.soql import Projection, SoqlQuery
 NIVEL_SIN_DATO = "sin_dato"
 
 _NIVEL_WORDS = {
-    "1": "1", "UNO": "1", "I": "1", "PRIMER": "1", "PRIMERO": "1", "PRIMER NIVEL": "1",
-    "2": "2", "DOS": "2", "II": "2", "SEGUNDO": "2", "SEGUNDO NIVEL": "2",
-    "3": "3", "TRES": "3", "III": "3", "TERCER": "3", "TERCERO": "3", "TERCER NIVEL": "3",
-    "SIN DATO": NIVEL_SIN_DATO, "SIN NIVEL": NIVEL_SIN_DATO, "NO INFORMADO": NIVEL_SIN_DATO,
+    "1": "1",
+    "UNO": "1",
+    "I": "1",
+    "PRIMER": "1",
+    "PRIMERO": "1",
+    "PRIMER NIVEL": "1",
+    "2": "2",
+    "DOS": "2",
+    "II": "2",
+    "SEGUNDO": "2",
+    "SEGUNDO NIVEL": "2",
+    "3": "3",
+    "TRES": "3",
+    "III": "3",
+    "TERCER": "3",
+    "TERCERO": "3",
+    "TERCER NIVEL": "3",
+    "SIN DATO": NIVEL_SIN_DATO,
+    "SIN NIVEL": NIVEL_SIN_DATO,
+    "NO INFORMADO": NIVEL_SIN_DATO,
 }
 
 
@@ -47,7 +63,10 @@ class ValueCatalog:
         if self._snapshot and time.monotonic() - self._snapshot.loaded_at < self._ttl_s:
             return self._snapshot
         async with self._lock:
-            if self._snapshot and time.monotonic() - self._snapshot.loaded_at < self._ttl_s:
+            if (
+                self._snapshot
+                and time.monotonic() - self._snapshot.loaded_at < self._ttl_s
+            ):
                 return self._snapshot
             self._snapshot = await self._load()
             return self._snapshot
@@ -57,7 +76,13 @@ class ValueCatalog:
             projections=[Column.DEPARTAMENTO, Column.MUNICIPIO],
             group_by=[Column.DEPARTAMENTO, Column.MUNICIPIO],
         )
-        places_rows, nat_rows, nivel_rows, grupo_rows, corte_rows = await asyncio.gather(
+        (
+            places_rows,
+            nat_rows,
+            nivel_rows,
+            grupo_rows,
+            corte_rows,
+        ) = await asyncio.gather(
             self._client.query(places_q.render(), page_size=MAX_PAGE_SIZE),
             self._client.query(self._values_query(Column.NATURALEZA)),
             self._client.query(self._values_query(Column.NIVEL_ATENCION)),
@@ -69,13 +94,21 @@ class ValueCatalog:
             dep, mun = row.get(Column.DEPARTAMENTO), row.get(Column.MUNICIPIO)
             if dep and mun:
                 snapshot.places.setdefault(dep, []).append(mun)
-        snapshot.naturalezas = [r[Column.NATURALEZA] for r in nat_rows if r.get(Column.NATURALEZA)]
-        snapshot.grupos = [r[Column.GRUPO_CAPACIDAD] for r in grupo_rows if r.get(Column.GRUPO_CAPACIDAD)]
+        snapshot.naturalezas = [
+            r[Column.NATURALEZA] for r in nat_rows if r.get(Column.NATURALEZA)
+        ]
+        snapshot.grupos = [
+            r[Column.GRUPO_CAPACIDAD]
+            for r in grupo_rows
+            if r.get(Column.GRUPO_CAPACIDAD)
+        ]
         for row in nivel_rows:
             key = row.get(Column.NIVEL_ATENCION) or NIVEL_SIN_DATO
             snapshot.niveles[key] = int(row["n"])
         snapshot.total_rows = sum(snapshot.niveles.values())
-        cortes = [r[Column.FECHA_CORTE] for r in corte_rows if r.get(Column.FECHA_CORTE)]
+        cortes = [
+            r[Column.FECHA_CORTE] for r in corte_rows if r.get(Column.FECHA_CORTE)
+        ]
         snapshot.fecha_corte = "; ".join(cortes) or None
         return snapshot
 
@@ -92,10 +125,16 @@ class ValueCatalog:
             raise UnknownFilterValueError("departamento", raw, suggestions or matches)
         return matches[0]
 
-    async def resolve_municipio(self, raw: str, departamento: str | None) -> tuple[list[str], list[str]]:
+    async def resolve_municipio(
+        self, raw: str, departamento: str | None
+    ) -> tuple[list[str], list[str]]:
         """Return (canonical municipio names, departamentos where they were found)."""
         snap = await self.snapshot()
-        scope = {departamento: snap.places.get(departamento, [])} if departamento else snap.places
+        scope = (
+            {departamento: snap.places.get(departamento, [])}
+            if departamento
+            else snap.places
+        )
         found_names: set[str] = set()
         found_deps: set[str] = set()
         all_suggestions: list[str] = []
@@ -106,7 +145,9 @@ class ValueCatalog:
                 found_deps.add(dep)
             all_suggestions.extend(suggestions)
         if not found_names:
-            raise UnknownFilterValueError("municipio", raw, sorted(set(all_suggestions))[:3])
+            raise UnknownFilterValueError(
+                "municipio", raw, sorted(set(all_suggestions))[:3]
+            )
         if len({normalize(n) for n in found_names}) > 1:
             raise UnknownFilterValueError("municipio", raw, sorted(found_names)[:3])
         return sorted(found_names), sorted(found_deps)
@@ -114,7 +155,11 @@ class ValueCatalog:
     async def resolve_naturaleza(self, raw: str) -> str:
         snap = await self.snapshot()
         stem = normalize(raw)[:4]
-        matches = [nat for nat in snap.naturalezas if len(stem) == 4 and normalize(nat).startswith(stem)]
+        matches = [
+            nat
+            for nat in snap.naturalezas
+            if len(stem) == 4 and normalize(nat).startswith(stem)
+        ]
         if len(matches) != 1:
             raise UnknownFilterValueError("naturaleza", raw, snap.naturalezas)
         return matches[0]
@@ -124,7 +169,11 @@ class ValueCatalog:
         key = normalize(raw).replace("NIVEL", "").strip() or normalize(raw)
         value = _NIVEL_WORDS.get(key) or _NIVEL_WORDS.get(normalize(raw))
         if value is None or (value != NIVEL_SIN_DATO and value not in snap.niveles):
-            raise UnknownFilterValueError("nivel_atencion", raw, sorted(k for k in snap.niveles if k != NIVEL_SIN_DATO))
+            raise UnknownFilterValueError(
+                "nivel_atencion",
+                raw,
+                sorted(k for k in snap.niveles if k != NIVEL_SIN_DATO),
+            )
         return value
 
     async def resolve_grupo(self, raw: str) -> str:

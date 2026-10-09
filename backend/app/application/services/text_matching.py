@@ -32,7 +32,8 @@ def best_matches(raw: str, candidates: list[str]) -> tuple[list[str], list[str]]
     prefix = [
         c
         for norm, values in by_norm.items()
-        if len(target) >= 4 and (norm.startswith(target + " ") or target.startswith(norm + " "))
+        if len(target) >= 4
+        and (norm.startswith(target + " ") or target.startswith(norm + " "))
         for c in values
     ]
     if prefix:
@@ -41,5 +42,8 @@ def best_matches(raw: str, candidates: list[str]) -> tuple[list[str], list[str]]
     close = difflib.get_close_matches(target, list(by_norm), n=3, cutoff=0.84)
     if len(close) == 1:
         return by_norm[close[0]], []
-    suggestions = [by_norm[n][0] for n in difflib.get_close_matches(target, list(by_norm), n=3, cutoff=0.6)]
+    suggestions = [
+        by_norm[n][0]
+        for n in difflib.get_close_matches(target, list(by_norm), n=3, cutoff=0.6)
+    ]
     return [], suggestions

@@ -51,7 +51,9 @@ class SoqlQuery:
         self.conditions.append(f"{Column(column)} = {quote_literal(value)}")
         return self
 
-    def where_in(self, column: Column, values: tuple[str, ...] | list[str]) -> "SoqlQuery":
+    def where_in(
+        self, column: Column, values: tuple[str, ...] | list[str]
+    ) -> "SoqlQuery":
         if not values:
             raise ValueError("where_in requiere al menos un valor")
         if len(values) == 1:
@@ -81,7 +83,9 @@ class SoqlQuery:
             p.render() if isinstance(p, Projection) else str(Column(p))
             for p in self.projections
         ]
-        sql = "SELECT " + ("DISTINCT " if self.distinct else "") + ", ".join(select_items)
+        sql = (
+            "SELECT " + ("DISTINCT " if self.distinct else "") + ", ".join(select_items)
+        )
         if self.conditions:
             sql += " WHERE " + " AND ".join(self.conditions)
         if self.group_by:

@@ -16,7 +16,9 @@ from app.infrastructure.socrata.errors import (
 )
 from app.infrastructure.socrata.socrata_client import SocrataClient
 
-SETTINGS = Settings(_env_file=None, socrata_max_retries=2, socrata_app_token=SecretStr("tok"))
+SETTINGS = Settings(
+    _env_file=None, socrata_max_retries=2, socrata_app_token=SecretStr("tok")
+)
 URL = SETTINGS.socrata_query_url
 
 
@@ -43,7 +45,11 @@ async def test_query_sends_soda3_body_and_token(client: SocrataClient) -> None:
 @respx.mock
 async def test_retries_transient_errors_then_succeeds(client: SocrataClient) -> None:
     route = respx.post(URL).mock(
-        side_effect=[httpx.Response(503), httpx.Response(429), httpx.Response(200, json=[])]
+        side_effect=[
+            httpx.Response(503),
+            httpx.Response(429),
+            httpx.Response(200, json=[]),
+        ]
     )
     assert await client.query("SELECT *") == []
     assert route.call_count == 3

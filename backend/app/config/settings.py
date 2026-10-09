@@ -35,7 +35,9 @@ class Settings(BaseSettings):
 
     @property
     def socrata_query_url(self) -> str:
-        return f"{self.socrata_domain}/api/v3/views/{self.socrata_dataset_id}/query.json"
+        return (
+            f"{self.socrata_domain}/api/v3/views/{self.socrata_dataset_id}/query.json"
+        )
 
     @property
     def socrata_metadata_url(self) -> str:
