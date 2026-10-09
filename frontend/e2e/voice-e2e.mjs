@@ -15,7 +15,6 @@ const option = (name, fallback) => {
   return index >= 0 ? rest[index + 1] : fallback;
 };
 const url = option('url', 'http://localhost:4200');
-const mode = option('mode', 'wake_word');
 const chromePath = option('chrome', 'C:/Program Files/Google/Chrome/Application/chrome.exe');
 const screensDir = option('screens', null);
 const wav = resolve(wavArg);
@@ -41,7 +40,6 @@ const consoleLines = [];
 page.on('console', (msg) => consoleLines.push(`[${msg.type()}] ${msg.text()}`));
 
 await page.goto(url, { waitUntil: 'networkidle' });
-await page.getByRole('radio', { name: mode === 'open' ? 'Conversación abierta' : 'Activación “Kognia”' }).click();
 const started = Date.now();
 await page.getByRole('button', { name: 'Iniciar conversación' }).click();
 try {

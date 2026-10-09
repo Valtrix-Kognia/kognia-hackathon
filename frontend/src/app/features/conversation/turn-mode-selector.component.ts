@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { LucideAngularModule, MessageCircleQuestion, RefreshCcw, ShieldCheck, VolumeX } from 'lucide-angular';
-import { TurnMode } from '../../core/models/realtime-event.model';
 import { ConversationStore } from '../../core/services/conversation-store.service';
-import { VoiceRoomService } from '../../core/services/voice-room.service';
 
 const REASONS: Record<string, string> = {
   palabra_activacion: 'Respondiendo: se dijo “Kognia”',
@@ -26,27 +24,9 @@ const REASONS: Record<string, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-2">
-      <div class="grid grid-cols-2 gap-1 rounded-xl bg-kv-bg/60 p-1 ring-1 ring-kv-border" role="radiogroup" aria-label="Modo de turnos">
-        @for (option of options; track option.mode) {
-          <button
-            type="button"
-            role="radio"
-            [attr.aria-checked]="store.turnMode() === option.mode"
-            class="rounded-lg px-3 py-2 text-xs font-medium transition"
-            [class]="store.turnMode() === option.mode ? 'bg-kv-elevated text-kv-ink shadow-sm ring-1 ring-kv-border' : 'text-kv-muted hover:text-kv-ink'"
-            (click)="select(option.mode)"
-          >
-            {{ option.label }}
-          </button>
-        }
-      </div>
       <p class="text-xs text-kv-muted">
-        @if (store.turnMode() === 'wake_word') {
-          Empieza con <strong>“Kognia, …”</strong> (también respondo preguntas claras sobre IPS). Las demás conversaciones se transcriben pero no se responden.
-          Durante 8 s puedes hacer una pregunta de seguimiento sin repetirlo. Para interrumpir, di “Kognia”.
-        } @else {
-          Kognia responde a cualquier pregunta. Útil con una sola persona y poco ruido.
-        }
+        Empieza con <strong>“Kognia, …”</strong> (también respondo preguntas claras sobre IPS). Las demás conversaciones se transcriben pero no se responden.
+        Durante 8 s puedes hacer una pregunta de seguimiento sin repetirlo. Para interrumpir, di “Kognia”.
       </p>
       @if (decision(); as d) {
         <p class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs {{ d.tone }}" aria-live="polite">
@@ -58,13 +38,6 @@ const REASONS: Record<string, string> = {
 })
 export class TurnModeSelectorComponent {
   protected readonly store = inject(ConversationStore);
-  private readonly room = inject(VoiceRoomService);
-
-  protected readonly options: { mode: TurnMode; label: string }[] = [
-    { mode: 'wake_word', label: 'Activación “Kognia”' },
-    { mode: 'open', label: 'Conversación abierta' },
-  ];
-
   protected readonly decision = computed(() => {
     const d = this.store.lastDecision();
     if (!d) return null;
@@ -75,7 +48,4 @@ export class TurnModeSelectorComponent {
     return { label, icon: d.reason === 'no_dirigido_a_kognia' ? VolumeX : MessageCircleQuestion, tone: 'bg-kv-elevated text-kv-muted' };
   });
 
-  protected select(mode: TurnMode): void {
-    void this.room.setTurnMode(mode);
-  }
 }

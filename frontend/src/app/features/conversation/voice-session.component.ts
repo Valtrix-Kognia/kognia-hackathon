@@ -43,13 +43,6 @@ const STATES: Record<OrbState, { label: string; hint: string; icon: typeof Ear; 
   error: { label: 'Sin conexión', hint: 'Reconecta para continuar', icon: CircleAlert, tone: 'text-red-300' },
 };
 
-const SUGGESTIONS = [
-  '¿Cuántas IPS hay en el Quindío?',
-  '¿Qué departamentos tienen más sedes?',
-  '¿Cuántas sedes públicas hay en Antioquia?',
-  '¿Qué niveles de atención aparecen en los datos?',
-];
-
 @Component({
   selector: 'app-voice-session',
   imports: [LucideAngularModule, VoiceOrbComponent, TurnModeSelectorComponent],
@@ -138,26 +131,6 @@ const SUGGESTIONS = [
           </button>
         </form>
 
-        <div>
-          <p class="eyebrow mb-2">Preguntas sugeridas</p>
-          <div class="flex flex-wrap gap-1.5">
-            @for (s of suggestions; track s) {
-              <button
-                type="button"
-                class="rounded-full border border-kv-border bg-kv-elevated/60 px-3 py-1.5 text-left text-xs text-kv-ink transition hover:border-kv-accent/60 hover:text-white disabled:opacity-50"
-                [disabled]="room.connection() !== 'connected'"
-                (click)="room.sendText(s)"
-                [title]="'Enviar como texto: ' + s"
-              >
-                {{ s }}
-              </button>
-            }
-          </div>
-          @if (room.connection() !== 'connected') {
-            <p class="mt-2 text-[11px] text-kv-subtle">Disponibles al conectar. Por voz, empieza con “Kognia, …”.</p>
-          }
-        </div>
-
         @if (room.microphones().length > 1 && active()) {
           <label class="block text-xs font-medium text-kv-muted">
             Micrófono
@@ -188,7 +161,6 @@ export class VoiceSessionComponent {
   protected readonly retryIcon = RotateCw;
   protected readonly volumeIcon = Volume2;
   protected readonly sendIcon = Send;
-  protected readonly suggestions = SUGGESTIONS;
 
   protected readonly userSpeaking = signal(false);
   protected readonly draft = signal('');

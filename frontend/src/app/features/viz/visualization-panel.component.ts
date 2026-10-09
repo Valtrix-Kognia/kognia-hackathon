@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ChartBar, CircleAlert, Database, History, LucideAngularModule, Map as MapIcon, Sparkles } from 'lucide-angular';
+import { ChartBar, CircleAlert, Database, History, LucideAngularModule, Map as MapIcon } from 'lucide-angular';
 import {
   CategoryChartSpec,
   ColombiaMapSpec,
@@ -15,12 +15,6 @@ import { BarChartComponent } from './bar-chart.component';
 import { DataTableComponent } from './data-table.component';
 import { DonutChartComponent } from './donut-chart.component';
 import { MetricTilesComponent } from './metric-tiles.component';
-
-const SUGGESTIONS = [
-  'Kognia, ¿cuántas IPS hay en el Quindío?',
-  'Kognia, ¿qué departamentos tienen más sedes?',
-  'Kognia, compara públicas y privadas en Antioquia.',
-];
 
 @Component({
   selector: 'app-visualization-panel',
@@ -113,12 +107,7 @@ const SUGGESTIONS = [
           <lucide-icon [img]="chartIcon" [size]="22" />
         </span>
         <p class="text-sm font-medium text-kv-ink">Las respuestas de Kognia aparecerán aquí como gráficos</p>
-        <p class="max-w-sm text-xs text-kv-muted">Todas las cifras vienen de consultas en vivo a la API oficial. Prueba con:</p>
-        <ul class="space-y-1.5">
-          @for (s of suggestions; track s) {
-            <li class="flex items-center gap-2 text-sm text-kv-ink"><lucide-icon [img]="sparkIcon" [size]="14" class="text-kv-accent" /> {{ s }}</li>
-          }
-        </ul>
+        <p class="max-w-sm text-xs text-kv-muted">Todas las cifras vienen de consultas en vivo a la API oficial.</p>
       </div>
     }
   `,
@@ -127,13 +116,11 @@ export class VisualizationPanelComponent {
   protected readonly store = inject(ConversationStore);
   protected readonly dashboard = inject(DashboardStateService);
   protected readonly toolLabels = TOOL_LABELS;
-  protected readonly suggestions = SUGGESTIONS;
   protected readonly historyIcon = History;
   protected readonly alertIcon = CircleAlert;
   protected readonly dbIcon = Database;
   protected readonly mapIcon = MapIcon;
   protected readonly chartIcon = ChartBar;
-  protected readonly sparkIcon = Sparkles;
 
   protected filters(q: { arguments: Record<string, unknown>; result: unknown }): { key: string; value: string }[] {
     const meta = (q.result as { metadata?: { filters: Record<string, string> } } | null)?.metadata;

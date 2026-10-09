@@ -19,6 +19,8 @@ import { ToastService } from './toast.service';
 const AGENT_TRANSCRIPTION_TOPIC = 'lk.transcription';
 const TURN_MODE_ATTRIBUTE = 'kognia.turn_mode';
 const CLIENT_METRICS_TOPIC = 'kognia.client_metrics';
+/** The dashboard always uses explicit activation ("Kognia, …") for the shared microphone. */
+const ACTIVATION_MODE: TurnMode = 'wake_word';
 
 /**
  * Shared-microphone capture. Noise suppression runs once, server side (ai-coustics QUAIL_L,
@@ -136,16 +138,6 @@ export class VoiceRoomService implements OnDestroy {
     }
   }
 
-  async setTurnMode(mode: TurnMode): Promise<void> {
-    this.store.turnMode.set(mode);
-    if (!this.room) return;
-    try {
-      await this.room.localParticipant.setAttributes({ [TURN_MODE_ATTRIBUTE]: mode });
-    } catch {
-      this.toasts.show('warning', 'No se pudo cambiar el modo de turnos.');
-    }
-  }
-
   async resumeAudio(): Promise<void> {
     await this.room?.startAudio();
     this.audioBlocked.set(!(this.room?.canPlaybackAudio ?? true));
@@ -179,10 +171,10 @@ export class VoiceRoomService implements OnDestroy {
     this.connection.set('connected');
     this.toasts.show(
       'success',
-      this.store.turnMode() === 'wake_word' ? 'Conectado. Empieza tus preguntas con “Kognia…”.' : 'Conectado. Kognia te está escuchando.',
+      'Conectado. Empieza tus preguntas con “Kognia…”.',
       4000,
     );
-    await room.localParticipant.setAttributes({ [TURN_MODE_ATTRIBUTE]: this.store.turnMode() }).catch(() => undefined);
+    await room.localParticipant.setAttributes({ [TURN_MODE_ATTRIBUTE]: ACTIVATION_MODE }).catch(() => undefined);
     await this.setMicrophone(room, true);
     await this.resumeAudio();
     navigator.mediaDevices?.addEventListener('devicechange', this.onDeviceChange);
