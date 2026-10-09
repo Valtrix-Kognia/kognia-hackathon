@@ -1,0 +1,391 @@
+{
+  "interventions": 13,
+  "decision_matches_expected": "13/13",
+  "failed": [],
+  "first_audio_ms": {
+    "n": 7,
+    "p50": 5433.2,
+    "p95": 7400.62
+  },
+  "end_of_turn_ms": {
+    "n": 7,
+    "p50": 645.6,
+    "p95": 1152.5
+  },
+  "llm_ttft_ms": {
+    "n": 9,
+    "p50": 3237.5,
+    "p95": 4113.5199999999995
+  },
+  "tts_ttfb_ms": {
+    "n": 9,
+    "p50": 434.7,
+    "p95": 623.5
+  },
+  "socrata_http_ms": {
+    "n": 8,
+    "p50": 3909.15,
+    "p95": 6794.11
+  },
+  "browser_decision_to_audible_ms": {
+    "n": 10,
+    "p50": 4590.0,
+    "p95": 7034.6
+  },
+  "browser_superseded": 0,
+  "by_category": {
+    "corta": {
+      "ok": "1/1",
+      "first_audio_p50": 6553.2
+    },
+    "larga_con_pausa": {
+      "ok": "2/2",
+      "first_audio_p50": 3631.3
+    },
+    "solo_palabra_activacion": {
+      "ok": "2/2",
+      "first_audio_p50": 4452.9
+    },
+    "variante_cognia": {
+      "ok": "1/1",
+      "first_audio_p50": 2860.6
+    },
+    "ambiental": {
+      "ok": "2/2",
+      "first_audio_p50": null
+    },
+    "variante_konia": {
+      "ok": "1/1",
+      "first_audio_p50": 5433.2
+    },
+    "dominio_sin_activacion": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "tercera_persona": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "cuarta_persona": {
+      "ok": "1/1",
+      "first_audio_p50": 7763.8
+    },
+    "fuera_de_fuente": {
+      "ok": "1/1",
+      "first_audio_p50": 6553.2
+    }
+  },
+  "rows": [
+    {
+      "category": "corta",
+      "person": "A",
+      "text": "Kognia, ¿cuántas IPS hay en Caldas?",
+      "expected": "respond",
+      "turn_id": "t1",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 6553.2,
+      "eou_ms": 1152.5,
+      "llm_ttft_ms": 3423.1,
+      "tts_ttfb_ms": 623.5,
+      "socrata_http_ms": 6443.5,
+      "tools": [
+        "count_ips",
+        "count_ips",
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t1",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 5716,
+        "speaking_event_to_audible_ms": 663
+      }
+    },
+    {
+      "category": "larga_con_pausa",
+      "person": "A",
+      "text": "Kognia, necesito que me",
+      "expected": "respond",
+      "turn_id": "t2",
+      "action": "hold",
+      "reason": "solicitud_incompleta",
+      "activation": "confirmada",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": null,
+      "tts_ttfb_ms": null,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": null
+    },
+    {
+      "category": "larga_con_pausa",
+      "person": "A",
+      "text": "digas cuántos prestadores públicos hay en Antioquia.",
+      "expected": "respond",
+      "turn_id": "t3",
+      "action": "respond",
+      "reason": "solicitud_consolidada",
+      "activation": "confirmada",
+      "first_audio_ms": 3631.3,
+      "eou_ms": 555.2,
+      "llm_ttft_ms": 1190.5,
+      "tts_ttfb_ms": 318,
+      "socrata_http_ms": 1046.3,
+      "tools": [
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t3",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 3342,
+        "speaking_event_to_audible_ms": 581
+      }
+    },
+    {
+      "category": "solo_palabra_activacion",
+      "person": "A",
+      "text": "Kognia.",
+      "expected": "respond",
+      "turn_id": "t4",
+      "action": "listen",
+      "reason": "solo_palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": null,
+      "tts_ttfb_ms": null,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": {
+        "turn_id": "t4",
+        "action": "listen",
+        "status": "medido",
+        "decision_to_audible_ms": 1144,
+        "speaking_event_to_audible_ms": 788
+      }
+    },
+    {
+      "category": "solo_palabra_activacion",
+      "person": "A",
+      "text": "¿Qué departamentos tienen más prestadores?",
+      "expected": "respond",
+      "turn_id": "t5",
+      "action": "respond",
+      "reason": "solicitud_consolidada",
+      "activation": "confirmada",
+      "first_audio_ms": 4452.9,
+      "eou_ms": 608.1,
+      "llm_ttft_ms": 3323.7,
+      "tts_ttfb_ms": 486.1,
+      "socrata_http_ms": 4540.1,
+      "tools": [
+        "group_ips",
+        "group_ips",
+        "group_ips"
+      ],
+      "browser": {
+        "turn_id": "t5",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 4048,
+        "speaking_event_to_audible_ms": 441
+      }
+    },
+    {
+      "category": "variante_cognia",
+      "person": "A",
+      "text": "Cognia, busca hospitales en Armenia.",
+      "expected": "respond",
+      "turn_id": "t6",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 2860.6,
+      "eou_ms": 560.2,
+      "llm_ttft_ms": 1536.4,
+      "tts_ttfb_ms": 401.7,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": {
+        "turn_id": "t6",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 3710,
+        "speaking_event_to_audible_ms": 1352
+      }
+    },
+    {
+      "category": "ambiental",
+      "person": "B",
+      "text": "¿Ya almorzaron? Todavía no, después de la demo vamos.",
+      "expected": "ignore",
+      "turn_id": "t7",
+      "action": "ignore",
+      "reason": "no_dirigido_a_kognia",
+      "activation": "ninguna",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": null,
+      "tts_ttfb_ms": null,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": null
+    },
+    {
+      "category": "variante_konia",
+      "person": "A",
+      "text": "Konia, ¿cuántas camas hay en Risaralda?",
+      "expected": "respond",
+      "turn_id": "t8",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "probable",
+      "first_audio_ms": 5433.2,
+      "eou_ms": 645.6,
+      "llm_ttft_ms": 3237.5,
+      "tts_ttfb_ms": 379.9,
+      "socrata_http_ms": 3278.2,
+      "tools": [
+        "group_ips",
+        "group_ips",
+        "group_ips"
+      ],
+      "browser": {
+        "turn_id": "t8",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 5132,
+        "speaking_event_to_audible_ms": 540
+      }
+    },
+    {
+      "category": "dominio_sin_activacion",
+      "person": "C",
+      "text": "¿Cuántas sedes hay en Bogotá?",
+      "expected": "respond",
+      "turn_id": "t9",
+      "action": "respond",
+      "reason": "diferido_mientras_hablaba",
+      "activation": "ninguna",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": 4573.8,
+      "tts_ttfb_ms": 502.3,
+      "socrata_http_ms": 6982.9,
+      "tools": [
+        "count_ips",
+        "count_ips",
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t9",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 6610,
+        "speaking_event_to_audible_ms": 1409
+      }
+    },
+    {
+      "category": "tercera_persona",
+      "person": "C",
+      "text": "Kognia, ¿cuántas ambulancias hay en Nariño?",
+      "expected": "respond",
+      "turn_id": "t12",
+      "action": "respond",
+      "reason": "diferido_mientras_hablaba",
+      "activation": "ninguna",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": 937.3,
+      "tts_ttfb_ms": 434.7,
+      "socrata_http_ms": 2662.3,
+      "tools": [
+        "count_ips",
+        "count_ips",
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t12",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 5692,
+        "speaking_event_to_audible_ms": 776
+      }
+    },
+    {
+      "category": "ambiental",
+      "person": "D",
+      "text": "Oye, ¿viste el partido de anoche? Estuvo buenísimo.",
+      "expected": "ignore",
+      "turn_id": null,
+      "action": "ignore",
+      "reason": "omitido_mientras_hablaba",
+      "activation": "confirmada",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": null,
+      "tts_ttfb_ms": null,
+      "socrata_http_ms": null,
+      "tools": [],
+      "browser": null
+    },
+    {
+      "category": "cuarta_persona",
+      "person": "D",
+      "text": "Kognia, ¿qué niveles de atención aparecen en los datos?",
+      "expected": "respond",
+      "turn_id": "t11",
+      "action": "respond",
+      "reason": "solicitud_consolidada",
+      "activation": "confirmada",
+      "first_audio_ms": 7763.8,
+      "eou_ms": 708.4,
+      "llm_ttft_ms": 2040.1,
+      "tts_ttfb_ms": 298.2,
+      "socrata_http_ms": 2066.6,
+      "tools": [
+        "group_ips",
+        "group_ips",
+        "group_ips"
+      ],
+      "browser": {
+        "turn_id": "t11",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 7382,
+        "speaking_event_to_audible_ms": 508
+      }
+    },
+    {
+      "category": "fuera_de_fuente",
+      "person": "B",
+      "text": "Kognia, ¿cuál es la mejor IPS de Colombia?",
+      "expected": "respond",
+      "turn_id": "t1",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 6553.2,
+      "eou_ms": 1152.5,
+      "llm_ttft_ms": 3423.1,
+      "tts_ttfb_ms": 623.5,
+      "socrata_http_ms": 6443.5,
+      "tools": [
+        "count_ips",
+        "count_ips",
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t1",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 5716,
+        "speaking_event_to_audible_ms": 663
+      }
+    }
+  ]
+}

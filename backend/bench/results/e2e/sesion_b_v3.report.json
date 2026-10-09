@@ -1,0 +1,359 @@
+{
+  "interventions": 12,
+  "decision_matches_expected": "12/12",
+  "failed": [],
+  "first_audio_ms": {
+    "n": 10,
+    "p50": 3697.55,
+    "p95": 4787.120000000001
+  },
+  "end_of_turn_ms": {
+    "n": 10,
+    "p50": 797.65,
+    "p95": 2424.625000000001
+  },
+  "llm_ttft_ms": {
+    "n": 10,
+    "p50": 1655.25,
+    "p95": 2954.1150000000007
+  },
+  "tts_ttfb_ms": {
+    "n": 10,
+    "p50": 385.35,
+    "p95": 449.415
+  },
+  "socrata_http_ms": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 2573.8500000000004
+  },
+  "browser_decision_to_audible_ms": {
+    "n": 10,
+    "p50": 2357.5,
+    "p95": 4919.200000000001
+  },
+  "browser_superseded": 0,
+  "by_category": {
+    "wake_repetida": {
+      "ok": "1/1",
+      "first_audio_p50": 3663.8
+    },
+    "ruido_ventilador": {
+      "ok": "1/1",
+      "first_audio_p50": 3613.4
+    },
+    "voces_superpuestas": {
+      "ok": "2/2",
+      "first_audio_p50": 3663.8
+    },
+    "interrupcion": {
+      "ok": "2/2",
+      "first_audio_p50": 3737.95
+    },
+    "corta": {
+      "ok": "1/1",
+      "first_audio_p50": 3613.4
+    },
+    "ambiental": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "larga_con_pausa": {
+      "ok": "2/2",
+      "first_audio_p50": 3731.3
+    },
+    "tercera_persona": {
+      "ok": "1/1",
+      "first_audio_p50": 4209.4
+    },
+    "variante_cognia": {
+      "ok": "1/1",
+      "first_audio_p50": 5259.8
+    }
+  },
+  "rows": [
+    {
+      "category": "wake_repetida",
+      "person": "A",
+      "text": "Kognia, Kognia, ¿cuántas clínicas hay en Cali?",
+      "expected": "respond",
+      "turn_id": "t1",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 3663.8,
+      "eou_ms": 1702.2,
+      "llm_ttft_ms": 2333,
+      "tts_ttfb_ms": 399.8,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": {
+        "turn_id": "t1",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 2471,
+        "speaking_event_to_audible_ms": 743
+      }
+    },
+    {
+      "category": "ruido_ventilador",
+      "person": "B",
+      "text": "Kognia, ¿cuántas IPS privadas hay en Santander?",
+      "expected": "respond",
+      "turn_id": "t2",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 3613.4,
+      "eou_ms": 482.9,
+      "llm_ttft_ms": 1087.3,
+      "tts_ttfb_ms": 300.5,
+      "socrata_http_ms": 0,
+      "tools": [
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t2",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 4037,
+        "speaking_event_to_audible_ms": 961
+      }
+    },
+    {
+      "category": "voces_superpuestas",
+      "person": "B",
+      "text": "Kognia, ¿cuántas IPS hay en el Quindío?",
+      "expected": "ask_repeat_or_respond",
+      "turn_id": "t1",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 3663.8,
+      "eou_ms": 1702.2,
+      "llm_ttft_ms": 2333,
+      "tts_ttfb_ms": 399.8,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": {
+        "turn_id": "t1",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 2471,
+        "speaking_event_to_audible_ms": 743
+      }
+    },
+    {
+      "category": "voces_superpuestas",
+      "person": "C",
+      "text": "Yo quisiera saber qué departamentos tienen más prestadores.",
+      "expected": "ask_repeat_or_respond",
+      "turn_id": "t3",
+      "action": "ask_repeat",
+      "reason": "habla_superpuesta",
+      "activation": "confirmada",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": null,
+      "tts_ttfb_ms": null,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": {
+        "turn_id": "t3",
+        "action": "ask_repeat",
+        "status": "medido",
+        "decision_to_audible_ms": 2244,
+        "speaking_event_to_audible_ms": 1550
+      }
+    },
+    {
+      "category": "interrupcion",
+      "person": "A",
+      "text": "Kognia, ¿qué departamentos tienen más sedes y cuántas tiene cada uno?",
+      "expected": "respond",
+      "turn_id": "t4",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 3812.1,
+      "eou_ms": 529.7,
+      "llm_ttft_ms": 1190.8,
+      "tts_ttfb_ms": 457.2,
+      "socrata_http_ms": 0,
+      "tools": [
+        "group_ips",
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t4",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 3946,
+        "speaking_event_to_audible_ms": 786
+      }
+    },
+    {
+      "category": "interrupcion",
+      "person": "A",
+      "text": "Kognia, para. ¿Cuántas IPS hay en Huila?",
+      "expected": "respond",
+      "turn_id": "t1",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 3663.8,
+      "eou_ms": 1702.2,
+      "llm_ttft_ms": 2333,
+      "tts_ttfb_ms": 399.8,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": {
+        "turn_id": "t1",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 2471,
+        "speaking_event_to_audible_ms": 743
+      }
+    },
+    {
+      "category": "corta",
+      "person": "C",
+      "text": "Kognia, ¿cuántas IPS hay en Sucre?",
+      "expected": "respond",
+      "turn_id": "t2",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 3613.4,
+      "eou_ms": 482.9,
+      "llm_ttft_ms": 1087.3,
+      "tts_ttfb_ms": 300.5,
+      "socrata_http_ms": 0,
+      "tools": [
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t2",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 4037,
+        "speaking_event_to_audible_ms": 961
+      }
+    },
+    {
+      "category": "ambiental",
+      "person": "D",
+      "text": "¿Alguien tiene el cargador del portátil?",
+      "expected": "ignore",
+      "turn_id": "t6",
+      "action": "ignore",
+      "reason": "no_dirigido_a_kognia",
+      "activation": "ninguna",
+      "first_audio_ms": null,
+      "eou_ms": null,
+      "llm_ttft_ms": null,
+      "tts_ttfb_ms": null,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": null
+    },
+    {
+      "category": "larga_con_pausa",
+      "person": "D",
+      "text": "Kognia, quisiera saber, eh,",
+      "expected": "respond",
+      "turn_id": "t9",
+      "action": "respond",
+      "reason": "solicitud_consolidada",
+      "activation": "confirmada",
+      "first_audio_ms": 3731.3,
+      "eou_ms": 558,
+      "llm_ttft_ms": 888.1,
+      "tts_ttfb_ms": 370.9,
+      "socrata_http_ms": 0,
+      "tools": [
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t9",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 3902,
+        "speaking_event_to_audible_ms": 896
+      }
+    },
+    {
+      "category": "larga_con_pausa",
+      "person": "D",
+      "text": "cuántas sedes de naturaleza mixta hay en todo el país.",
+      "expected": "respond",
+      "turn_id": "t9",
+      "action": "respond",
+      "reason": "solicitud_consolidada",
+      "activation": "confirmada",
+      "first_audio_ms": 3731.3,
+      "eou_ms": 558,
+      "llm_ttft_ms": 888.1,
+      "tts_ttfb_ms": 370.9,
+      "socrata_http_ms": 0,
+      "tools": [
+        "count_ips"
+      ],
+      "browser": {
+        "turn_id": "t9",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 3902,
+        "speaking_event_to_audible_ms": 896
+      }
+    },
+    {
+      "category": "tercera_persona",
+      "person": "B",
+      "text": "Kognia, busca la clínica San Rafael en Pasto.",
+      "expected": "respond",
+      "turn_id": "t10",
+      "action": "respond",
+      "reason": "palabra_activacion",
+      "activation": "confirmada",
+      "first_audio_ms": 4209.4,
+      "eou_ms": 3015.7,
+      "llm_ttft_ms": 2119.7,
+      "tts_ttfb_ms": 439.9,
+      "socrata_http_ms": 3431.8,
+      "tools": [
+        "search_ips"
+      ],
+      "browser": {
+        "turn_id": "t10",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 1693,
+        "speaking_event_to_audible_ms": 464
+      }
+    },
+    {
+      "category": "variante_cognia",
+      "person": "C",
+      "text": "Cognia, ¿cuántos consultorios hay en Boyacá?",
+      "expected": "respond",
+      "turn_id": "t12",
+      "action": "respond",
+      "reason": "solicitud_consolidada",
+      "activation": "confirmada",
+      "first_audio_ms": 5259.8,
+      "eou_ms": 1037.3,
+      "llm_ttft_ms": 3462.3,
+      "tts_ttfb_ms": 313.9,
+      "socrata_http_ms": 0,
+      "tools": [],
+      "browser": {
+        "turn_id": "t12",
+        "action": "respond",
+        "status": "medido",
+        "decision_to_audible_ms": 5641,
+        "speaking_event_to_audible_ms": 1488
+      }
+    }
+  ]
+}

@@ -15,6 +15,7 @@ from app.domain.models.filter_request import FilterRequest
 from app.infrastructure.socrata.errors import SocrataError
 from app.infrastructure.socrata.socrata_client import http_durations_ms
 from app.voice.event_publisher import EventPublisher
+from app.voice.filter_guard import guard_filters
 from app.voice.latency_metrics import LatencyMetricsService, ToolTiming
 
 logger = logging.getLogger("kognia.tools")
@@ -64,6 +65,7 @@ class IpsToolset(llm.Toolset):
         events: EventPublisher,
         latency: LatencyMetricsService | None = None,
         filler_delay_s: float | None = 0.7,
+        request_text: Callable[[], str] = lambda: "",
     ) -> None:
         super().__init__(id="ips_tools")
         self._service = service
@@ -71,6 +73,14 @@ class IpsToolset(llm.Toolset):
         self._latency = latency
         self._filler_count = 0
         self._filler_delay_s = filler_delay_s
+        self._request_text = request_text
+        self._dropped: list[str] = []
+
+    def _guard(self, request: FilterRequest) -> FilterRequest:
+        guarded, self._dropped = guard_filters(request, self._request_text())
+        if self._dropped:
+            logger.info("dropping filters not mentioned by the user: %s", self._dropped)
+        return guarded
 
     def _filler(self, step: int) -> str | None:
         if step > 0:
@@ -89,6 +99,9 @@ class IpsToolset(llm.Toolset):
     ) -> dict[str, Any]:
         query_id = uuid.uuid4().hex[:12]
         clean_args = {k: v for k, v in arguments.items() if v not in (None, "")}
+        dropped, self._dropped = self._dropped, []
+        if dropped:
+            clean_args["filtros_descartados"] = ", ".join(dropped)
         self._events.publish(
             "ips.query.started",
             {"query_id": query_id, "tool": tool, "arguments": clean_args},
@@ -148,7 +161,10 @@ class IpsToolset(llm.Toolset):
                 else None,
             },
         )
-        return summarize(result)
+        summary = summarize(result)
+        if dropped:
+            summary["filtros_descartados_no_mencionados"] = dropped
+        return summary
 
     def _fail(
         self, query_id: str, tool: str, args: dict[str, Any], message: str
@@ -171,6 +187,8 @@ class IpsToolset(llm.Toolset):
         """Cuenta registros, sedes únicas y prestadores únicos de IPS con filtros opcionales.
 
         Úsala para preguntas de "cuántas IPS/sedes/prestadores hay" en Colombia o en un lugar.
+        Usa una sola llamada y solo los filtros que el usuario mencionó; no desgloses por
+        naturaleza ni por nivel (para comparar, usa group_ips).
 
         Args:
             departamento: Departamento o distrito tal como lo dice el usuario (ej. "Quindío", "Bogotá").
@@ -186,6 +204,7 @@ class IpsToolset(llm.Toolset):
             nivel_atencion=nivel_atencion,
             grupo_capacidad=grupo_capacidad,
         )
+        request = self._guard(request)
         return await self._run(
             context,
             "count_ips",
@@ -238,6 +257,7 @@ class IpsToolset(llm.Toolset):
             nivel_atencion=nivel_atencion,
             grupo_capacidad=grupo_capacidad,
         )
+        request = self._guard(request)
         if dimension not in _DIMENSIONS:
             raise ToolError(f"Dimensión no permitida: {dimension}")
         return await self._run(
@@ -289,6 +309,7 @@ class IpsToolset(llm.Toolset):
             municipio=municipio,
             naturaleza=naturaleza,
         )
+        request = self._guard(request)
         if not any([nombre, departamento, municipio]):
             raise ToolError(
                 "Indica al menos un nombre, departamento o municipio para buscar."

@@ -54,6 +54,7 @@ class ConversationController:
             self._agent_speech
         )
         self._deferred: list[str] = []
+        self.last_request_text = ""
         self._deferred_handler: Callable[[str], None] = lambda _text: None
 
     def on_deferred_request(self, handler: Callable[[str], None]) -> None:
@@ -124,6 +125,8 @@ class ConversationController:
             self._report_skipped(stale)
         state = self._turns.follow_up_state()
         decision = self._turns.decide(utterances, committed_text)
+        if decision.action == "respond":
+            self.last_request_text = decision.llm_text or committed_text
         turn_id = f"t{next(self._turn_counter)}"
         self._latency.start_turn(turn_id, decision.action)
         self._latency.mark("decision")
@@ -191,6 +194,7 @@ class ConversationController:
     def start_programmatic_turn(self, text: str, reason: str) -> str:
         """Open a traced turn for a reply that does not go through a LiveKit commit."""
         turn_id = f"t{next(self._turn_counter)}"
+        self.last_request_text = text
         self._latency.start_turn(turn_id, "respond")
         self._latency.mark("decision")
         self._events.publish(

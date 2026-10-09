@@ -1,0 +1,74 @@
+{
+  "interventions": 12,
+  "decision_matches_expected": "12/12",
+  "failed": [],
+  "first_audio_ms": {
+    "n": 10,
+    "p50": 3697.55,
+    "p95": 4787.120000000001
+  },
+  "end_of_turn_ms": {
+    "n": 10,
+    "p50": 797.65,
+    "p95": 2424.625000000001
+  },
+  "llm_ttft_ms": {
+    "n": 10,
+    "p50": 1655.25,
+    "p95": 2954.1150000000007
+  },
+  "tts_ttfb_ms": {
+    "n": 10,
+    "p50": 385.35,
+    "p95": 449.415
+  },
+  "socrata_http_ms": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 2573.8500000000004
+  },
+  "browser_decision_to_audible_ms": {
+    "n": 10,
+    "p50": 2357.5,
+    "p95": 4919.200000000001
+  },
+  "browser_superseded": 0,
+  "by_category": {
+    "wake_repetida": {
+      "ok": "1/1",
+      "first_audio_p50": 3663.8
+    },
+    "ruido_ventilador": {
+      "ok": "1/1",
+      "first_audio_p50": 3613.4
+    },
+    "voces_superpuestas": {
+      "ok": "2/2",
+      "first_audio_p50": 3663.8
+    },
+    "interrupcion": {
+      "ok": "2/2",
+      "first_audio_p50": 3737.95
+    },
+    "corta": {
+      "ok": "1/1",
+      "first_audio_p50": 3613.4
+    },
+    "ambiental": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "larga_con_pausa": {
+      "ok": "2/2",
+      "first_audio_p50": 3731.3
+    },
+    "tercera_persona": {
+      "ok": "1/1",
+      "first_audio_p50": 4209.4
+    },
+    "variante_cognia": {
+      "ok": "1/1",
+      "first_audio_p50": 5259.8
+    }
+  }
+}

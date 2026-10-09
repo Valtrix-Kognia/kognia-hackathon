@@ -1,0 +1,78 @@
+{
+  "interventions": 13,
+  "decision_matches_expected": "13/13",
+  "failed": [],
+  "first_audio_ms": {
+    "n": 7,
+    "p50": 5433.2,
+    "p95": 7400.62
+  },
+  "end_of_turn_ms": {
+    "n": 7,
+    "p50": 645.6,
+    "p95": 1152.5
+  },
+  "llm_ttft_ms": {
+    "n": 9,
+    "p50": 3237.5,
+    "p95": 4113.5199999999995
+  },
+  "tts_ttfb_ms": {
+    "n": 9,
+    "p50": 434.7,
+    "p95": 623.5
+  },
+  "socrata_http_ms": {
+    "n": 8,
+    "p50": 3909.15,
+    "p95": 6794.11
+  },
+  "browser_decision_to_audible_ms": {
+    "n": 10,
+    "p50": 4590.0,
+    "p95": 7034.6
+  },
+  "browser_superseded": 0,
+  "by_category": {
+    "corta": {
+      "ok": "1/1",
+      "first_audio_p50": 6553.2
+    },
+    "larga_con_pausa": {
+      "ok": "2/2",
+      "first_audio_p50": 3631.3
+    },
+    "solo_palabra_activacion": {
+      "ok": "2/2",
+      "first_audio_p50": 4452.9
+    },
+    "variante_cognia": {
+      "ok": "1/1",
+      "first_audio_p50": 2860.6
+    },
+    "ambiental": {
+      "ok": "2/2",
+      "first_audio_p50": null
+    },
+    "variante_konia": {
+      "ok": "1/1",
+      "first_audio_p50": 5433.2
+    },
+    "dominio_sin_activacion": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "tercera_persona": {
+      "ok": "1/1",
+      "first_audio_p50": null
+    },
+    "cuarta_persona": {
+      "ok": "1/1",
+      "first_audio_p50": 7763.8
+    },
+    "fuera_de_fuente": {
+      "ok": "1/1",
+      "first_audio_p50": 6553.2
+    }
+  }
+}

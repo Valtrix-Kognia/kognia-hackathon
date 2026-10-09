@@ -211,6 +211,7 @@ async def entrypoint(ctx: JobContext) -> None:
                 filler_delay_s=settings.tool_filler_delay_s
                 if settings.tool_filler_delay_s >= 0
                 else None,
+                request_text=lambda: controller.last_request_text,
             )
         ],
         controller=controller,

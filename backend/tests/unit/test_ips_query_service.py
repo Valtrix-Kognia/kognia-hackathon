@@ -161,3 +161,10 @@ async def test_counts_and_ranking_served_from_preloaded_aggregates() -> None:
     fake._responses = [[{"registros": "1", "prestadores": "1", "sedes": "1"}]]
     await service.count(FilterRequest(departamento="quindio", nivel_atencion="1"))
     assert len(fake.queries) == before + 1
+
+
+def test_municipio_resolves_official_long_name_by_suffix() -> None:
+    from app.application.services.text_matching import best_matches
+
+    matches, _ = best_matches("Cali", ["SANTIAGO DE CALI", "CALIMA", "ALCALÁ"])
+    assert matches == ["SANTIAGO DE CALI"]

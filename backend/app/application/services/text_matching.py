@@ -33,7 +33,11 @@ def best_matches(raw: str, candidates: list[str]) -> tuple[list[str], list[str]]
         c
         for norm, values in by_norm.items()
         if len(target) >= 4
-        and (norm.startswith(target + " ") or target.startswith(norm + " "))
+        and (
+            norm.startswith(target + " ")
+            or target.startswith(norm + " ")
+            or norm.endswith(" " + target)
+        )
         for c in values
     ]
     if prefix:
